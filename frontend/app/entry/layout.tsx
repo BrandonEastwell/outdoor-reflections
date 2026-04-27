@@ -3,8 +3,8 @@ export default function EntryLayout({ children } : { children: React.ReactNode }
 
 
     return (
-        <main>
+        <div className="bg-[#F9F7F3]">
             {children}
-        </main>
+        </div>
     )
 }
