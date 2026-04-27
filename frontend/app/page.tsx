@@ -12,7 +12,7 @@ export default function Home() {
         </div>
         <a
             className="flex h-12 w-full items-center justify-center gap-2 rounded-lg px-5 text-background transition-colors bg-[#ce796b] hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href=""
+            href=" "
             target="_blank"
             rel="noopener noreferrer"
         >
