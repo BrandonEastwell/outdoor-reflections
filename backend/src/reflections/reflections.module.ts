@@ -7,7 +7,8 @@ import {ReflectionsRepository} from "./reflections.repository";
 @Module({
     imports: [DatabaseModule],
     controllers: [ReflectionsController],
-    providers: [ReflectionsService, ReflectionsRepository]
+    providers: [ReflectionsService, ReflectionsRepository],
+    exports: [ReflectionsService]
 })
 
 export class ReflectionsModule {}
