@@ -12,7 +12,7 @@ export class ReflectionsController {
 
     @Post()
     async create(@Body() body: ReflectionsDTO ) {
-        return this.reflectionService.create(body)
+        return this.reflectionService.createEntry(body)
     }
 
     @Get(':id')
