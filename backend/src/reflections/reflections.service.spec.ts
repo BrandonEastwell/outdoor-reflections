@@ -1,4 +1,4 @@
-import {ReflectionsController} from "./reflections.controller";
+import {ReflectionsController, ReflectionsDTO} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {Reflection} from "../interfaces/reflection.interface";
@@ -28,10 +28,11 @@ describe('ReflectionsService', () => {
     })
 
     describe('create', () => {
-        const mockReflectionEntry: Reflection = { content: "...", title: "day 1" }
+        const mockReflectionEntry: ReflectionsDTO = { content: "...", title: "day 1" }
 
-        it('should create a new reflection entry', () => {
-            const res = reflectionsService.createEntry(mockReflectionEntry);
+        it('should create a new reflection entry', async () => {
+            mockReflectionRepo.create.mockResolvedValue({id: 0, ...mockReflectionEntry})
+            const res = await reflectionsService.createEntry(mockReflectionEntry);
             expect(res).toMatchObject(mockReflectionEntry)
             expect(res).toHaveProperty("id")
         });

@@ -2,6 +2,7 @@ import {ReflectionsController, ReflectionsDTO} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ConflictException} from "@nestjs/common";
+import {ReflectionsRepository} from "./reflections.repository";
 
 describe("ReflectionsController", () => {
     let reflectionsController: ReflectionsController
@@ -10,7 +11,11 @@ describe("ReflectionsController", () => {
     beforeEach(async () => {
         const app = await Test.createTestingModule({
             controllers: [ReflectionsController],
-            providers: [ReflectionsService],
+            providers: [ReflectionsService,
+                {
+                    provide: ReflectionsRepository,
+                    useValue: jest.fn()
+                }],
         }).compile()
 
         reflectionsController = app.get(ReflectionsController)
@@ -25,7 +30,7 @@ describe("ReflectionsController", () => {
         const mockServiceReturnValue = { id: 1, ...mockBody }
 
         it('should create a new reflection entry', async () => {
-            jest.spyOn(reflectionsService, 'createEntry').mockImplementation(() => mockServiceReturnValue)
+            jest.spyOn(reflectionsService, 'createEntry').mockResolvedValue(mockServiceReturnValue)
             expect(await reflectionsController.create(mockBody)).toEqual(mockServiceReturnValue)
         });
 
