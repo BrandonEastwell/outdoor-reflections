@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {ReflectionsController} from "./reflections/reflections.controller";
 import {ReflectionsService} from "./reflections/reflections.service";
+import {ReflectionsModule} from "./reflections/reflections.module";
 
 @Module({
-  imports: [],
+  imports: [ReflectionsModule],
   controllers: [AppController, ReflectionsController],
   providers: [AppService, ReflectionsService],
 })
