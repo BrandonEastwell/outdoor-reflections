@@ -1,7 +1,6 @@
 import {ReflectionsController, ReflectionsDTO} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
-import {Reflection} from "../interfaces/reflection.interface";
 import {ReflectionsRepository} from "./reflections.repository";
 
 describe('ReflectionsService', () => {
