@@ -11,8 +11,8 @@ export class ReflectionsController {
     constructor(private reflectionService: ReflectionsService) {}
 
     @Post()
-    async create(@Body() reflectionDTO: ReflectionsDTO ) {
-        return this.reflectionService.create(reflectionDTO)
+    async create(@Body() body: ReflectionsDTO ) {
+        return this.reflectionService.create(body)
     }
 
     @Get(':id')

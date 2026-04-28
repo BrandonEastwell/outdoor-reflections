@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {ReflectionsController} from "./reflections.controller";
-import {ReflectionsService} from "./reflections.service";
+import {ReflectionsController} from "./reflections/reflections.controller";
+import {ReflectionsService} from "./reflections/reflections.service";
 
 @Module({
   imports: [],
