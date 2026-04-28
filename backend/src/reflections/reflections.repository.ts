@@ -1,9 +1,10 @@
 import {Injectable} from "@nestjs/common";
 import {ReflectionsDTO} from "./reflections.controller";
+import {DatabaseService} from "../database/database.service";
 
 @Injectable()
 export class ReflectionsRepository {
-    constructor() {}
+    constructor(private readonly db: DatabaseService) {}
 
     async create(reflectionEntry: ReflectionsDTO) {
         return reflectionEntry
