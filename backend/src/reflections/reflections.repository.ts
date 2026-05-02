@@ -11,4 +11,9 @@ export class ReflectionsRepository {
         const query = "INSERT INTO reflection (user_id, title, content, drawing)"
         return reflectionEntry
     }
+
+    async delete(entryID: number): QueryResult {
+        const query = "INSERT INTO reflection (user_id, title, content, drawing)"
+        return
+    }
 }
