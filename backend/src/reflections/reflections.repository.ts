@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {ReflectionsDTO} from "./reflections.controller";
+import {ReflectionDTO} from "./reflections.controller";
 import {DatabaseService} from "../database/database.service";
 
 @Injectable()
