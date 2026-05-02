@@ -1,8 +1,9 @@
-import {ReflectionsController, ReflectionDTO} from "./reflections.controller";
+import {ReflectionsController} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ConflictException} from "@nestjs/common";
 import {ReflectionsRepository} from "./reflections.repository";
+import {ReflectionDTO} from "../interfaces/reflection.types";
 
 describe("ReflectionsController", () => {
     let reflectionsController: ReflectionsController
@@ -23,9 +24,10 @@ describe("ReflectionsController", () => {
     })
 
     describe('create', () => {
-        const mockBody: ReflectionsDTO = {
+        const mockBody: ReflectionDTO = {
             content: 'hello',
-            title: 'day 1'
+            title: 'day 1',
+            drawing: null
         }
         const mockServiceReturnValue = { id: 1, ...mockBody }
 
