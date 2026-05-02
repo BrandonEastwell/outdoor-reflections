@@ -39,7 +39,7 @@ describe('ReflectionsRepository', () => {
 
         const query = "SELECT COUNT(*) FROM reflection"
         const before = await db.query(query)
-        await reflectionRepository.create(entry);
+        await reflectionRepository.create(entry, testUserID);
         const after = await db.query(query)
         expect(Number(after.rows[0].count)).toBe(Number(before.rows[0].count) + 1)
     });
