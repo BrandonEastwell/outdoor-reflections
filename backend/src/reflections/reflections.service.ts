@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionsDTO} from "./reflections.controller";
+import {ReflectionDTO} from "./reflections.controller";
 
 
 @Injectable()

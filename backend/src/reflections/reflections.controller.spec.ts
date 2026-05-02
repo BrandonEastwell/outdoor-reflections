@@ -1,4 +1,4 @@
-import {ReflectionsController, ReflectionsDTO} from "./reflections.controller";
+import {ReflectionsController, ReflectionDTO} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ConflictException} from "@nestjs/common";

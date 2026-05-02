@@ -1,10 +1,9 @@
-import {ReflectionsController, ReflectionsDTO} from "./reflections.controller";
+import {ReflectionDTO} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
 
 describe('ReflectionsService', () => {
-    let reflectionsController: ReflectionsController
     let reflectionsService: ReflectionsService
 
     const mockReflectionRepo = {
@@ -14,7 +13,6 @@ describe('ReflectionsService', () => {
 
     beforeEach(async () => {
         const app = await Test.createTestingModule({
-            controllers: [ReflectionsController],
             providers: [ReflectionsService,
                 {
                     provide: ReflectionsRepository,
@@ -22,7 +20,6 @@ describe('ReflectionsService', () => {
                 }],
         }).compile()
 
-        reflectionsController = app.get(ReflectionsController)
         reflectionsService = app.get(ReflectionsService)
     })
 
