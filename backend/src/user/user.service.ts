@@ -7,10 +7,14 @@ export class UserService {
     constructor(private repo: UserRepository) {}
 
     createUser(UserDTO: UserDTO) {
-        
+
     }
 
     findUserByID(id: number) {
+
+    }
+
+    findUserByUsername(username: string) {
 
     }
 
