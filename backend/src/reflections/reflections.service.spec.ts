@@ -1,7 +1,7 @@
-import {ReflectionDTO} from "./reflections.controller";
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
+import {ReflectionDTO} from "../interfaces/reflection.types";
 
 describe('ReflectionsService', () => {
     let reflectionsService: ReflectionsService
@@ -24,7 +24,11 @@ describe('ReflectionsService', () => {
     })
 
     describe('create', () => {
-        const mockReflectionEntry: ReflectionsDTO = { content: "...", title: "day 1" }
+        const mockReflectionEntry: ReflectionDTO = {
+            content: "...",
+            title: "day 1",
+            drawing: null
+        }
 
         it('should create a new reflection entry', async () => {
             mockReflectionRepo.create.mockResolvedValue({id: 0, ...mockReflectionEntry})
