@@ -1,6 +1,6 @@
 export interface Reflection {
     id: number
-    user_id: number
+    userID: number
     title: string
     content: string | null
     drawing: string | null
