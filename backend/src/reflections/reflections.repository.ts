@@ -1,7 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {DatabaseService} from "../database/database.service";
-import {Reflection, ReflectionDTO} from "../interfaces/reflection.types";
-import {QueryResult} from "pg";
+import {ReflectionDTO} from "../interfaces/reflection.types";
 
 @Injectable()
 export class ReflectionsRepository {
@@ -14,8 +13,9 @@ export class ReflectionsRepository {
         return res.rows[0]
     }
 
-    async delete(entryID: number): QueryResult {
-        const query = "INSERT INTO reflection (user_id, title, content, drawing)"
-        return
+    async delete(id: number) {
+        const query = "DELETE FROM reflection WHERE id=$1 RETURNING *"
+        const res = await this.db.query(query, [id])
+        return res.rows[0]
     }
 }
