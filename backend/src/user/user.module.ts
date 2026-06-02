@@ -3,7 +3,7 @@ import {DatabaseModule} from "../database/database.module";
 import {UserController} from "./user.controller";
 import {UserService} from "./user.service";
 import {UserRepository} from "./user.repository";
-import {AuthService} from "./auth.service";
+import {AuthService} from "../auth/auth.service";
 
 @Module({
     imports: [DatabaseModule],
