@@ -2,20 +2,21 @@ import {UserService} from "./user.service";
 import {Controller, Get, Post, Req, Res} from "@nestjs/common";
 import type { Request, Response } from 'express';
 import {UserDTO} from "../interfaces/user.types";
+import {AuthService} from "../auth/auth.service";
 
-@Controller('users')
+@Controller('user')
 export class UserController {
-     constructor(private userService: UserService) {}
+     constructor(private userService: UserService, private authService: AuthService) {}
 
     @Get(':id')
     findOne(@Req() req: Request, @Res() res: Response) {
          const userID: string = req.params.id[0];
-         this.userService.findUserByID(Number(userID))
+         return this.userService.findUserByID(Number(userID))
     }
 
     @Post()
-    create(@Req() req: Request, @Res() res: Response) {
+    register(@Req() req: Request, @Res() res: Response) {
          const UserDTO: UserDTO = req.body;
-         this.userService.createUser(UserDTO)
+         return this.authService.register(UserDTO)
     }
  }
