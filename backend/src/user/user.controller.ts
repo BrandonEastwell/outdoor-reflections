@@ -17,6 +17,6 @@ export class UserController {
     @Post()
     register(@Req() req: Request, @Res() res: Response) {
          const UserDTO: UserDTO = req.body;
-         return this.authService.register(UserDTO)
+         return this.authService.registerUser(UserDTO)
     }
  }

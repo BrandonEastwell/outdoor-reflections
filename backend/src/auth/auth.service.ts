@@ -8,11 +8,15 @@ export class AuthService {
     constructor(private userService: UserService) {
     }
 
-    validateUser(username: string, password: string) {
-
+    async validateUser(username: string, password: string) {
+        const user = (await this.userService.findUserByUsername(username)).rows[0];
+        if (!user) throw new Error('User not found');
+        const isPasswordValid = bcrypt.compareSync(password, user.password);
+        if (!isPasswordValid) throw new Error('Invalid password');
+        return user;
     }
 
-    async register(userDTO: UserDTO) {
+    async registerUser(userDTO: UserDTO) {
         const userExists = await this.userService.findUserByUsername(userDTO.username);
         if (userExists) throw new Error('User already exists');
 
