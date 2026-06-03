@@ -4,7 +4,7 @@ import type { Request, Response } from 'express';
 import {UserDTO} from "../interfaces/user.types";
 import {AuthService} from "../auth/auth.service";
 
-@Controller('user')
+@Controller('users')
 export class UserController {
      constructor(private userService: UserService, private authService: AuthService) {}
 
@@ -15,7 +15,7 @@ export class UserController {
     }
 
     @Post()
-    register(@Req() req: Request, @Res() res: Response) {
+    create(@Req() req: Request, @Res() res: Response) {
          const UserDTO: UserDTO = req.body;
          return this.authService.registerUser(UserDTO)
     }
