@@ -10,7 +10,7 @@ export default function Page() {
                     <span className="">saturday, 27.04</span>
                     <span>0</span>
                 </div>
-                <div className="flex flex-col flex-1 bg-[#ecc8af]/40 rounded-2xl p-3">
+                <div className="flex flex-col flex-1 bg-desert/40 rounded-2xl p-3">
                     <EntryForm />
                 </div>
             </div>

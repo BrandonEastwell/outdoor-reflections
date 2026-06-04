@@ -12,7 +12,8 @@ export default function EntryForm() {
     };
 
     return (
-        <form onSubmit={handleSave} id="journal-entry-form">
+        <form className="relative"
+            onSubmit={handleSave} id="journal-entry-form">
             <DrawingArea />
             <TextArea value={content} onChange={setContent} />
         </form>
