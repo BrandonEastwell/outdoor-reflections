@@ -6,12 +6,12 @@ import {User} from "../interfaces/user.types";
 export class UserRepository {
     constructor(private db: DatabaseService) {}
 
-    async getUserById(id: string) {
-        return this.db.query('SELECT * FROM user_account WHERE id = $1', [id]);
+    async getUserById(id: number) {
+        return (await this.db.query('SELECT * FROM user_account WHERE id = $1', [id])).rows[0];
     }
 
     async getUserByUsername(username: string) {
-        return this.db.query('SELECT * FROM user_account WHERE username = $1', [username]);
+        return (await this.db.query('SELECT * FROM user_account WHERE username = $1', [username])).rows[0];
     }
 
     async createUser(username: string, password: string) {

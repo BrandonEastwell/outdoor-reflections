@@ -12,7 +12,7 @@ export class AuthController {
     @Post()
     async login(@Req() req: Request, @Res() res: Response) {
         try {
-            return await this.authService.login(<User>req.user);
+            return await this.authService.createToken(<User>req.user);
         } catch (err) {
             return res.status(401).json({error: err.message});
         }

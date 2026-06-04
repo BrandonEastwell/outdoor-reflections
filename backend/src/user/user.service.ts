@@ -9,12 +9,16 @@ export class UserService {
         return this.repo.createUser(username, password)
     }
 
-    findUserByID(id: number) {
-
+    async findUserByID(id: number) {
+        const user = await this.repo.getUserById(id);
+        if (!user) return null;
+        return user;
     }
 
-    findUserByUsername(username: string) {
-        return this.repo.getUserByUsername(username)
+    async findUserByUsername(username: string) {
+        const user = await this.repo.getUserByUsername(username)
+        if (!user) return null;
+        return user;
     }
 
     deleteUser() {
