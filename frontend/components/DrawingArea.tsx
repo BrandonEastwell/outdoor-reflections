@@ -1,11 +1,12 @@
 "use client"
 import { useRef, useState } from "react";
-
+import { getStroke } from "perfect-freehand";
+import {getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 
 export default function DrawingArea() {
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
     const drawAreaRef = useRef<HTMLDivElement | null>(null);
-    const [lines, setLines] = useState<(number[])[]>([]);
+    const [points, setPoints] = useState<(number[])[]>([]);
 
     const relativeCoordinates = (event: React.MouseEvent) => {
         const boundingRect = drawAreaRef.current?.getBoundingClientRect();
@@ -18,7 +19,7 @@ export default function DrawingArea() {
     const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.button !== 0) return;
         const point = relativeCoordinates(event);
-        point && setLines((prevLines) => [...prevLines, point]);
+        point && setPoints((prevLines) => [...prevLines, point]);
         setIsDrawing(true);
     };
 
@@ -26,8 +27,15 @@ export default function DrawingArea() {
         if (!isDrawing) return;
 
         const point = relativeCoordinates(event);
-        point && setLines((prevLines) => [...prevLines, point]);
+        point && setPoints((prevLines) => [...prevLines, point]);
     };
+
+    const stroke = getStroke(points, {
+        size: 5,
+        streamline: 0.5
+    });
+
+    const pathData = getSvgPathFromStroke(stroke);
 
     return (
         <div
@@ -36,7 +44,9 @@ export default function DrawingArea() {
             onMouseMove={handleMouseMove}
             onMouseUp={() => setIsDrawing(false)}
         >
-            {/* Drawing canvas goes here */}
+            <svg>
+                <path d={pathData} />
+            </svg>
         </div>
     );
 }
