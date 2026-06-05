@@ -2,7 +2,6 @@
 import EntryForm from "@/components/EntryForm";
 import {useState} from "react";
 import {EditMode} from "@/types/customTypes";
-import DrawIcon from "@/components/DrawIcon";
 import { SVG_PATHS } from "@/constants/svgPaths";
 import IconButton from "@/components/IconButton";
 
@@ -16,7 +15,7 @@ export default function EntryArea() {
                     <span className="">saturday, 27.04</span>
                 </div>
                 <div className="flex flex-row items-center gap-2">
-                    <IconButton mode={mode} setMode={setMode} SVGPaths={SVG_PATHS.drawIcon} fill={mode === "drawing" ? "#ce796b" : "#000000"} />
+                    <IconButton mode={mode} setMode={setMode} SVGPaths={SVG_PATHS.reverseIcon} fill={mode === "drawing" ? "#ce796b" : "#000000"} iconSize={2} />
                 </div>
             </div>
             <div className="flex flex-col flex-1 bg-desert/40 rounded-2xl p-3">
