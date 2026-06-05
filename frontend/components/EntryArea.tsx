@@ -15,7 +15,14 @@ export default function EntryArea() {
                     <span className="">saturday, 27.04</span>
                 </div>
                 <div className="flex flex-row items-center gap-2">
-                    <IconButton mode={mode} setMode={setMode} SVGPaths={SVG_PATHS.reverseIcon} fill={mode === "drawing" ? "#ce796b" : "#000000"} iconSize={2} />
+                    <IconButton svgIconPath={SVG_PATHS.reverseIcon}
+                                fill={"#000000"}
+                                iconSize={2}
+                                onClick={() => {}} />
+                    <IconButton svgIconPath={SVG_PATHS.drawIcon}
+                                fill={mode === "drawing" ? "#ce796b" : "#000000"}
+                                iconSize={2}
+                                onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
                 </div>
             </div>
             <div className="flex flex-col flex-1 bg-desert/40 rounded-2xl p-3">

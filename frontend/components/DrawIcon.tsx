@@ -8,7 +8,7 @@ import {Point} from "@/types/customTypes";
 function createPointsFromSVGPath(path: string) {
     const points: Point[] = [];
 
-    // Check if path starts with 'M' for a path, else it's a line
+    // Check if path starts with 'M' for a path, else it's a line'
     if (path[0] === "M") {
         const props = new svgPathProperties(path);
         const length = props.getTotalLength();
@@ -34,7 +34,7 @@ export default function DrawIcon({ svgPaths, fill, iconSize = 2 } : { svgPaths: 
 
         const stroke = getStroke(points, {
             size: iconSize,
-            thinning: 0,
+            thinning: 0.5,
             streamline: 0.5,
             smoothing: 0.5,
             easing: (t) => t,

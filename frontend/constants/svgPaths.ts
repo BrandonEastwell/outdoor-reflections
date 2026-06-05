@@ -1,5 +1,6 @@
 export const SVG_PATHS = {
-    reverseIcon: ["1 4 1 10 7 10", "M3.51 15a9 9 0 1 0 2.13-9.36L1 10"],
+    reverseIcon: ["1 4 1 10 7 10", "M2.51 15a9 9 0 1 0 2.13-9.36L1 10"],
+    forwardIcon: ["23 4 23 10 17 10", "M20.49 15a9 9 0 1 1-2.12-9.36L23 10"],
     typeIcon: [""],
     editIcon: ["M12 20h9 ", "M16.5 3.5a2.121 2.121 0 0 1 3 3L10 19l-4 1 1-4L16.5 3.5z"],
     drawIcon: [
