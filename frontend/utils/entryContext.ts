@@ -4,6 +4,11 @@ import {EntryDraft} from "@/types/entryTypes";
 type EntryContextValue = {
     entry: EntryDraft;
     setEntry: Dispatch<SetStateAction<EntryDraft>>;
+    drawHistory: string[]
 };
 
-export const EntryContext = createContext<EntryContextValue>({entry: {title: null, content: "", date: new Date(), drawingPaths: []}, setEntry: () => {}});
+export const EntryContext = createContext<EntryContextValue>({
+    entry: { title: "", content: "", date: new Date(), drawingPaths: [] },
+    setEntry: () => {},
+    drawHistory: []
+});
