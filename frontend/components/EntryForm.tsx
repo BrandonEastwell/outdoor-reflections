@@ -2,8 +2,9 @@
 import { useState } from "react";
 import DrawingArea from "./DrawingArea";
 import TextArea from "./TextArea";
+import {EditMode} from "@/types/customTypes";
 
-export default function EntryForm() {
+export default function EntryForm({ mode }: { mode: EditMode }) {
     const [content, setContent] = useState<undefined | string>();
 
     const handleSave = (event: React.FormEvent<HTMLFormElement>) => {
@@ -14,8 +15,8 @@ export default function EntryForm() {
     return (
         <form className="relative"
             onSubmit={handleSave} id="journal-entry-form">
-            <DrawingArea />
-            <TextArea value={content} onChange={setContent} />
+            <DrawingArea focus={mode === "drawing"} />
+            <TextArea value={content} onChange={setContent} focus={mode === "text"} />
         </form>
     );
 }

@@ -1,4 +1,5 @@
 import {Vec2} from "perfect-freehand";
+import polygonClipping from 'polygon-clipping'
 
 export function getSvgPathFromStroke(points: Vec2[], closed = true) {
     const average = (a: number, b: number) => (a + b) / 2
@@ -32,4 +33,18 @@ export function getSvgPathFromStroke(points: Vec2[], closed = true) {
     }
 
     return result
+}
+
+export function getFlatSvgPathFromStroke(stroke: Vec2[]) {
+    const faces = polygonClipping.union([stroke])
+
+    const d: string[] = []
+
+    faces.forEach((face) =>
+        face.forEach((points) => {
+            d.push(getSvgPathFromStroke(points))
+        })
+    )
+
+    return d.join(' ')
 }

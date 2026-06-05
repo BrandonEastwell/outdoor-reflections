@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { getStroke } from "perfect-freehand";
 import {getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 
-export default function DrawingArea() {
+export default function DrawingArea({ focus }: { focus: boolean }) {
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
     const drawAreaRef = useRef<HTMLDivElement | null>(null);
     const [points, setPoints] = useState<(number[])[]>([]);
@@ -21,7 +21,9 @@ export default function DrawingArea() {
     const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
         if (event.button !== 0) return;
         const point = relativeCoordinates(event);
-        point && setPoints((prevLines) => [...prevLines, point]);
+        if (point) {
+            setPoints((prevLines) => [...prevLines, point]);
+        }
         setIsDrawing(true);
     };
 
@@ -29,7 +31,9 @@ export default function DrawingArea() {
         if (!isDrawing) return;
 
         const point = relativeCoordinates(event);
-        point && setPoints((prevLines) => [...prevLines, point]);
+        if (point) {
+            setPoints((prevLines) => [...prevLines, point]);
+        }
     };
 
     const handlePointerUp = (pathData: string) => {
@@ -53,7 +57,7 @@ export default function DrawingArea() {
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={() => handlePointerUp(pathData)}
-            className="absolute w-full h-full z-10"
+            className={"absolute inset-0 h-full w-full z-10" + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}
         >
             <svg width="100%" height="100%">
                 {points && isDrawing && <path d={pathData} />}
