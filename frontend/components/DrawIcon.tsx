@@ -3,24 +3,34 @@ import { svgPathProperties } from "svg-path-properties";
 import {getStroke} from "perfect-freehand";
 import {getFlatSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 import {lineToPoints} from "@/utils/svgPoints";
+import {Point} from "@/types/customTypes";
+
+function createPointsFromSVGPath(path: string) {
+    const points: Point[] = [];
+
+    // Check if path starts with 'M' for a path, else it's a line
+    if (path[0] === "M") {
+        const props = new svgPathProperties(path);
+        const length = props.getTotalLength();
+
+        for (let i = 0; i <= length; i += length / 100) {
+            const point = props.getPointAtLength(i);
+            points.push([point.x, point.y]);
+        }
+    } else {
+        const pointsFromLine = lineToPoints(path);
+        points.push(...pointsFromLine);
+    }
+
+    return points
+}
 
 export default function DrawIcon({ svgPaths, fill, iconSize = 2 } : { svgPaths: string[], fill?: string, iconSize?: number }) {
     const paths: string[] = [];
 
     for (const path of svgPaths) {
-        const points: [number, number][] = [];
-        if (path[0] === "M") {
-            const props = new svgPathProperties(path);
-            const length = props.getTotalLength();
-
-            for (let i = 0; i <= length; i += length / 100) {
-                const point = props.getPointAtLength(i);
-                points.push([point.x, point.y]);
-            }
-        } else {
-            const pointsFromLine = lineToPoints(path);
-            points.push(...pointsFromLine);
-        }
+        const points: Point[] = [];
+        points.push(...createPointsFromSVGPath(path));
 
         const stroke = getStroke(points, {
             size: iconSize,
