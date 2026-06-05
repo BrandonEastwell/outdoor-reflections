@@ -13,7 +13,8 @@ export default function EntryEditor() {
         title: "",
         content: "",
         date: new Date(),
-        drawingPaths: []
+        drawingPaths: [],
+        created_at: new Date(),
     });
 
     const saveEntry = () => {
