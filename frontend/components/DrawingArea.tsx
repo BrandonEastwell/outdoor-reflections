@@ -1,13 +1,14 @@
 "use client"
-import { useRef, useState } from "react";
+import {useContext, useRef, useState} from "react";
 import { getStroke } from "perfect-freehand";
 import {getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
+import {EntryContext} from "@/utils/entryContext";
 
 export default function DrawingArea({ focus }: { focus: boolean }) {
+    const { entry, setEntry } = useContext(EntryContext);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
     const drawAreaRef = useRef<HTMLDivElement | null>(null);
     const [points, setPoints] = useState<(number[])[]>([]);
-    const [paths, setPaths] = useState<string[]>([]);
 
     const relativeCoordinates = (event: React.PointerEvent) => {
         const boundingRect = drawAreaRef.current?.getBoundingClientRect();
@@ -37,7 +38,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     };
 
     const handlePointerUp = (pathData: string) => {
-        setPaths((prevPaths) => [...prevPaths, pathData]);
+        setEntry({...entry, drawingPaths: [...entry.drawingPaths, pathData]});
         setIsDrawing(false);
         setPoints([]);
     }
@@ -61,7 +62,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
         >
             <svg width="100%" height="100%">
                 {points && isDrawing && <path d={pathData} />}
-                {paths.map((path, index) => (
+                {entry.drawingPaths.map((path, index) => (
                     <path key={index} d={path} />
                 ))}
             </svg>
