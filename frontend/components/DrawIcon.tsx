@@ -3,7 +3,7 @@ import { svgPathProperties } from "svg-path-properties";
 import {getStroke} from "perfect-freehand";
 import {getFlatSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 
-export default function DrawIcon({ svgPaths } : { svgPaths: string[] }) {
+export default function DrawIcon({ svgPaths, fill } : { svgPaths: string[], fill?: string }) {
     const paths: string[] = [];
 
     for (const path of svgPaths) {
@@ -41,7 +41,7 @@ export default function DrawIcon({ svgPaths } : { svgPaths: string[] }) {
     }
 
     return (
-        <svg height="24" width="24" viewBox="0 0 24 24">
+        <svg height="24" width="24" viewBox="0 0 24 24" fill={fill} xmlns="http://www.w3.org/2000/svg">
             { paths.map((path, index) => <path key={index} d={path}/>) }
         </svg>
     )

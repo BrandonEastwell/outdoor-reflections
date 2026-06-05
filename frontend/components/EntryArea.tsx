@@ -4,6 +4,7 @@ import {useState} from "react";
 import {EditMode} from "@/types/customTypes";
 import DrawIcon from "@/components/DrawIcon";
 import { SVG_PATHS } from "@/constants/svgPaths";
+import IconButton from "@/components/IconButton";
 
 export default function EntryArea() {
     const [mode, setMode] = useState<EditMode>("text");
@@ -15,9 +16,7 @@ export default function EntryArea() {
                     <span className="">saturday, 27.04</span>
                 </div>
                 <div className="flex flex-row items-center gap-2">
-                    <DrawIcon svgPaths={SVG_PATHS.drawIcon}></DrawIcon>
-                    <button type="button" onClick={() => setMode("drawing")} className="mr-2">Draw</button>
-                    <button type="button" onClick={() => setMode("text")}>Text</button>
+                    <IconButton mode={mode} setMode={setMode} SVGPaths={SVG_PATHS.drawIcon} fill={mode === "drawing" ? "#ce796b" : "#000000"} />
                 </div>
             </div>
             <div className="flex flex-col flex-1 bg-desert/40 rounded-2xl p-3">
