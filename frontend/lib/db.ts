@@ -1,10 +1,11 @@
-import {Dexie, EntityTable} from 'dexie';
-import {Entry} from "@/types/entryTypes";
 
-export const db = new Dexie('Reflections') as Dexie & {
-    reflections: EntityTable<Entry, "id">
-};
+const openReflectionEntriesDB = () => {
+    const db = indexedDB.open("reflections-db", 1);
+    db.onupgradeneeded = () => {
+        db.result.createObjectStore("reflections", { keyPath: "id" });
+    };
 
-db.version(1).stores({reflections: '++id, title, content, date, drawingPaths, created_at'});
+    return db;
+}
 
-export default db;
+export default openReflectionEntriesDB;

@@ -5,7 +5,7 @@ import {getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 import {EntryContext} from "@/utils/entryContext";
 
 export default function DrawingArea({ focus }: { focus: boolean }) {
-    const { entry, setEntry } = useContext(EntryContext);
+    const { entry, setEntry, drawColor } = useContext(EntryContext);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
     const drawAreaRef = useRef<HTMLDivElement | null>(null);
     const [points, setPoints] = useState<(number[])[]>([]);
@@ -38,7 +38,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     };
 
     const handlePointerUp = (pathData: string) => {
-        setEntry({...entry, drawingPaths: [...entry.drawingPaths, pathData]});
+        setEntry({...entry, drawPaths: [...entry.drawPaths, { path: pathData, color: drawColor }]});
         setIsDrawing(false);
         setPoints([]);
     }
@@ -61,9 +61,9 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
             className={"absolute inset-0 h-full w-full z-10" + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}
         >
             <svg width="100%" height="100%">
-                {points && isDrawing && <path d={pathData} />}
-                {entry.drawingPaths.map((path, index) => (
-                    <path key={index} d={path} />
+                {points && isDrawing && <path d={pathData} fill={drawColor} />}
+                {entry.drawPaths.map((drawPath, index) => (
+                    <path key={index} d={drawPath.path} fill={drawPath.color} />
                 ))}
             </svg>
         </div>

@@ -1,41 +1,63 @@
 "use client"
 import EntryForm from "@/components/EntryForm";
-import {useState} from "react";import {EditMode} from "@/types/customTypes";
-import { SVG_PATHS } from "@/constants/svgPaths";
+import {useState} from "react";
+import {EditMode} from "@/types/customTypes";
+import {SVG_PATHS} from "@/constants/svgPaths";
 import IconButton from "@/components/IconButton";
-import {EntryDraft} from "@/types/entryTypes";
+import {DrawPath, EntryDraft} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
+import openReflectionEntriesDB from "@/lib/db";
 
 export default function EntryEditor() {
     const [mode, setMode] = useState<EditMode>("text");
-    const [drawHistory, setDrawHistory] = useState<string[]>([]);
+    const [drawColor, setDrawColor] = useState<string>('#000000')
+    const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
     const [entry, setEntry] = useState<EntryDraft>({
         title: "",
         content: "",
         date: new Date(),
-        drawingPaths: [],
-        created_at: new Date(),
+        drawPaths: []
     });
 
-    const saveEntry = () => {
+    const onSaveEntry = () => {
+        saveEntryToOfflineDB();
+    }
 
-    };
+    const saveEntryToOfflineDB = () => {
+        try {
+            const db = openReflectionEntriesDB();
+            return db.onsuccess = () => {
+                const transaction = db.result.transaction("entries", "readwrite");
+                const store = transaction.objectStore("entries");
+                const { result } = store.put(entry);
+                transaction.oncomplete = () => {
+                    console.log(`Entry id=${result} saved to offline database`);
+                }
+                return result
+            }
+        } catch (error) {
+            console.error("Error saving entry to offline database:", error);
+        }
+    }
 
     const handleUndo = () => {
-        if (entry.drawingPaths.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawingPaths: prevEntry.drawingPaths.slice(0, -1)}));
-        setDrawHistory(prevHistory => [...prevHistory, entry.drawingPaths[entry.drawingPaths.length - 1]]);
+        if (entry.drawPaths.length === 0) return;
+        setEntry(prevEntry => ({...prevEntry, drawPaths: prevEntry.drawPaths.slice(0, -1)}));
+        setDrawHistory(prevHistory => [...prevHistory, entry.drawPaths[entry.drawPaths.length - 1]]);
     }
 
     const handleRedo = () => {
         if (drawHistory.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawingPaths: [...prevEntry.drawingPaths, drawHistory[drawHistory.length - 1]]}));
+        setEntry(prevEntry => ({...prevEntry, drawPaths: [...prevEntry.drawPaths, drawHistory[drawHistory.length - 1]]}));
         setDrawHistory(prevHistory => prevHistory.slice(0, -1));
     }
 
+    // initial save to offline db
+    const id = saveEntryToOfflineDB()
+
     return (
         <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
-            <EntryContext value={{entry, setEntry, drawHistory}}>
+            <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
                 <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                     <div>
                         <span className="">saturday, 27.04</span>
@@ -65,7 +87,7 @@ export default function EntryEditor() {
                         <IconButton svgIconPath={SVG_PATHS.saveIcon}
                                     fill={"#000000"}
                                     iconSize={2}
-                                    onClick={() => {}} />
+                                    onClick={() => onSaveEntry()} />
                     </div>
                 </div>
             </EntryContext>

@@ -1,9 +1,15 @@
+export type DrawPath = {
+    path: string;
+    color: string;
+};
+
+type EntrySyncStatus = "synced" | "pending" | "failed";
+
 export type EntryDraft = {
     title: string;
     content: string;
     date: Date;
-    drawingPaths: string[];
-    created_at: Date;
+    drawPaths: DrawPath[];
 }
 
 export type Entry = {
@@ -11,6 +17,9 @@ export type Entry = {
     title: string;
     content: string;
     date: Date;
-    drawing: string[];
-    created_at: string;
+    drawing: DrawPath[];
+    sync_status: EntrySyncStatus;
+    last_synced_at: Date;
+    created_at: Date;
+    updated_at: Date;
 }
