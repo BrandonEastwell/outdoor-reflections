@@ -32,13 +32,13 @@ export default function EntryEditor() {
 
     const handleUndo = () => {
         if (entry.drawings.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawPaths: prevEntry.drawings.slice(0, -1)}));
+        setEntry(prevEntry => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
         setDrawHistory(prevHistory => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
     }
 
     const handleRedo = () => {
         if (drawHistory.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawPaths: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
+        setEntry(prevEntry => ({...prevEntry, drawings: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
         setDrawHistory(prevHistory => prevHistory.slice(0, -1));
     }
 

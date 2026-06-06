@@ -38,7 +38,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     };
 
     const handlePointerUp = (pathData: string) => {
-        setEntry({...entry, drawings: [...entry.drawPaths, { path: pathData, color: drawColor }]});
+        setEntry({...entry, drawings: [...entry.drawings, { path: pathData, color: drawColor }]});
         setIsDrawing(false);
         setPoints([]);
     }
@@ -62,7 +62,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
         >
             <svg width="100%" height="100%">
                 {points && isDrawing && <path d={pathData} fill={drawColor} />}
-                {entry.drawPaths.map((drawPath, index) => (
+                {entry.drawings.map((drawPath, index) => (
                     <path key={index} d={drawPath.path} fill={drawPath.color} />
                 ))}
             </svg>

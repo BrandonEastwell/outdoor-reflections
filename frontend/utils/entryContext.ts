@@ -2,7 +2,7 @@ import {createContext, Dispatch, SetStateAction} from "react";
 import {DrawPath, Entry} from "@/types/entryTypes";
 
 type EntryContextValue = {
-    entry: Partial<Entry>;
+    entry: Entry;
     setEntry: Dispatch<SetStateAction<Entry>>;
     drawHistory: DrawPath[];
     drawColor: string;
@@ -15,7 +15,10 @@ export const EntryContext = createContext<EntryContextValue>({
         content: "",
         date: new Date(),
         drawings: [],
-        sync_status: "synced",
+        sync_status: "pending",
+        last_synced_at: null,
+        created_at: new Date(),
+        updated_at: new Date()
     },
     setEntry: () => {},
     drawHistory: [],

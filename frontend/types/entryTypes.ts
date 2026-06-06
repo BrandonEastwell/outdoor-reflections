@@ -5,13 +5,6 @@ export type DrawPath = {
 
 type EntrySyncStatus = "synced" | "pending" | "failed";
 
-export type EntryDraft = {
-    title: string;
-    content: string;
-    date: Date;
-    drawPaths: DrawPath[];
-}
-
 export type Entry = {
     id?: number;
     title: string;
