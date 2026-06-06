@@ -10,6 +10,7 @@ import db from "@/lib/db";
 
 const offlineDB = new db();
 const initEntry: Entry = {
+    id: crypto.randomUUID(),
     created_at: new Date(),
     last_synced_at: null,
     sync_status: "pending",

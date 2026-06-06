@@ -6,7 +6,7 @@ export type DrawPath = {
 type EntrySyncStatus = "synced" | "pending" | "failed";
 
 export type Entry = {
-    id?: number;
+    id: string;
     title: string;
     content: string;
     date: Date;
