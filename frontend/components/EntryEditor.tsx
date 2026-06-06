@@ -4,56 +4,43 @@ import {useState} from "react";
 import {EditMode} from "@/types/customTypes";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import IconButton from "@/components/IconButton";
-import {DrawPath, EntryDraft} from "@/types/entryTypes";
+import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
-import openReflectionEntriesDB from "@/lib/db";
+import db from "@/lib/db";
+
+const offlineDB = new db();
+const initEntry: Entry = {
+    created_at: new Date(),
+    last_synced_at: null,
+    sync_status: "pending",
+    updated_at: new Date(),
+    title: "",
+    content: "",
+    date: new Date(),
+    drawings: []
+}
 
 export default function EntryEditor() {
     const [mode, setMode] = useState<EditMode>("text");
     const [drawColor, setDrawColor] = useState<string>('#000000')
     const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
-    const [entry, setEntry] = useState<EntryDraft>({
-        title: "",
-        content: "",
-        date: new Date(),
-        drawPaths: []
-    });
+    const [entry, setEntry] = useState<Entry>(initEntry);
 
     const onSaveEntry = () => {
-        saveEntryToOfflineDB();
-    }
-
-    const saveEntryToOfflineDB = () => {
-        try {
-            const db = openReflectionEntriesDB();
-            return db.onsuccess = () => {
-                const transaction = db.result.transaction("entries", "readwrite");
-                const store = transaction.objectStore("entries");
-                const { result } = store.put(entry);
-                transaction.oncomplete = () => {
-                    console.log(`Entry id=${result} saved to offline database`);
-                }
-                return result
-            }
-        } catch (error) {
-            console.error("Error saving entry to offline database:", error);
-        }
+        offlineDB.saveEntryToOfflineDB(entry, "reflections");
     }
 
     const handleUndo = () => {
-        if (entry.drawPaths.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawPaths: prevEntry.drawPaths.slice(0, -1)}));
-        setDrawHistory(prevHistory => [...prevHistory, entry.drawPaths[entry.drawPaths.length - 1]]);
+        if (entry.drawings.length === 0) return;
+        setEntry(prevEntry => ({...prevEntry, drawPaths: prevEntry.drawings.slice(0, -1)}));
+        setDrawHistory(prevHistory => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
     }
 
     const handleRedo = () => {
         if (drawHistory.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawPaths: [...prevEntry.drawPaths, drawHistory[drawHistory.length - 1]]}));
+        setEntry(prevEntry => ({...prevEntry, drawPaths: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
         setDrawHistory(prevHistory => prevHistory.slice(0, -1));
     }
-
-    // initial save to offline db
-    const id = saveEntryToOfflineDB()
 
     return (
         <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">

@@ -38,7 +38,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     };
 
     const handlePointerUp = (pathData: string) => {
-        setEntry({...entry, drawPaths: [...entry.drawPaths, { path: pathData, color: drawColor }]});
+        setEntry({...entry, drawings: [...entry.drawPaths, { path: pathData, color: drawColor }]});
         setIsDrawing(false);
         setPoints([]);
     }

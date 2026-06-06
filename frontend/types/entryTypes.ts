@@ -13,13 +13,13 @@ export type EntryDraft = {
 }
 
 export type Entry = {
-    id: number;
+    id?: number;
     title: string;
     content: string;
     date: Date;
-    drawing: DrawPath[];
+    drawings: DrawPath[];
     sync_status: EntrySyncStatus;
-    last_synced_at: Date;
+    last_synced_at: Date | null;
     created_at: Date;
     updated_at: Date;
 }
