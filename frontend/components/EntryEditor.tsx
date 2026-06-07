@@ -1,6 +1,6 @@
 "use client"
 import EntryForm from "@/components/EntryForm";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {EditMode} from "@/types/customTypes";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import IconButton from "@/components/IconButton";
@@ -19,6 +19,15 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const onSaveEntry = async () => {
         await db.saveToDB(entry, "reflections");
     }
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            onSaveEntry()
+        }, 1000);
+        return () => clearTimeout(timeout);
+    }, [entry])
+
+
 
     const drawUndo = () => {
         if (entry.drawings.length === 0) return;
