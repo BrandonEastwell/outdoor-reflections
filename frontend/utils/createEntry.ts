@@ -1,6 +1,8 @@
 import {Entry} from "@/types/entryTypes";
+import Database from "@/lib/database";
+const db = new Database();
 
-export default function createEntry() {
+export default async function createEntry() {
     const initEntry: Entry = {
         id: crypto.randomUUID(),
         created_at: new Date(),
@@ -13,5 +15,6 @@ export default function createEntry() {
         drawings: []
     }
 
+    await db.saveToDB(initEntry, "reflections")
     return initEntry
 }

@@ -1,4 +1,3 @@
-import EntryEditor from "../../../components/EntryEditor";
 import EntryEditorLoader from "@/components/EntryEditorLoader";
 
 export default function Page({ params }: { params: { id: string } }) {

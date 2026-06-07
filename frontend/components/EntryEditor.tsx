@@ -8,7 +8,7 @@ import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
 
-const offlineDB = new Database();
+const db = new Database();
 
 export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [mode, setMode] = useState<EditMode>("text");
@@ -16,17 +16,17 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
     const [entry, setEntry] = useState<Entry>(initEntry);
 
-    const onSaveEntry = () => {
-        offlineDB.saveToDB(entry, "reflections");
+    const onSaveEntry = async () => {
+        await db.saveToDB(entry, "reflections");
     }
 
-    const handleUndo = () => {
+    const drawUndo = () => {
         if (entry.drawings.length === 0) return;
         setEntry(prevEntry => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
         setDrawHistory(prevHistory => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
     }
 
-    const handleRedo = () => {
+    const drawRedo = () => {
         if (drawHistory.length === 0) return;
         setEntry(prevEntry => ({...prevEntry, drawings: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
         setDrawHistory(prevHistory => prevHistory.slice(0, -1));
@@ -54,11 +54,11 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                         <IconButton svgIconPath={SVG_PATHS.reverseIcon}
                                     fill={"#000000"}
                                     iconSize={2}
-                                    onClick={() => handleUndo()} />
+                                    onClick={() => drawUndo()} />
                         <IconButton svgIconPath={SVG_PATHS.forwardIcon}
                                     fill={"#000000"}
                                     iconSize={2}
-                                    onClick={() => handleRedo()} />
+                                    onClick={() => drawRedo()} />
                     </div>
                     <div className="flex flex-row items-center gap-1">
                         <IconButton svgIconPath={SVG_PATHS.saveIcon}
