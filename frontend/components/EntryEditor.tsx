@@ -6,29 +6,18 @@ import {SVG_PATHS} from "@/constants/svgPaths";
 import IconButton from "@/components/IconButton";
 import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
-import db from "@/lib/db";
+import Database from "../lib/database";
 
-const offlineDB = new db();
-const initEntry: Entry = {
-    id: crypto.randomUUID(),
-    created_at: new Date(),
-    last_synced_at: null,
-    sync_status: "pending",
-    updated_at: new Date(),
-    title: "",
-    content: "",
-    date: new Date(),
-    drawings: []
-}
+const offlineDB = new Database();
 
-export default function EntryEditor() {
+export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [mode, setMode] = useState<EditMode>("text");
     const [drawColor, setDrawColor] = useState<string>('#000000')
     const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
     const [entry, setEntry] = useState<Entry>(initEntry);
 
     const onSaveEntry = () => {
-        offlineDB.saveEntryToOfflineDB(entry, "reflections");
+        offlineDB.saveToDB(entry, "reflections");
     }
 
     const handleUndo = () => {

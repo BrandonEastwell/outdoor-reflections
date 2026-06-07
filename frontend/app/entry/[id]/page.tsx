@@ -1,6 +1,6 @@
-import EntryEditor from "../../components/EntryEditor";
+import EntryEditor from "../../../components/EntryEditor";
 
-export default function Page() {
+export default function Page({ params }: { params: { id: string } }) {
 
     return (
         <main className="flex flex-col flex-1 items-center">
