@@ -27,8 +27,6 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
         return () => clearTimeout(timeout);
     }, [entry])
 
-
-
     const drawUndo = () => {
         if (entry.drawings.length === 0) return;
         setEntry(prevEntry => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));

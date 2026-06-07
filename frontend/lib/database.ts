@@ -23,6 +23,19 @@ export default class Database {
         })
     }
 
+    async getAllFromDB(name: DBNames): Promise<Entry[] | undefined> {
+        const db = await this.openDB(name);
+
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(name, "readonly");
+            const store = transaction.objectStore(name);
+            const request = store.getAll();
+
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
     async getFromDB(id: string, name: DBNames): Promise<Entry | undefined> {
         const db = await this.openDB(name);
 
