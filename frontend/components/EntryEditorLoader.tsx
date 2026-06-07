@@ -13,7 +13,7 @@ export default function EntryEditorLoader({ id } : { id: string }) {
         async function loadEntry() {
             try {
                 const data = await db.getFromDB(id, "reflections")
-                data && setEntry(data)
+                if (data) setEntry(data);
             } catch (error) {
                 console.error("Failed to load entry", error)
             }

@@ -30,6 +30,7 @@ export default class Database {
             const transaction = db.transaction(name, "readonly");
             const store = transaction.objectStore(name);
 
+            if (!id) return reject(`[${name}DB] No key provided`);
             const request = store.get(id);
 
             request.onsuccess = () => resolve(request.result);
