@@ -23,7 +23,7 @@ export default class Database {
         })
     }
 
-    async getFromDB(id: string, name: DBNames) {
+    async getFromDB(id: string, name: DBNames): Promise<Entry | undefined> {
         const db = await this.openDB(name);
 
         return new Promise((resolve, reject) => {
