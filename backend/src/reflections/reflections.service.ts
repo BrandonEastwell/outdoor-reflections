@@ -1,13 +1,13 @@
 import {Injectable} from "@nestjs/common";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionDTO} from "../interfaces/reflection.types";
+import {ReflectionEntryDTO} from "../interfaces/reflection.types";
 
 
 @Injectable()
 export class ReflectionsService {
     constructor(private repo: ReflectionsRepository) {}
 
-    createEntry(reflectionEntry: ReflectionDTO, userID: number) {
+    createEntry(reflectionEntry: ReflectionEntryDTO, userID: number) {
         return this.repo.create(reflectionEntry, userID)
     }
 }

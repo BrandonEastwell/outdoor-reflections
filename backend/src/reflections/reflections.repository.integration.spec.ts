@@ -1,7 +1,7 @@
 import {DatabaseService} from "../database/database.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionDTO} from "../interfaces/reflection.types";
+import {ReflectionEntryDTO} from "../interfaces/reflection.types";
 import {DatabaseModule} from "../database/database.module";
 
 describe('ReflectionsRepository', () => {
@@ -31,7 +31,7 @@ describe('ReflectionsRepository', () => {
     })
 
     it('should create a new reflections entry in reflections table', async () => {
-        const entry: ReflectionDTO = {
+        const entry: ReflectionEntryDTO = {
             title: "test entry",
             content: "it is day 3",
             drawing: null

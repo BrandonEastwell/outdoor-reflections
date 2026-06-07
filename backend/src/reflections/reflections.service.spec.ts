@@ -1,7 +1,7 @@
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionDTO} from "../interfaces/reflection.types";
+import {ReflectionEntryDTO} from "../interfaces/reflection.types";
 
 describe('ReflectionsService', () => {
     let reflectionsService: ReflectionsService
@@ -24,7 +24,7 @@ describe('ReflectionsService', () => {
     })
 
     describe('create', () => {
-        const mockReflectionEntry: ReflectionDTO = {
+        const mockReflectionEntry: ReflectionEntryDTO = {
             content: "...",
             title: "day 1",
             drawing: null

@@ -1,12 +1,12 @@
 import {Injectable} from "@nestjs/common";
 import {DatabaseService} from "../database/database.service";
-import {ReflectionDTO} from "../interfaces/reflection.types";
+import {ReflectionEntryDTO} from "../interfaces/reflection.types";
 
 @Injectable()
 export class ReflectionsRepository {
     constructor(private readonly db: DatabaseService) {}
 
-    async create(reflectionDTO: ReflectionDTO, userID: number) {
+    async create(reflectionDTO: ReflectionEntryDTO, userID: number) {
         const query = "INSERT INTO reflection (user_id, title, content, drawing) VALUES ($1, $2, $3, $4) RETURNING *"
         const res = await this.db.query(query,
             [userID, reflectionDTO.title, reflectionDTO.content, reflectionDTO.drawing])

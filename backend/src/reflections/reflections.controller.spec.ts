@@ -3,7 +3,7 @@ import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ConflictException} from "@nestjs/common";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionDTO} from "../interfaces/reflection.types";
+import {ReflectionEntryDTO} from "../interfaces/reflection.types";
 
 describe("ReflectionsController", () => {
     let reflectionsController: ReflectionsController
@@ -24,7 +24,7 @@ describe("ReflectionsController", () => {
     })
 
     describe('create', () => {
-        const mockBody: ReflectionDTO = {
+        const mockBody: ReflectionEntryDTO = {
             content: 'hello',
             title: 'day 1',
             drawing: null
@@ -37,7 +37,7 @@ describe("ReflectionsController", () => {
         });
 
         it('should return conflict exception if entry exists', () => {
-            reflectionsService.createEntry = jest.fn().mockRejectedValue(new ConflictException("Entry already exists"))
+            reflectionsService.createEntry = jest.fn().mockRejectedValue(new ConflictException("EntryEditor already exists"))
             expect(reflectionsController.create(mockBody)).rejects.toThrow(ConflictException)
         });
     })
