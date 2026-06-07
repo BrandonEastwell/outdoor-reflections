@@ -9,9 +9,8 @@ export class ReflectionsController {
 
     @Post()
     async create(@Req() req: Request, @Res() res: Response) {
-        const { title, drawing, content, userID } = req.body;
-        const dto: ReflectionEntryDTO = { title, drawing, content }
-        return this.reflectionService.createEntry(dto, userID)
+        const { userId, entry }: { userId: number, entry: ReflectionEntryDTO } = req.body;
+        return this.reflectionService.createEntry(entry, userId)
     }
 
     @Get(':id')
@@ -22,6 +21,6 @@ export class ReflectionsController {
 
     @Post('sync')
     async syncReflections(@Req() req: Request, @Res() res: Response) {
-        const { userID, entries } = req.body;
+        const { userId, entries }: { userId: number, entries: ReflectionEntryDTO } = req.body;
     }
 }
