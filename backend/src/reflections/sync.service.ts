@@ -8,6 +8,6 @@ export class SyncService {
 
     async syncEntries(entries: ReflectionEntryDTO[], userId: number) {
         const entriesToInsert: Reflection[] = entries.map(entry => ({...entry, user_id: userId }))
-        await this.repo.upsert(entriesToInsert)
+        return this.repo.upsert(entriesToInsert)
     }
 }

@@ -25,14 +25,20 @@ describe('ReflectionsService', () => {
 
     describe('create', () => {
         const mockReflectionEntry: ReflectionEntryDTO = {
+            created_at: new Date(),
+            date: new Date(),
+            id: "",
+            last_synced_at: null,
+            sync_status: "pending",
+            updated_at: new Date(),
             content: "...",
             title: "day 1",
-            drawing: null
+            drawing_paths: []
         }
 
         it('should create a new reflection entry', async () => {
-            mockReflectionRepo.create.mockResolvedValue({id: 0, ...mockReflectionEntry})
-            const res = await reflectionsService.createEntry(mockReflectionEntry);
+            mockReflectionRepo.create.mockResolvedValue({user_id: 0, ...mockReflectionEntry})
+            const res = await reflectionsService.createEntry(mockReflectionEntry, 0);
             expect(res).toMatchObject(mockReflectionEntry)
             expect(res).toHaveProperty("id")
         });
