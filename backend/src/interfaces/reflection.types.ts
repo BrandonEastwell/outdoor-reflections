@@ -7,6 +7,7 @@ type EntrySyncStatus = "synced" | "pending" | "failed";
 
 export type Reflection = {
     id: string;
+    user_id: number;
     title: string;
     content: string;
     date: Date;
@@ -21,7 +22,7 @@ export type ReflectionEntryDTO = {
     title: string;
     content: string;
     date: Date;
-    drawings: DrawPath[];
+    drawing_paths: DrawPath[];
     sync_status: EntrySyncStatus;
     last_synced_at: Date | null;
     created_at: Date;

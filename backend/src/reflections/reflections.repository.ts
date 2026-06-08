@@ -6,10 +6,10 @@ import {Reflection, ReflectionEntryDTO} from "../interfaces/reflection.types";
 export class ReflectionsRepository {
     constructor(private readonly db: DatabaseService) {}
 
-    async create(reflectionDTO: ReflectionEntryDTO, userId: number) {
-        const query = "INSERT INTO reflection (id, user_id, title, content, drawing_paths) VALUES ($1, $2, $3, $4, $5) RETURNING *"
+    async create(entry: Reflection) {
+        const query = "INSERT INTO reflection (id, user_id, title, content, date, drawing_paths, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *"
         const res = await this.db.query(query,
-            [userId, reflectionDTO.title, reflectionDTO.content, reflectionDTO.drawings])
+            [entry.user_id, entry.title, entry.content, entry.date, entry.drawing_paths, entry.created_at])
         return res.rows[0]
     }
 
@@ -19,7 +19,7 @@ export class ReflectionsRepository {
         return res.rows[0]
     }
 
-    async upsert(reflectionEntries: Reflection[], userId: number) {
+    async upsert(reflectionEntries: Reflection[]) {
         if (reflectionEntries.length === 0) {
             return [];
         }
@@ -31,7 +31,7 @@ export class ReflectionsRepository {
 
                 values.push(
                     entry.id,
-                    userId,
+                    entry.user_id,
                     entry.title,
                     entry.content,
                     entry.date,
