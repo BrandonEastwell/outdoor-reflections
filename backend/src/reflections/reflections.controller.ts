@@ -5,7 +5,7 @@ import type {Request, Response} from 'express';
 
 @Controller('reflection')
 export class ReflectionsController {
-    constructor(private reflectionService: ReflectionsService) {}
+    constructor(private reflectionService: ReflectionsService, private syncService: ReflectionsService) {}
 
     @Post()
     async create(@Req() req: Request, @Res() res: Response) {
@@ -22,5 +22,7 @@ export class ReflectionsController {
     @Post('sync')
     async syncReflections(@Req() req: Request, @Res() res: Response) {
         const { userId, entries }: { userId: number, entries: ReflectionEntryDTO } = req.body;
+
+
     }
 }

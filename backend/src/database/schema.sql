@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS user_account (
 );
 
 CREATE TABLE IF NOT EXISTS reflection (
-                            id UUID NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                            id UUID PRIMARY KEY,
                             user_id INT NOT NULL,
                             title VARCHAR(50) NOT NULL,
                             content TEXT,
