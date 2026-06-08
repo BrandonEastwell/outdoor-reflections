@@ -1,7 +1,7 @@
 "use client"
 import { svgPathProperties } from "svg-path-properties";
 import {getStroke} from "perfect-freehand";
-import {getFlatSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
+import {getFlatSvgPathFromStroke, getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 import {lineToPoints} from "@/utils/svgPoints";
 import {Point} from "@/types/customTypes";
 
@@ -52,7 +52,7 @@ export default function DrawIcon({ svgPaths, fill, iconSize = 2 } : { svgPaths: 
             },
         });
 
-        const pathFromStroke = getFlatSvgPathFromStroke(stroke)
+        const pathFromStroke = getSvgPathFromStroke(stroke)
         paths.push(pathFromStroke);
     }
 
