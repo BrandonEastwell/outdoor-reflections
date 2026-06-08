@@ -6,8 +6,8 @@ import {Reflection, ReflectionEntryDTO} from "../interfaces/reflection.types";
 export class SyncService {
     constructor(private repo: ReflectionsRepository) {}
 
-    syncEntries(userId: number, entries: ReflectionEntryDTO[]) {
+    async syncEntries(entries: ReflectionEntryDTO[], userId: number) {
         const entriesToInsert: Reflection[] = entries.map(entry => ({...entry, user_id: userId }))
-        this.repo.upsert()
+        await this.repo.upsert(entriesToInsert)
     }
 }
