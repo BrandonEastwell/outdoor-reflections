@@ -18,21 +18,23 @@ function formatISOToDisplayDate(ISODate: string): string {
 export default function DatePicker() {
     const { entry, setEntry } = useContext(EntryContext);
     const [displayDate, setDisplayDate] = useState<string>(formatISOToDisplayDate(entry.date));
+    const [toggleDatePicker, setToggleDatePicker] = useState<boolean>(false);
 
     const onDateChange = (date: Date) => {
         setEntry({...entry, date: date.toISOString()});
         setDisplayDate(formatISOToDisplayDate(date.toISOString()));
+        setToggleDatePicker(false);
     }
 
     return (
         <div className="relative">
-            <span className="">{displayDate}</span>
-            <Calendar
+            <span onClick={() => setToggleDatePicker(!toggleDatePicker)} className="cursor-pointer select-none">{displayDate}</span>
+            { toggleDatePicker && <Calendar
                 mode="single"
                 selected={new Date(entry.date)}
                 onSelect={(date) => date ? onDateChange(date) : null}
                 className="absolute z-999 rounded-lg border [--cell-size:--spacing(6.5)]"
-            />
+            /> }
         </div>
     )
 }
