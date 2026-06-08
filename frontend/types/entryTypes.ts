@@ -9,7 +9,7 @@ export type Entry = {
     id: string;
     title: string;
     content: string;
-    date: Date;
+    date: string;
     drawings: DrawPath[];
     sync_status: EntrySyncStatus;
     last_synced_at: Date | null;

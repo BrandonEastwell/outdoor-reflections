@@ -7,6 +7,8 @@ import IconButton from "@/components/IconButton";
 import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
+import { Calendar } from "@/components/ui/calendar"
+import DatePicker from "@/components/DatePicker";
 
 const db = new Database();
 
@@ -43,9 +45,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
         <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
             <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
                 <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
-                    <div>
-                        <span className="">saturday, 27.04</span>
-                    </div>
+                    <DatePicker />
                     <div className="flex flex-row items-center gap-1">
                         <IconButton svgIconPath={SVG_PATHS.drawIcon}
                                     fill={mode === "drawing" ? "#ce796b" : "#000000"}
