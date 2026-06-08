@@ -12,7 +12,7 @@ export type Entry = {
     date: string;
     drawings: DrawPath[];
     sync_status: EntrySyncStatus;
-    last_synced_at: Date | null;
-    created_at: Date;
-    updated_at: Date;
+    last_synced_at: string | null;
+    created_at: string;
+    updated_at: string;
 }

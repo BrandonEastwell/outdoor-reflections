@@ -7,7 +7,6 @@ import IconButton from "@/components/IconButton";
 import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
-import { Calendar } from "@/components/ui/calendar"
 import DatePicker from "@/components/DatePicker";
 
 const db = new Database();
@@ -42,39 +41,42 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     }
 
     return (
-        <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
-            <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
-                <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
-                    <DatePicker />
-                    <div className="flex flex-row items-center gap-1">
-                        <IconButton svgIconPath={SVG_PATHS.drawIcon}
-                                    fill={mode === "drawing" ? "#ce796b" : "#000000"}
-                                    iconSize={2}
-                                    onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
+        <>
+            <h1 className="max-w-xs text-3xl font-semibold font-flower tracking-wider text-black">Your reflections entry</h1>
+            <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
+                <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
+                    <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
+                        <DatePicker />
+                        <div className="flex flex-row items-center gap-1">
+                            <IconButton svgIconPath={SVG_PATHS.drawIcon}
+                                        fill={mode === "drawing" ? "#ce796b" : "#000000"}
+                                        iconSize={2}
+                                        onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
+                        </div>
                     </div>
-                </div>
-                <div className="flex flex-col flex-1 bg-desert/40 rounded-2xl p-3">
-                    <EntryForm mode={mode} />
-                </div>
-                <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
-                    <div className="flex flex-row items-center">
-                        <IconButton svgIconPath={SVG_PATHS.reverseIcon}
-                                    fill={"#000000"}
-                                    iconSize={2}
-                                    onClick={() => drawUndo()} />
-                        <IconButton svgIconPath={SVG_PATHS.forwardIcon}
-                                    fill={"#000000"}
-                                    iconSize={2}
-                                    onClick={() => drawRedo()} />
+                    <div className="flex flex-col flex-1 bg-desert/40 rounded-2xl p-3">
+                        <EntryForm mode={mode} />
                     </div>
-                    <div className="flex flex-row items-center gap-1">
-                        <IconButton svgIconPath={SVG_PATHS.saveIcon}
-                                    fill={"#000000"}
-                                    iconSize={2}
-                                    onClick={() => onSaveEntry()} />
+                    <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
+                        <div className="flex flex-row items-center">
+                            <IconButton svgIconPath={SVG_PATHS.reverseIcon}
+                                        fill={"#000000"}
+                                        iconSize={2}
+                                        onClick={() => drawUndo()} />
+                            <IconButton svgIconPath={SVG_PATHS.forwardIcon}
+                                        fill={"#000000"}
+                                        iconSize={2}
+                                        onClick={() => drawRedo()} />
+                        </div>
+                        <div className="flex flex-row items-center gap-1">
+                            <IconButton svgIconPath={SVG_PATHS.saveIcon}
+                                        fill={"#000000"}
+                                        iconSize={2}
+                                        onClick={() => onSaveEntry()} />
+                        </div>
                     </div>
-                </div>
-            </EntryContext>
-        </div>
+                </EntryContext>
+            </div>
+        </>
     )
 }

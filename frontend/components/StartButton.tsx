@@ -7,13 +7,13 @@ const db = new Database();
 async function createEmptyEntry() {
     const initEntry: Entry = {
         id: crypto.randomUUID(),
-        created_at: new Date(),
+        created_at: new Date().toISOString(),
         last_synced_at: null,
         sync_status: "pending",
-        updated_at: new Date(),
+        updated_at: new Date().toISOString(),
         title: "",
         content: "",
-        date: new Date(),
+        date: new Date().toISOString(),
         drawings: []
     }
 
