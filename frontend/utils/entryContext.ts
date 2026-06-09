@@ -13,12 +13,13 @@ export const EntryContext = createContext<EntryContextValue>({
     entry: {
         title: "",
         content: "",
-        date: new Date(),
+        date: "",
         drawings: [],
         sync_status: "pending",
         last_synced_at: null,
-        created_at: new Date(),
-        updated_at: new Date()
+        created_at: "",
+        updated_at: "",
+        id: ""
     },
     setEntry: () => {},
     drawHistory: [],

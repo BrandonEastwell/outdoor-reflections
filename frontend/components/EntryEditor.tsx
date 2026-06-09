@@ -42,7 +42,18 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
     return (
         <>
-            <h1 className="max-w-xs text-3xl font-semibold font-flower tracking-wider text-black">Your reflections entry</h1>
+            <input
+                value={entry.title}
+                onChange={(e) =>
+                    setEntry({
+                        ...entry,
+                        title: e.target.value,
+                    })
+                }
+                maxLength={30}
+                placeholder="untitled reflection"
+                className="max-w-xs bg-transparent text-center outline-none text-3xl font-semibold font-flower tracking-wider text-black placeholder-black"
+            />
             <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
                 <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
