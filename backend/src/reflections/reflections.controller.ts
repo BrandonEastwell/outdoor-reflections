@@ -1,13 +1,15 @@
-import {Controller, Get, Param, Post, Req, Res} from "@nestjs/common";
+import {Controller, Get, Param, Post, Req, Res, UseGuards} from "@nestjs/common";
 import {ReflectionsService} from "./reflections.service";
 import {ReflectionEntryDTO} from "../interfaces/reflection.types";
 import type {Request, Response} from 'express';
 import {SyncService} from "./sync.service";
+import {JwtAuthGuard} from "../auth/jwt-auth-guard";
 
 @Controller('reflection')
 export class ReflectionsController {
     constructor(private reflectionService: ReflectionsService, private syncService: SyncService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Req() req: Request, @Res() res: Response) {
         const { userId, entry }: { userId: number, entry: ReflectionEntryDTO } = req.body;
@@ -20,6 +22,7 @@ export class ReflectionsController {
         return "Returns a reflection"
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('sync')
     async syncReflections(@Req() req: Request, @Res() res: Response) {
         const { userId, entries }: { userId: number, entries: ReflectionEntryDTO[] } = req.body;
