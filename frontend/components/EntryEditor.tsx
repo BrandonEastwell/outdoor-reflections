@@ -8,6 +8,7 @@ import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
 import DatePicker from "@/components/DatePicker";
+import { motion } from "motion/react";
 
 const db = new Database();
 
@@ -80,10 +81,15 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                                         onClick={() => drawRedo()} />
                         </div>
                         <div className="flex flex-row items-center gap-1">
-                            <IconButton svgIconPath={SVG_PATHS.saveIcon}
-                                        fill={"#000000"}
-                                        strokeWidth={2}
-                                        onClick={() => onSaveEntry()} />
+                            { /** <motion.div
+                                className="h-[66%] aspect-square border-2 rounded-[50%] border-t-rose border-l-rose border-b-rose"
+                                animate={{ transform: "rotate(360deg)" }}
+                                transition={{
+                                    duration: 0.8,
+                                    repeat: Infinity,
+                                    ease: "linear",
+                                }}
+                            /> **/}
                         </div>
                     </div>
                 </EntryContext>
