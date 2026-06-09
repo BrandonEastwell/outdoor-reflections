@@ -62,7 +62,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
              onPointerDown={handlePointerDown}
              onPointerMove={handlePointerMove}
              onPointerUp={() => handlePointerUp(pathData)}
-             className={"absolute inset-0 h-full w-full z-10" + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
+             className={"absolute inset-0 h-full w-full z-10 touch-none " + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
             {points && isDrawing && <path d={pathData} fill={drawColor} />}
             {entry.drawings.map((drawPath, index) => (
                 <path key={index} d={drawPath.path} fill={drawPath.color} />
