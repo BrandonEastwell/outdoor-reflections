@@ -41,7 +41,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     }
 
     return (
-        <>
+        <div className="flex flex-col place-items-center aspect-3/4 w-full h-full origin-top">
             <input
                 value={entry.title}
                 onChange={(e) =>
@@ -54,7 +54,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                 placeholder="untitled reflection"
                 className="max-w-xs bg-transparent text-center outline-none text-3xl font-semibold font-flower tracking-wider text-black placeholder-black"
             />
-            <div className="flex flex-col grow w-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
+            <div className="flex flex-col grow w-full h-full gap-2 px-3 pb-3 pt-2 bg-white rounded-2xl mt-4">
                 <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                         <DatePicker />
@@ -88,6 +88,6 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     </div>
                 </EntryContext>
             </div>
-        </>
+        </div>
     )
 }

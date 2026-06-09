@@ -3,8 +3,8 @@ export default function EntryLayout({ children } : { children: React.ReactNode }
 
 
     return (
-        <div className="flex flex-col flex-1 min-h-screen pt-16 pb-16 px-8">
-            <div>{children}</div>
-        </div>
+        <main className="flex flex-col flex-1 min-h-screen pt-16 pb-16 px-8 items-center">
+            {children}
+        </main>
     )
 }

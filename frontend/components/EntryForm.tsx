@@ -6,10 +6,10 @@ import {EditMode} from "@/types/customTypes";
 export default function EntryForm({ mode }: { mode: EditMode }) {
 
     return (
-        <form className="relative"
+        <div className="relative w-full h-full overflow-hidden"
             onSubmit={() => {}} id="journal-entry-form">
             <DrawingArea focus={mode === "drawing"} />
             <TextArea focus={mode === "text"} />
-        </form>
+        </div>
     );
 }

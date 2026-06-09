@@ -7,28 +7,32 @@ import {EntryContext} from "@/utils/entryContext";
 export default function DrawingArea({ focus }: { focus: boolean }) {
     const { entry, setEntry, drawColor } = useContext(EntryContext);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
-    const drawAreaRef = useRef<HTMLDivElement | null>(null);
+    const drawAreaRef = useRef<SVGSVGElement | null>(null);
     const [points, setPoints] = useState<(number[])[]>([]);
 
     const relativeCoordinates = (event: React.PointerEvent) => {
-        const boundingRect = drawAreaRef.current?.getBoundingClientRect();
-        if (!boundingRect) return;
-        const x = event.clientX - boundingRect.left;
-        const y = event.clientY - boundingRect.top;
+
+        const point = drawAreaRef.current?.createSVGPoint();
+        if (!point) return null;
+
+        point.x = event.clientX;
+        point.y = event.clientY;
         const e = event.pressure;
-        return [x, y, e];
+
+        const transformedPoint = point.matrixTransform(drawAreaRef.current?.getScreenCTM()!.inverse());
+
+        return [transformedPoint.x, transformedPoint.y, e] as [number, number, number];
     };
 
-    const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    const handlePointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
         if (event.button !== 0) return;
+
         const point = relativeCoordinates(event);
-        if (point) {
-            setPoints((prevLines) => [...prevLines, point]);
-        }
+        if (point) setPoints((prevLines) => [...prevLines, point]);
         setIsDrawing(true);
     };
 
-    const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const handlePointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
         if (!isDrawing) return;
 
         const point = relativeCoordinates(event);
@@ -53,19 +57,16 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     const pathData = getSvgPathFromStroke(stroke, true);
 
     return (
-        <div
-            ref={drawAreaRef}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={() => handlePointerUp(pathData)}
-            className={"absolute inset-0 h-full w-full z-10" + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}
-        >
-            <svg width="100%" height="100%">
-                {points && isDrawing && <path d={pathData} fill={drawColor} />}
-                {entry.drawings.map((drawPath, index) => (
-                    <path key={index} d={drawPath.path} fill={drawPath.color} />
-                ))}
-            </svg>
-        </div>
+        <svg viewBox="0 0 700 933"
+             ref={drawAreaRef}
+             onPointerDown={handlePointerDown}
+             onPointerMove={handlePointerMove}
+             onPointerUp={() => handlePointerUp(pathData)}
+             className={"absolute inset-0 h-full w-full z-10" + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
+            {points && isDrawing && <path d={pathData} fill={drawColor} />}
+            {entry.drawings.map((drawPath, index) => (
+                <path key={index} d={drawPath.path} fill={drawPath.color} />
+            ))}
+        </svg>
     );
 }
