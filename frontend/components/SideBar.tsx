@@ -11,24 +11,28 @@ export default function SideBar() {
     const toggle = () => setToggleSidebar(!toggleSidebar);
 
     return (
-        <motion.div animate={{ width: toggleSidebar ? 160 : 32 }}
+        <motion.div className={"flex flex-col pl-1 max-w-40 h-screen m-0.5 border-r bg-rose/5 border-rose/10"}
+                    animate={{ width: toggleSidebar ? 160 : 32 }}
                     transition={{
                         type: "spring",
                         stiffness: 300,
                         damping: 30,
-                    }}
-                    className={"flex flex-col pl-1 max-w-40 items-center h-screen m-0.5 border-r bg-rose/5 border-rose/10"}>
-            <SidebarItem
-                svgPaths={SVG_PATHS.flowerIcon}
-                label="reflections"
-                expanded={toggleSidebar}
-                onClick={toggle}
-                iconSize={42}
-                strokeWidth={1.5}
-                className="flex flex-row place-items-center font-flower text-2xl cursor-pointer"
-            />
-            <motion.div animate={{ placeItems: toggleSidebar ? "start" : "center"}}
-                className={"w-full flex flex-col gap-1 mt-6"}>
+                    }}>
+            <motion.div animate={{ marginLeft: toggleSidebar ? 0 : -10 }}
+                        className={"w-full flex flex-col items-start"}>
+                <SidebarItem
+                    svgPaths={SVG_PATHS.flowerIcon}
+                    label="reflections"
+                    expanded={toggleSidebar}
+                    onClick={toggle}
+                    iconSize={42}
+                    strokeWidth={1.5}
+                    className="flex flex-row items-center font-flower text-2xl text-nowrap cursor-pointer"
+                />
+            </motion.div>
+
+            <motion.div animate={{ marginLeft: toggleSidebar ? 0 : -3 }}
+                        className={"w-full flex flex-col items-start gap-1 mt-6"}>
                 <SidebarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="login"
