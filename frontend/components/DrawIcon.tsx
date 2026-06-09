@@ -25,7 +25,7 @@ function createPointsFromSVGPath(path: string) {
     return points
 }
 
-export default function DrawIcon({ svgPaths, fill, iconSize = 2 } : { svgPaths: string[], fill?: string, iconSize?: number }) {
+export default function DrawIcon({ svgPaths, fill, strokeWidth = 2, iconSize = 24 } : { svgPaths: string[], fill?: string, strokeWidth?: number, iconSize?: number }) {
     const paths: string[] = [];
 
     for (const path of svgPaths) {
@@ -33,7 +33,7 @@ export default function DrawIcon({ svgPaths, fill, iconSize = 2 } : { svgPaths: 
         points.push(...createPointsFromSVGPath(path));
 
         const stroke = getStroke(points, {
-            size: iconSize,
+            size: strokeWidth,
             thinning: 0.5,
             streamline: 0.5,
             smoothing: 0.5,
@@ -57,7 +57,7 @@ export default function DrawIcon({ svgPaths, fill, iconSize = 2 } : { svgPaths: 
     }
 
     return (
-        <svg height="24" width="24" viewBox="0 0 24 24" fill={fill} xmlns="http://www.w3.org/2000/svg">
+        <svg height={iconSize} width={iconSize} viewBox="0 0 24 24" fill={fill} xmlns="http://www.w3.org/2000/svg">
             { paths.map((path, index) => <path key={index} d={path}/>) }
         </svg>
     )

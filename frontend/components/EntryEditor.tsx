@@ -50,7 +50,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                         <div className="flex flex-row items-center gap-1">
                             <IconButton svgIconPath={SVG_PATHS.drawIcon}
                                         fill={mode === "drawing" ? "#ce796b" : "#000000"}
-                                        iconSize={2}
+                                        strokeWidth={2}
                                         onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
                         </div>
                     </div>
@@ -61,17 +61,17 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                         <div className="flex flex-row items-center">
                             <IconButton svgIconPath={SVG_PATHS.reverseIcon}
                                         fill={"#000000"}
-                                        iconSize={2}
+                                        strokeWidth={2}
                                         onClick={() => drawUndo()} />
                             <IconButton svgIconPath={SVG_PATHS.forwardIcon}
                                         fill={"#000000"}
-                                        iconSize={2}
+                                        strokeWidth={2}
                                         onClick={() => drawRedo()} />
                         </div>
                         <div className="flex flex-row items-center gap-1">
                             <IconButton svgIconPath={SVG_PATHS.saveIcon}
                                         fill={"#000000"}
-                                        iconSize={2}
+                                        strokeWidth={2}
                                         onClick={() => onSaveEntry()} />
                         </div>
                     </div>
