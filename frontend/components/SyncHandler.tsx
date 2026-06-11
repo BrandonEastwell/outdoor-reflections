@@ -7,7 +7,7 @@ export default function SyncHandler() {
     const [isSyncing, setIsSyncing] = useState(false)
 
     async function syncPendingEntries() {
-        const entries = await db.getAllFromDB('reflections')
+        const entries = await db.getAll('reflections')
         if (!entries) return;
 
         const entriesToSync = entries.map(entry => entry.sync_status = "pending")

@@ -12,7 +12,7 @@ export default function EntryEditorLoader({ id } : { id: string }) {
     useEffect(() => {
         async function loadEntry() {
             try {
-                const data = await db.getFromDB(id, "reflections")
+                const data = await db.get(id, "reflections")
                 if (data) setEntry(data);
             } catch (error) {
                 console.error("Failed to load entry", error)

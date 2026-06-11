@@ -1,6 +1,7 @@
 import {Entry} from "@/types/entryTypes";
 
 type DBNames = 'reflections'
+type DBTypes = Entry
 
 export default class Database {
     constructor() {}
@@ -23,7 +24,7 @@ export default class Database {
         })
     }
 
-    async getAllFromDB(name: DBNames): Promise<Entry[] | undefined> {
+    async getAll(name: DBNames): Promise<DBTypes[] | undefined> {
         const db = await this.openDB(name);
 
         return new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ export default class Database {
         });
     }
 
-    async getFromDB(id: string, name: DBNames): Promise<Entry | undefined> {
+    async get(id: string, name: DBNames): Promise<DBTypes | undefined> {
         const db = await this.openDB(name);
 
         return new Promise((resolve, reject) => {

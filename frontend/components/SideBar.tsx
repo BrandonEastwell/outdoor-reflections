@@ -10,8 +10,10 @@ export default function SideBar() {
     const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
     const toggle = () => setToggleSidebar(!toggleSidebar);
 
+
+
     return (
-        <motion.div className={"flex flex-col pl-1 max-w-40 h-screen m-0.5 border-r bg-rose/5 border-rose/10"}
+        <motion.div className={"flex flex-col pl-1 pr-3 h-screen m-0.5 border-r bg-rose/5 border-black/10"}
                     animate={{ width: toggleSidebar ? 160 : 32 }}
                     transition={{
                         type: "spring",
