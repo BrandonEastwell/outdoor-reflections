@@ -24,8 +24,10 @@ export default function SidebarItem({
 }: SidebarItemProps) {
     return (
         <div className={className} onClick={onClick}>
-            <DrawIcon svgPaths={svgPaths} strokeWidth={strokeWidth} iconSize={iconSize} />
-            <AnimatedLabel show={expanded}>{label}</AnimatedLabel>
+            <div className="grid grid-cols-[30px_1fr] place-items-center">
+                <DrawIcon svgPaths={svgPaths} strokeWidth={strokeWidth} iconSize={iconSize} />
+                <AnimatedLabel show={expanded}>{label}</AnimatedLabel>
+            </div>
         </div>
     );
 }

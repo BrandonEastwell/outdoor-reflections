@@ -18,7 +18,7 @@ export default function SideBar() {
                         stiffness: 300,
                         damping: 30,
                     }}>
-            <motion.div animate={{ marginLeft: toggleSidebar ? 0 : -10 }}
+            <motion.div animate={{ marginLeft: toggleSidebar ? 0 : -5 }}
                         className={"w-full flex flex-col items-start"}>
                 <SidebarItem
                     svgPaths={SVG_PATHS.flowerIcon}
@@ -35,20 +35,27 @@ export default function SideBar() {
                         className={"w-full flex flex-col items-start gap-1 mt-6"}>
                 <SidebarItem
                     svgPaths={SVG_PATHS.userIcon}
-                    label="login"
+                    label="Login"
                     expanded={toggleSidebar}
                     onClick={toggle}
                 />
                 <SidebarItem
                     svgPaths={SVG_PATHS.reflectionIcon}
-                    label="new entry"
+                    label="Entries"
+                    expanded={toggleSidebar}
+                    onClick={toggle}
+                />
+                <SidebarItem
+                    iconSize={25}
+                    svgPaths={SVG_PATHS.newEntryIcon}
+                    label="New entry"
                     expanded={toggleSidebar}
                     onClick={toggle}
                 />
             </motion.div>
             <div className="w-full flex flex-col place-items-start gap-1 mt-6">
                 <AnimatedLabel show={toggleSidebar} className="font-flower text-nowrap pl-1 font-bold">
-                    recent entries
+                    Recent entries
                 </AnimatedLabel>
             </div>
         </motion.div>
