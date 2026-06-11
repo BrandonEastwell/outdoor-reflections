@@ -35,15 +35,14 @@ export default function SideBar() {
     }
 
     return (
-        <motion.div className={"flex flex-col pl-1 pr-3 h-screen m-0.5 border-r bg-rose/5 border-black/10"}
-                    animate={{ width: toggleSidebar ? 180 : 32 }}
+        <motion.div className={"flex flex-col h-screen border-r pl-1 pr-1 bg-rose/5 border-black/10"}
+                    animate={{ width: toggleSidebar ? 180 : 40 }}
                     transition={{
                         type: "spring",
                         stiffness: 300,
                         damping: 30,
                     }}>
-            <motion.div animate={{ marginLeft: toggleSidebar ? 0 : -5 }}
-                        className={"w-full flex flex-col items-start"}>
+            <div className={"w-full flex flex-col items-start"}>
                 <SidebarItem
                     svgPaths={SVG_PATHS.flowerIcon}
                     label="reflections"
@@ -53,10 +52,9 @@ export default function SideBar() {
                     strokeWidth={1.5}
                     className="flex flex-row items-center font-flower text-3xl text-nowrap cursor-pointer"
                 />
-            </motion.div>
+            </div>
 
-            <motion.div animate={{ marginLeft: toggleSidebar ? 0 : -4, paddingLeft: toggleSidebar ? 4 : 0 }}
-                        className={"w-full flex flex-col items-start gap-1 mt-6 px-2 text-lg"}>
+            <div className={"w-full flex flex-col items-start gap-1 mt-6 text-lg"}>
                 <SidebarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="Login"
@@ -76,13 +74,13 @@ export default function SideBar() {
                     expanded={toggleSidebar}
                     onClick={toggle}
                 />
-            </motion.div>
+            </div>
             <div className="w-full flex flex-col place-items-start gap-1 mt-6 text-lg">
                 <AnimatedLabel show={toggleSidebar} className="font-flower text-nowrap px-2 font-bold">
                     Recent entries
                 </AnimatedLabel>
                 { recentEntries.length > 0 && recentEntries.map((entry) => (
-                    <button onClick={() => recentEntryClickHandler(entry)} className="flex w-full px-2 hover:bg-rose/10 rounded-lg cursor-pointer">
+                    <button key={entry.id} onClick={() => recentEntryClickHandler(entry)} className="flex w-full px-2 hover:bg-rose/10 rounded-lg cursor-pointer">
                         <AnimatedLabel show={toggleSidebar} className="font-flower text-nowrap">
                             { entry.title ? entry.title : "Untitled Reflection" }
                         </AnimatedLabel>
