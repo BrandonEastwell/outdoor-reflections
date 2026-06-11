@@ -20,7 +20,7 @@ export default function SidebarItem({
     onClick,
     iconSize = 30,
     strokeWidth = 2,
-    className = "flex flex-row items-center font-flower text-base text-nowrap cursor-pointer",
+    className = "flex flex-row items-center font-flower text-nowrap cursor-pointer",
 }: SidebarItemProps) {
     return (
         <div className={className} onClick={onClick}>
