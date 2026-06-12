@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import SidebarItem from "@/components/SidebarItem";
 import AnimatedLabel from "@/components/AnimatedLabel";
 import Database from "@/lib/database";
-import {sortEntriesByLastUpdated} from "@/utils/entryUtils";
+import {createEmptyEntry, sortEntriesByLastUpdated} from "@/utils/entryUtils";
 import {Entry} from "@/types/entryTypes";
 import {useRouter} from "next/navigation";
 
@@ -34,8 +34,13 @@ export default function SideBar() {
         setToggleSidebar(false);
     }
 
+    const createNewEntry = async () => {
+        const emptyEntry = await createEmptyEntry();
+        router.push(`/entry/${emptyEntry.id}`);
+    }
+
     return (
-        <motion.div className={"flex flex-col h-screen border-r pl-1 pr-1 bg-rose/5 border-black/10"}
+        <motion.div className={"flex flex-col h-screen border-r pl-1 pr-1 bg-rose/5 border-black/10 select-none"}
                     animate={{ width: toggleSidebar ? 180 : 40 }}
                     transition={{
                         type: "spring",
@@ -72,7 +77,7 @@ export default function SideBar() {
                     svgPaths={SVG_PATHS.newEntryIcon}
                     label="New entry"
                     expanded={toggleSidebar}
-                    onClick={toggle}
+                    onClick={createNewEntry}
                 />
             </div>
             <div className="w-full flex flex-col place-items-start gap-1 mt-6 text-lg">
