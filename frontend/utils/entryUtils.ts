@@ -8,16 +8,24 @@ export function sortEntriesByLastUpdated(entries: Entry[])  {
     })
 }
 
+export async function isEntryEmpty(id: string) {
+    const entry = await db.get(id, "reflections")
+    if (!entry) return Error("Entry not found");
+    return entry.content === "" && entry.title === "" && entry.drawings.length === 0
+}
+
 export async function createEmptyEntry() {
+    const curDate = new Date().toISOString();
+
     const initEntry: Entry = {
         id: crypto.randomUUID(),
-        created_at: new Date().toISOString(),
+        created_at: curDate,
         last_synced_at: null,
         sync_status: "pending",
-        updated_at: new Date().toISOString(),
+        updated_at: curDate,
         title: "",
         content: "",
-        date: new Date().toISOString(),
+        date: curDate,
         drawings: []
     }
 

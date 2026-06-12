@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import SidebarItem from "@/components/SidebarItem";
 import AnimatedLabel from "@/components/AnimatedLabel";
 import Database from "@/lib/database";
-import {createEmptyEntry, sortEntriesByLastUpdated} from "@/utils/entryUtils";
+import {createEmptyEntry, isEntryEmpty, sortEntriesByLastUpdated} from "@/utils/entryUtils";
 import {Entry} from "@/types/entryTypes";
 import {useRouter} from "next/navigation";
 
@@ -35,6 +35,12 @@ export default function SideBar() {
     }
 
     const createNewEntry = async () => {
+        if (window.location.pathname.includes("/entry/")) {
+            const id = window.location.pathname.split("/")[2]
+            const isCurrentEntryEmpty = await isEntryEmpty(id)
+            if (isCurrentEntryEmpty === true) return router.refresh();
+        }
+
         const emptyEntry = await createEmptyEntry();
         router.push(`/entry/${emptyEntry.id}`);
     }

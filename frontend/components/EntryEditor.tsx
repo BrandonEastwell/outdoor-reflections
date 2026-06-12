@@ -1,6 +1,6 @@
 "use client"
 import EntryForm from "@/components/EntryForm";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {EditMode} from "@/types/customTypes";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import IconButton from "@/components/IconButton";
@@ -8,24 +8,39 @@ import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
 import DatePicker from "@/components/DatePicker";
-import { motion } from "motion/react";
 
 const db = new Database();
+
+const isEntryBlank = (entry: Entry) => {
+    return (
+        entry.title.trim() === "" &&
+        entry.content.trim() === "" &&
+        entry.drawings.length === 0
+    );
+};
 
 export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [mode, setMode] = useState<EditMode>("text");
     const [drawColor, setDrawColor] = useState<string>('#000000')
     const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
     const [entry, setEntry] = useState<Entry>(initEntry);
+    const isFirstRender = useRef(true);
 
-    const onSaveEntry = async () => {
-        entry.updated_at = new Date().toISOString();
-        await db.saveToDB(entry, "reflections");
+    const saveEntry = async () => {
+        const entryToSave = {...entry, updated_at: new Date().toISOString()};
+        await db.saveToDB(entryToSave, "reflections");
     }
 
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return
+        }
+
+        if (isEntryBlank(entry)) return;
+
         const timeout = setTimeout(() => {
-            onSaveEntry()
+            saveEntry()
         }, 1000);
         return () => clearTimeout(timeout);
     }, [entry])
