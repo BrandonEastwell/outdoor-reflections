@@ -80,7 +80,7 @@ export default function SideBar() {
                     Recent entries
                 </AnimatedLabel>
                 { recentEntries.length > 0 && recentEntries.map((entry) => (
-                    <button key={entry.id} onClick={() => recentEntryClickHandler(entry)} className="flex w-full px-2 hover:bg-rose/10 rounded-lg cursor-pointer">
+                    <button key={entry.id} onClick={() => recentEntryClickHandler(entry)} className={"flex w-full px-2 rounded-lg cursor-pointer " + (window.location.pathname === `/entry/${entry.id}` ? "bg-rose/25" : "hover:bg-rose/10")}>
                         <AnimatedLabel show={toggleSidebar} className="font-flower text-nowrap">
                             { entry.title ? entry.title : "Untitled Reflection" }
                         </AnimatedLabel>
