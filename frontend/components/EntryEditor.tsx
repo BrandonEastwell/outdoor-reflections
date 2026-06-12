@@ -19,6 +19,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [entry, setEntry] = useState<Entry>(initEntry);
 
     const onSaveEntry = async () => {
+        entry.updated_at = new Date().toISOString();
         await db.saveToDB(entry, "reflections");
     }
 

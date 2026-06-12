@@ -52,7 +52,7 @@ export default class Database {
         });
     }
 
-    async saveToDB(obj: any, name: DBNames) {
+    async saveToDB(obj: DBTypes, name: DBNames) {
         try {
             const db = await this.openDB(name);
             const transaction = db.transaction(name, "readwrite");
