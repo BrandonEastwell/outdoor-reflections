@@ -12,7 +12,7 @@ export default function TextArea({ focus }: TextAreaProps) {
     return (
         <textarea
             name="content"
-            className={"relative z-20 min-h-[300px] h-auto font-mono outline-none outline-0 border-none bg-transparent w-full text-sm/1.7 text-black placeholder-black" + (focus ? "" : " pointer-events-none")}
+            className={"relative z-20 min-h-75 h-auto font-mono outline-none outline-0 border-none bg-transparent w-full text-sm/1.7 text-black placeholder-black" + (focus ? "" : " pointer-events-none")}
             value={entry.content}
             onChange={(e) => setEntry({ ...entry, content: e.target.value })}
             placeholder="How was your day?"

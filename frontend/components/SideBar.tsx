@@ -8,7 +8,7 @@ import AnimatedLabel from "@/components/AnimatedLabel";
 import Database from "@/lib/database";
 import {createEmptyEntry, isEntryEmpty, sortEntriesByLastUpdated} from "@/utils/entryUtils";
 import {Entry} from "@/types/entryTypes";
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 
 const db = new Database();
 
@@ -16,6 +16,7 @@ export default function SideBar() {
     const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
     const [recentEntries, setRecentEntries] = useState<Entry[]>([]);
     const toggle = () => setToggleSidebar(!toggleSidebar);
+    const pathname = usePathname();
     const router = useRouter();
 
     useEffect(() => {
@@ -44,6 +45,8 @@ export default function SideBar() {
         const emptyEntry = await createEmptyEntry();
         router.push(`/entry/${emptyEntry.id}`);
     }
+
+    if (pathname === "/") return;
 
     return (
         <motion.div className={"flex flex-col h-screen border-r pl-1 pr-1 bg-rose/5 border-black/10 select-none"}
