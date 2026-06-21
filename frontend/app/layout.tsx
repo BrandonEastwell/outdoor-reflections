@@ -21,7 +21,7 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full antialiased", "font-sans", inter.variable)}
     >
-      <body className="min-h-full flex flex-row bg-[#F9F7F3]">
+      <body className="min-h-full flex flex-col bg-[#F9F7F3]">
         <SideBar />
         {children}
       </body>

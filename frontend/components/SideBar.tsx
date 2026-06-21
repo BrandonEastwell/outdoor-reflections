@@ -2,9 +2,7 @@
 
 import { SVG_PATHS } from "@/constants/svgPaths";
 import {useEffect, useState} from "react";
-import { motion } from "motion/react";
 import SidebarItem from "@/components/SidebarItem";
-import AnimatedLabel from "@/components/AnimatedLabel";
 import Database from "@/lib/database";
 import {createEmptyEntry, isEntryEmpty, sortEntriesByLastUpdated} from "@/utils/entryUtils";
 import {Entry} from "@/types/entryTypes";
@@ -49,26 +47,8 @@ export default function SideBar() {
     if (pathname === "/") return;
 
     return (
-        <motion.div className={"flex flex-col h-screen border-r pl-1 pr-1 bg-rose/5 border-black/10 select-none"}
-                    animate={{ width: toggleSidebar ? 180 : 40 }}
-                    transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                    }}>
-            <div className={"w-full flex flex-col items-start"}>
-                <SidebarItem
-                    svgPaths={SVG_PATHS.flowerIcon}
-                    label="reflections"
-                    expanded={toggleSidebar}
-                    onClick={toggle}
-                    iconSize={42}
-                    strokeWidth={1.5}
-                    className="flex flex-row items-center font-flower text-3xl text-nowrap cursor-pointer"
-                />
-            </div>
-
-            <div className={"w-full flex flex-col items-start gap-1 mt-6 text-lg"}>
+        <div className={"w-full my-5 h-20 place-items-center justify-center gap-1 text-lg"}>
+            <div className="fixed z-50 flex flex-row gap-1 rounded-2xl border border-white/40 bg-rose/25 p-1 shadow-[0_8px_32px_rgba(73,88,103,0.18)] backdrop-blur-xl backdrop-saturate-150 ring-1 ring-rose/10">
                 <SidebarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="Login"
@@ -76,10 +56,12 @@ export default function SideBar() {
                     onClick={toggle}
                 />
                 <SidebarItem
-                    svgPaths={SVG_PATHS.reflectionIcon}
-                    label="Entries"
+                    svgPaths={SVG_PATHS.flowerIcon}
+                    label="reflections"
                     expanded={toggleSidebar}
                     onClick={toggle}
+                    iconSize={42}
+                    strokeWidth={1.5}
                 />
                 <SidebarItem
                     iconSize={25}
@@ -89,18 +71,6 @@ export default function SideBar() {
                     onClick={createNewEntry}
                 />
             </div>
-            <div className="w-full flex flex-col place-items-start gap-1 mt-6 text-lg">
-                <AnimatedLabel show={toggleSidebar} className="font-flower text-nowrap px-2 font-bold">
-                    Recent entries
-                </AnimatedLabel>
-                { recentEntries.length > 0 && recentEntries.map((entry) => (
-                    <button key={entry.id} onClick={() => recentEntryClickHandler(entry)} className={"flex w-full px-2 rounded-lg cursor-pointer " + (window.location.pathname === `/entry/${entry.id}` ? "bg-rose/25" : "hover:bg-rose/10")}>
-                        <AnimatedLabel show={toggleSidebar} className="font-flower text-nowrap">
-                            { entry.title ? entry.title : "Untitled Reflection" }
-                        </AnimatedLabel>
-                    </button>
-                ))}
-            </div>
-        </motion.div>
+        </div>
     )
 }

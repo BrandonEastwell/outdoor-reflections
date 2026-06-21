@@ -1,7 +1,6 @@
 "use client"
 
 import DrawIcon from "@/components/DrawIcon";
-import AnimatedLabel from "@/components/AnimatedLabel";
 import { motion } from "motion/react";
 
 interface SidebarItemProps {
@@ -21,14 +20,11 @@ export default function SidebarItem({
     onClick,
     iconSize = 30,
     strokeWidth = 2,
-    className = "flex flex-row w-full hover:bg-rose/10 py-1 rounded-lg items-center font-flower text-nowrap cursor-pointer",
+    className = "flex aspect-square w-10 cursor-pointer flex-row items-center justify-center text-nowrap rounded-xl py-1 font-flower transition-colors hover:bg-white/30 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose/30",
 }: SidebarItemProps) {
     return (
-        <motion.div className={className} onClick={onClick} animate={{ paddingLeft: expanded ? 4 : 0, paddingRight: expanded ? 4 : 0 }}>
-            <div className="grid grid-cols-[30px_1fr] place-items-center">
-                <DrawIcon svgPaths={svgPaths} strokeWidth={strokeWidth} iconSize={iconSize} />
-                <AnimatedLabel show={expanded}>{label}</AnimatedLabel>
-            </div>
+        <motion.div aria-label={label} className={className} onClick={onClick} animate={{ paddingLeft: expanded ? 4 : 0, paddingRight: expanded ? 4 : 0 }}>
+            <DrawIcon svgPaths={svgPaths} strokeWidth={strokeWidth} iconSize={iconSize} />
         </motion.div>
     );
 }
