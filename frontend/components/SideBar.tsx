@@ -52,13 +52,11 @@ export default function SideBar() {
                 <SidebarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="Login"
-                    expanded={toggleSidebar}
                     onClick={toggle}
                 />
                 <SidebarItem
                     svgPaths={SVG_PATHS.flowerIcon}
                     label="reflections"
-                    expanded={toggleSidebar}
                     onClick={toggle}
                     iconSize={42}
                     strokeWidth={1.5}
@@ -67,7 +65,6 @@ export default function SideBar() {
                     iconSize={25}
                     svgPaths={SVG_PATHS.newEntryIcon}
                     label="New entry"
-                    expanded={toggleSidebar}
                     onClick={createNewEntry}
                 />
             </div>

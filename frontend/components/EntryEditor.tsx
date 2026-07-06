@@ -8,6 +8,7 @@ import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
 import DatePicker from "@/components/DatePicker";
+import EditorToolbar from "@/components/ToolBar";
 
 const db = new Database();
 
@@ -85,31 +86,9 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     <div className="flex flex-col flex-1  rounded-2xl p-3">
                         <EntryForm mode={mode} />
                     </div>
-                    <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
-                        <div className="flex flex-row items-center">
-                            <IconButton svgIconPath={SVG_PATHS.reverseIcon}
-                                        fill={"#000000"}
-                                        strokeWidth={2}
-                                        onClick={() => drawUndo()} />
-                            <IconButton svgIconPath={SVG_PATHS.forwardIcon}
-                                        fill={"#000000"}
-                                        strokeWidth={2}
-                                        onClick={() => drawRedo()} />
-                        </div>
-                        <div className="flex flex-row items-center gap-1">
-                            { /** <motion.div
-                                className="h-[66%] aspect-square border-2 rounded-[50%] border-t-rose border-l-rose border-b-rose"
-                                animate={{ transform: "rotate(360deg)" }}
-                                transition={{
-                                    duration: 0.8,
-                                    repeat: Infinity,
-                                    ease: "linear",
-                                }}
-                            /> **/}
-                        </div>
-                    </div>
                 </EntryContext>
             </div>
+            <EditorToolbar />
         </div>
     )
 }
