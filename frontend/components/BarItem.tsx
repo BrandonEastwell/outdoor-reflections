@@ -12,7 +12,7 @@ interface SidebarItemProps {
     className?: string;
 }
 
-export default function SidebarItem({
+export default function BarItem({
     svgPaths,
     label,
     onClick,

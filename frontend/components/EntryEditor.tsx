@@ -88,7 +88,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     </div>
                 </EntryContext>
             </div>
-            <EditorToolbar />
+            <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} />
         </div>
     )
 }

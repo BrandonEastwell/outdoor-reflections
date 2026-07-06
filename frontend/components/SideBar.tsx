@@ -2,7 +2,7 @@
 
 import { SVG_PATHS } from "@/constants/svgPaths";
 import {useEffect, useState} from "react";
-import SidebarItem from "@/components/SidebarItem";
+import BarItem from "@/components/BarItem";
 import Database from "@/lib/database";
 import {createEmptyEntry, isEntryEmpty, sortEntriesByLastUpdated} from "@/utils/entryUtils";
 import {Entry} from "@/types/entryTypes";
@@ -49,19 +49,19 @@ export default function SideBar() {
     return (
         <div className={"w-full my-5 h-20 place-items-center justify-center gap-1 text-lg"}>
             <div className="fixed z-50 flex flex-row gap-1 rounded-2xl border border-white/40 bg-rose/25 p-1 shadow-[0_8px_32px_rgba(73,88,103,0.18)] backdrop-blur-xl backdrop-saturate-150 ring-1 ring-rose/10">
-                <SidebarItem
+                <BarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="Login"
                     onClick={toggle}
                 />
-                <SidebarItem
+                <BarItem
                     svgPaths={SVG_PATHS.flowerIcon}
                     label="reflections"
                     onClick={toggle}
                     iconSize={42}
                     strokeWidth={1.5}
                 />
-                <SidebarItem
+                <BarItem
                     iconSize={25}
                     svgPaths={SVG_PATHS.newEntryIcon}
                     label="New entry"
