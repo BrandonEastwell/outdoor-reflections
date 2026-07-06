@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-import SideBar from "@/components/SideBar";
+import TopBar from "@/components/TopBar";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -22,7 +22,7 @@ export default function RootLayout({
       className={cn("h-full antialiased", "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col bg-[#F9F7F3]">
-        <SideBar />
+        <TopBar />
         {children}
       </body>
     </html>

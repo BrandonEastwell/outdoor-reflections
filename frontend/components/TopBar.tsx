@@ -10,7 +10,7 @@ import {usePathname, useRouter} from "next/navigation";
 
 const db = new Database();
 
-export default function SideBar() {
+export default function TopBar() {
     const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
     const [recentEntries, setRecentEntries] = useState<Entry[]>([]);
     const toggle = () => setToggleSidebar(!toggleSidebar);
@@ -48,7 +48,7 @@ export default function SideBar() {
 
     return (
         <div className={"w-full my-5 h-20 place-items-center justify-center gap-1 text-lg"}>
-            <div className="fixed z-50 flex flex-row gap-1 rounded-2xl border border-white/40 bg-rose/25 p-1 shadow-[0_8px_32px_rgba(73,88,103,0.18)] backdrop-blur-xl backdrop-saturate-150 ring-1 ring-rose/10">
+            <div className="fixed z-50 flex flex-row gap-1 rounded-2xl border border-white/40 bg-rose/35 p-1 shadow-[0_8px_32px_rgba(73,88,103,0.18)] backdrop-blur-xl backdrop-saturate-150 ring-1 ring-rose/10">
                 <BarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="Login"
