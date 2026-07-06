@@ -76,19 +76,13 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                 <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                         <DatePicker />
-                        <div className="flex flex-row items-center gap-1">
-                            <IconButton svgIconPath={SVG_PATHS.drawIcon}
-                                        fill={mode === "drawing" ? "#ce796b" : "#000000"}
-                                        strokeWidth={2}
-                                        onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
-                        </div>
                     </div>
-                    <div className="flex flex-col flex-1  rounded-2xl p-3">
+                    <div className="flex flex-col flex-1 rounded-2xl p-3">
                         <EntryForm mode={mode} />
                     </div>
                 </EntryContext>
             </div>
-            <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} />
+            <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} setMode={setMode} mode={mode} />
         </div>
     )
 }
