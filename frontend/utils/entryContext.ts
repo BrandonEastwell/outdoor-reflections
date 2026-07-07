@@ -7,12 +7,13 @@ type EntryContextValue = {
     drawHistory: DrawPath[];
     drawColor: string;
     setDrawColor: Dispatch<SetStateAction<string>>;
+    editorScale: number;
 };
 
 export const EntryContext = createContext<EntryContextValue>({
     entry: {
         title: "",
-        content: "",
+        content: [],
         date: "",
         drawings: [],
         sync_status: "pending",
@@ -25,4 +26,5 @@ export const EntryContext = createContext<EntryContextValue>({
     drawHistory: [],
     drawColor: "#000000",
     setDrawColor: () => {},
+    editorScale: 1,
 });

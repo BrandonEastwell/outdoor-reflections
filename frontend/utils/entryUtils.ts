@@ -2,6 +2,21 @@ import {Entry} from "@/types/entryTypes";
 import Database from "@/lib/database";
 const db = new Database();
 
+export function normalizeEntryContent(content: string | string[] | undefined) {
+    if (Array.isArray(content)) return content;
+    if (typeof content === "string") {
+        return content.length > 0 ? content.split("\n") : [""];
+    }
+    return [""];
+}
+
+export function normalizeEntry(entry: Entry | (Omit<Entry, "content"> & { content?: string | string[] })) : Entry {
+    return {
+        ...entry,
+        content: normalizeEntryContent(entry.content),
+    };
+}
+
 export function sortEntriesByLastUpdated(entries: Entry[])  {
     return entries.sort((a,b) => {
         return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
@@ -11,7 +26,8 @@ export function sortEntriesByLastUpdated(entries: Entry[])  {
 export async function isEntryEmpty(id: string) {
     const entry = await db.get(id, "reflections")
     if (!entry) return Error("Entry not found");
-    return entry.content === "" && entry.title === "" && entry.drawings.length === 0
+    const normalizedEntry = normalizeEntry(entry);
+    return normalizedEntry.content.length === 1 && normalizedEntry.content[0] === "" && normalizedEntry.title === "" && normalizedEntry.drawings.length === 0
 }
 
 export async function createEmptyEntry() {
@@ -24,7 +40,7 @@ export async function createEmptyEntry() {
         sync_status: "pending",
         updated_at: curDate,
         title: "",
-        content: "",
+        content: [""],
         date: curDate,
         drawings: []
     }

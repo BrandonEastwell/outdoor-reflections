@@ -5,7 +5,7 @@ import {getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 import {EntryContext} from "@/utils/entryContext";
 
 export default function DrawingArea({ focus }: { focus: boolean }) {
-    const { entry, setEntry, drawColor } = useContext(EntryContext);
+    const { entry, setEntry, drawColor, editorScale } = useContext(EntryContext);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
     const drawAreaRef = useRef<SVGSVGElement | null>(null);
     const [points, setPoints] = useState<(number[])[]>([]);
@@ -48,7 +48,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     }
 
     const stroke = getStroke(points, {
-        size: 5,
+        size: 5 * editorScale,
         thinning: 0.5,
         smoothing: 0.5,
         streamline: 0.5,
@@ -57,12 +57,12 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     const pathData = getSvgPathFromStroke(stroke, true);
 
     return (
-        <svg viewBox="0 0 700 933"
+        <svg viewBox="0 0 320 933" preserveAspectRatio="xMinYMin meet"
              ref={drawAreaRef}
              onPointerDown={handlePointerDown}
              onPointerMove={handlePointerMove}
              onPointerUp={() => handlePointerUp(pathData)}
-             className={"absolute inset-0 h-full w-full z-10 touch-none " + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
+             className={"absolute inset-0 h-full w-full w-min-[320px] z-10 touch-none " + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
             {points && isDrawing && <path d={pathData} fill={drawColor} />}
             {entry.drawings.map((drawPath, index) => (
                 <path key={index} d={drawPath.path} fill={drawPath.color} />

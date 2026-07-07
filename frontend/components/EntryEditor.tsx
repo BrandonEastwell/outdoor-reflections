@@ -1,21 +1,21 @@
 "use client"
-import EntryForm from "@/components/EntryForm";
+import Canvas from "@/components/EntryForm";
 import {useEffect, useRef, useState} from "react";
 import {EditMode} from "@/types/customTypes";
-import {SVG_PATHS} from "@/constants/svgPaths";
-import IconButton from "@/components/IconButton";
 import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
 import DatePicker from "@/components/DatePicker";
 import EditorToolbar from "@/components/ToolBar";
+import DrawingArea from "@/components/DrawingArea";
+import TextArea from "@/components/TextArea";
 
 const db = new Database();
 
 const isEntryBlank = (entry: Entry) => {
     return (
         entry.title.trim() === "" &&
-        entry.content.trim() === "" &&
+        entry.content[0] === "" &&
         entry.drawings.length === 0
     );
 };
@@ -26,11 +26,8 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
     const [entry, setEntry] = useState<Entry>(initEntry);
     const isFirstRender = useRef(true);
-
-    const saveEntry = async () => {
-        const entryToSave = {...entry, updated_at: new Date().toISOString()};
-        await db.saveToDB(entryToSave, "reflections");
-    }
+    const editorAreaRef = useRef<HTMLDivElement | null>(null);
+    const [editorScale, setEditorScale] = useState(1);
 
     useEffect(() => {
         if (isFirstRender.current) {
@@ -41,10 +38,33 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
         if (isEntryBlank(entry)) return;
 
         const timeout = setTimeout(() => {
-            saveEntry()
+            const entryToSave = {...entry, updated_at: new Date().toISOString()};
+            db.saveToDB(entryToSave, "reflections");
         }, 1000);
         return () => clearTimeout(timeout);
     }, [entry])
+
+    useEffect(() => {
+        const updateScale = () => {
+            const container = editorAreaRef.current;
+            if (!container) return;
+
+            const rect = container.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+
+            const nextScale = rect.width / 320
+            setEditorScale(Math.max(1, nextScale));
+        };
+
+        updateScale();
+
+        const resizeObserver = new ResizeObserver(updateScale);
+        if (editorAreaRef.current) {
+            resizeObserver.observe(editorAreaRef.current);
+        }
+
+        return () => resizeObserver.disconnect();
+    }, []);
 
     const drawUndo = () => {
         if (entry.drawings.length === 0) return;
@@ -72,13 +92,14 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                 placeholder="untitled reflection"
                 className="max-w-xs bg-transparent text-center outline-none text-3xl font-semibold font-flower tracking-wider text-black placeholder-black"
             />
-            <div className="flex flex-col grow w-full h-full gap-2 px-3 pb-3 pt-2 rounded-2xl mt-4">
-                <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor}}>
+            <div className="flex flex-col grow w-full max-w-2xl h-full gap-2 px-3 pb-3 pt-2 rounded-2xl mt-4">
+                <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor, editorScale}}>
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                         <DatePicker />
                     </div>
-                    <div className="flex flex-col flex-1 rounded-2xl p-3">
-                        <EntryForm mode={mode} />
+                    <div ref={editorAreaRef} className="relative w-full h-full w-min-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl p-3">
+                        <DrawingArea focus={mode === "drawing"} />
+                        <TextArea focus={mode === "text"} />
                     </div>
                 </EntryContext>
             </div>

@@ -8,7 +8,7 @@ type EntrySyncStatus = "synced" | "pending" | "failed";
 export type Entry = {
     id: string;
     title: string;
-    content: string;
+    content: string[];
     date: string;
     drawings: DrawPath[];
     sync_status: EntrySyncStatus;
