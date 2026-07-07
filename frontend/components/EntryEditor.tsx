@@ -1,5 +1,4 @@
 "use client"
-import Canvas from "@/components/EntryForm";
 import {useEffect, useRef, useState} from "react";
 import {EditMode} from "@/types/customTypes";
 import {DrawPath, Entry} from "@/types/entryTypes";
@@ -97,9 +96,11 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                         <DatePicker />
                     </div>
-                    <div ref={editorAreaRef} className="relative w-full h-full w-min-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl p-3">
-                        <DrawingArea focus={mode === "drawing"} />
-                        <TextArea focus={mode === "text"} />
+                    <div ref={editorAreaRef} className={"relative w-full h-full w-min-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl p-3" + `scale-${editorScale}`}>
+                        <div style={{width: `${320 * editorScale}px`}} className="relative flex shrink-0 overflow-hidden">
+                            <DrawingArea focus={mode === "drawing"} />
+                            <TextArea focus={mode === "text"} />
+                        </div>
                     </div>
                 </EntryContext>
             </div>

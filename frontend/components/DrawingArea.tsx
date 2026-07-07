@@ -57,12 +57,12 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     const pathData = getSvgPathFromStroke(stroke, true);
 
     return (
-        <svg viewBox="0 0 320 933" preserveAspectRatio="xMinYMin meet"
+        <svg viewBox="0 0 320 933"
              ref={drawAreaRef}
              onPointerDown={handlePointerDown}
              onPointerMove={handlePointerMove}
              onPointerUp={() => handlePointerUp(pathData)}
-             className={"absolute inset-0 h-full w-full w-min-[320px] z-10 touch-none " + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
+             className={"absolute inset-0 h-full w-full z-10 touch-none " + (focus ? " pointer-events-auto cursor-crosshair" : " pointer-events-none")}>
             {points && isDrawing && <path d={pathData} fill={drawColor} />}
             {entry.drawings.map((drawPath, index) => (
                 <path key={index} d={drawPath.path} fill={drawPath.color} />
