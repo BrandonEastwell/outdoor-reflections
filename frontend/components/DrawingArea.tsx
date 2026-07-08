@@ -5,7 +5,7 @@ import {getSvgPathFromStroke} from "@/utils/getSvgPathFromStroke";
 import {EntryContext} from "@/utils/entryContext";
 
 export default function DrawingArea({ focus }: { focus: boolean }) {
-    const { entry, setEntry, drawColor, editorScale } = useContext(EntryContext);
+    const { entry, setEntry, drawColor } = useContext(EntryContext);
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
     const drawAreaRef = useRef<SVGSVGElement | null>(null);
     const [points, setPoints] = useState<(number[])[]>([]);
@@ -48,7 +48,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     }
 
     const stroke = getStroke(points, {
-        size: 5 * editorScale,
+        size: 5,
         thinning: 0.5,
         smoothing: 0.5,
         streamline: 0.5,
@@ -57,7 +57,7 @@ export default function DrawingArea({ focus }: { focus: boolean }) {
     const pathData = getSvgPathFromStroke(stroke, true);
 
     return (
-        <svg viewBox="0 0 320 933"
+        <svg viewBox="0 0 320 920"
              ref={drawAreaRef}
              onPointerDown={handlePointerDown}
              onPointerMove={handlePointerMove}

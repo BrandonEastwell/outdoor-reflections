@@ -51,8 +51,9 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
             const rect = container.getBoundingClientRect();
             if (rect.width === 0 || rect.height === 0) return;
 
-            const nextScale = rect.width / 320
-            setEditorScale(Math.max(1, nextScale));
+            const horizontalPadding = 24;
+            const availableWidth = Math.max(320, rect.width - horizontalPadding);
+            setEditorScale(Math.max(1, availableWidth / 320));
         };
 
         updateScale();
@@ -96,8 +97,15 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                         <DatePicker />
                     </div>
-                    <div ref={editorAreaRef} className={"relative w-full h-full w-min-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl p-3" + `scale-${editorScale}`}>
-                        <div style={{width: `${320 * editorScale}px`}} className="relative flex shrink-0 overflow-hidden">
+                    <div ref={editorAreaRef} className={"relative w-full h-full min-w-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl p-3"}>
+                        <div
+                            style={{
+                                width: "320px",
+                                height: "920px",
+                                zoom: editorScale,
+                            }}
+                            className="relative flex overflow-hidden"
+                        >
                             <DrawingArea focus={mode === "drawing"} />
                             <TextArea focus={mode === "text"} />
                         </div>
