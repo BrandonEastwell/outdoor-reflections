@@ -6,9 +6,10 @@ import {motion, Reorder, useDragControls} from "motion/react";
 
 interface TextAreaProps {
     focus: boolean;
+    container: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function TextArea({ focus }: TextAreaProps) {
+export default function TextArea({ focus, container }: TextAreaProps) {
     const {entry, setEntry} = useContext(EntryContext)
     let holdInterval: NodeJS.Timeout | null = null
 
@@ -17,7 +18,7 @@ export default function TextArea({ focus }: TextAreaProps) {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.key === "Enter" && !event.shiftKey) {
+        if (event.key === "Enter") {
             event.preventDefault();
             setEntry({...entry, content: [...entry.content, ""]});
         }
@@ -36,7 +37,7 @@ export default function TextArea({ focus }: TextAreaProps) {
     const handleChange = (index: number, value: string) => {
         setEntry({
             ...entry,
-            content: entry.content.map((line, lineIndex) => (lineIndex === index ? value.trimEnd() : line)),
+            content: entry.content.map((line, lineIndex) => (lineIndex === index ? value : line)),
         });
     };
 
@@ -54,6 +55,7 @@ export default function TextArea({ focus }: TextAreaProps) {
                                   value={text}
                                   whileHover={{ borderWidth: 1 }}
                                   dragControls={controls}
+                                  dragConstraints={container}
                                   className="w-full h-auto border-rose/20 rounded-md px-2 mb-1 hover:cursor-pointer">
                         <motion.textarea
                             name="content"

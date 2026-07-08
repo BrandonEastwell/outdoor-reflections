@@ -107,7 +107,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                             className="relative flex overflow-hidden"
                         >
                             <DrawingArea focus={mode === "drawing"} />
-                            <TextArea focus={mode === "text"} />
+                            <TextArea container={editorAreaRef} focus={mode === "text"} />
                         </div>
                     </div>
                 </EntryContext>
