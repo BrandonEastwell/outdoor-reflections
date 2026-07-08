@@ -1,8 +1,9 @@
 # Outdoor Reflections
 
-Outdoor Reflections is an offline-first journaling app for capturing a day as both text and drawing. It pairs a lightweight writing experience with a sketch surface, then syncs entries back to the server when the connection is available.
+Outdoor Reflections is an offline-first journaling app for capturing a day as both text and drawing. It pairs a lightweight writing experience with a sketch surface, then syncs entries back to the server when the connection is available. This is still under active development and not yet ready for public use. The goal is to integrate AI suggestions to inspire sketches and journaling ideas to make journaling easier to do.
 
-This is the project I would point an interviewer to if I wanted to show how I approach product thinking, UI state, offline persistence, and backend reconciliation in one small codebase.
+
+![localhost_3000_entry_b47c140f-8a63-46b6-a03f-0ee8c932054f(iPhone 14 Pro Max).png](public/localhost_3000_entry_b47c140f-8a63-46b6-a03f-0ee8c932054f%28iPhone%2014%20Pro%20Max%29.png)
 
 ## What It Does
 
