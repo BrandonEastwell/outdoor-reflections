@@ -97,7 +97,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
                         <DatePicker />
                     </div>
-                    <div ref={editorAreaRef} className={"relative w-full h-full min-w-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl p-3"}>
+                    <div ref={editorAreaRef} className={"relative w-full h-full min-w-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl"}>
                         <div
                             style={{
                                 width: "320px",
