@@ -1,80 +1,108 @@
 "use client"
 
-import {useContext} from "react";
+import {useContext, useState, type KeyboardEvent} from "react";
 import {EntryContext} from "@/utils/entryContext";
-import {motion, Reorder, useDragControls} from "motion/react";
+import {Reorder, useDragControls} from "motion/react";
+import {normalizeEntryContent} from "@/utils/entryUtils";
 
 interface TextAreaProps {
     focus: boolean;
-    container: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function TextArea({ focus, container }: TextAreaProps) {
-    const {entry, setEntry} = useContext(EntryContext)
-    let holdInterval: NodeJS.Timeout | null = null
+type TextBlock = {
+    id: string;
+    text: string;
+};
 
-    const handleReorder = (newContent: string[]) => {
-        setEntry({...entry, content: newContent})
-    }
+const createBlock = (text: string): TextBlock => ({
+    id: crypto.randomUUID(),
+    text,
+});
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            setEntry({...entry, content: [...entry.content, ""]});
-        }
-    }
+const reorderBlocks = (blocks: TextBlock[], orderedIds: string[]) =>
+    orderedIds
+        .map((id) => blocks.find((block) => block.id === id))
+        .filter((block): block is TextBlock => Boolean(block));
 
-    const handlePointerDown = (event: React.PointerEvent<HTMLTextAreaElement>) => {
-        holdInterval = setInterval(() => {
-            controls.start(event)
-        }, 100)
-    }
+export default function TextArea({ focus }: TextAreaProps) {
+    const {entry, setEntry} = useContext(EntryContext);
+    const dragControls = useDragControls();
+    const [blocks, setBlocks] = useState<TextBlock[]>(
+        normalizeEntryContent(entry.content).map(createBlock)
+    );
 
-    const handlePointerUp = (event: React.PointerEvent<HTMLTextAreaElement>) => {
-        holdInterval ? clearInterval(holdInterval) : null
-    }
-
-    const handleChange = (index: number, value: string) => {
-        setEntry({
-            ...entry,
-            content: entry.content.map((line, lineIndex) => (lineIndex === index ? value : line)),
-        });
+    const commitBlocks = (nextBlocks: TextBlock[]) => {
+        setBlocks(nextBlocks);
+        setEntry((prevEntry) => ({
+            ...prevEntry,
+            content: nextBlocks.map((block) => block.text),
+        }));
     };
 
-    const controls = useDragControls();
+    const handleReorder = (orderedIds: string[]) => {
+        commitBlocks(reorderBlocks(blocks, orderedIds));
+    };
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            commitBlocks([...blocks, createBlock("")]);
+        }
+    };
+
+    const handleChange = (id: string, value: string) => {
+        commitBlocks(
+            blocks.map((block) =>
+                block.id === id ? {...block, text: value.trimEnd()} : block
+            )
+        );
+    };
 
     return (
-            <Reorder.Group
-                values={entry.content}
-                axis="y"
-                onReorder={handleReorder}
-                className="absolute inset-0 h-full w-full"
-            >
-                { entry.content.map((text, index) => (
-                    <Reorder.Item key={index}
-                                  value={text}
-                                  whileHover={{ borderWidth: 1 }}
-                                  dragControls={controls}
-                                  dragConstraints={container}
-                                  className="w-full h-auto border-rose/20 rounded-md px-2 mb-1 hover:cursor-pointer">
-                        <motion.textarea
+        <Reorder.Group
+            values={blocks.map((block) => block.id)}
+            axis="y"
+            onReorder={handleReorder}
+            className="absolute inset-0 h-full w-full"
+        >
+            {blocks.map((block) => (
+                <Reorder.Item
+                    key={block.id}
+                    value={block.id}
+                    drag="y"
+                    dragListener={false}
+                    dragControls={dragControls}
+                    className="w-full"
+                >
+                    <div className="flex items-start gap-2">
+                        <button
+                            type="button"
+                            aria-label="Drag text block"
+                            className="mt-2 h-4 w-4 shrink-0 rounded-full border border-rose/30 bg-transparent cursor-grab active:cursor-grabbing"
+                            onPointerDown={(event) => {
+                                event.preventDefault();
+                                dragControls.start(event, {snapToCursor: true});
+                            }}
+                            tabIndex={-1}
+                        />
+                        <textarea
                             name="content"
                             className={
-                                "resize-none field-sizing-content bg-transparent font-mono outline-none outline-0 text-black placeholder-black " +
-                                "text-xs leading-6.75 h-auto overflow-hidden  " +
+                                "block w-full resize-none rounded-md border-none bg-transparent px-2 font-mono text-black outline-none placeholder-black " +
+                                "text-[16px] leading-[27px] min-h-[75px] overflow-hidden " +
                                 (focus ? "" : " pointer-events-none")
                             }
-                            value={text}
-                            onPointerUp={handlePointerUp}
-                            onPointerDown={handlePointerDown}
+                            value={block.text}
                             onKeyDown={handleKeyDown}
-                            onChange={(e) => handleChange(index, e.target.value)}
+                            onChange={(e) => handleChange(block.id, e.target.value)}
                             placeholder="How was your day?"
                             disabled={!focus}
                             spellCheck={false}
+                            style={{padding: 0, margin: 0}}
                         />
-                    </Reorder.Item>
-                ))}
-            </Reorder.Group>
+                    </div>
+                </Reorder.Item>
+            ))}
+        </Reorder.Group>
     );
 }

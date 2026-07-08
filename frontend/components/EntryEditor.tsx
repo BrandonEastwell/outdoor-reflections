@@ -88,6 +88,8 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                         title: e.target.value,
                     })
                 }
+                onClick={(e) => e.currentTarget.placeholder = ""}
+                onBlur={(e) => e.currentTarget.innerText === "" ? e.currentTarget.placeholder = "untitled reflection" : null}
                 maxLength={30}
                 placeholder="untitled reflection"
                 className="max-w-xs bg-transparent text-center outline-none text-3xl font-semibold font-flower tracking-wider text-black placeholder-black"
@@ -107,7 +109,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                             className="relative flex overflow-hidden"
                         >
                             <DrawingArea focus={mode === "drawing"} />
-                            <TextArea container={editorAreaRef} focus={mode === "text"} />
+                            <TextArea focus={mode === "text"} />
                         </div>
                     </div>
                 </EntryContext>
