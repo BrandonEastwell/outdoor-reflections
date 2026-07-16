@@ -13,3 +13,8 @@ export interface IconButtonType {
     drawButton: ButtonProps,
     textButton: ButtonProps,
 }
+
+export type TextBox = {
+    id: string;
+    text: string;
+};
