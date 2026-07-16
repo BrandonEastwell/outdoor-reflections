@@ -1,6 +1,6 @@
 "use client"
 
-import {useContext} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import {EntryContext} from "@/utils/entryContext";
 import {motion, Reorder, useDragControls} from "motion/react";
 
@@ -9,54 +9,96 @@ interface TextAreaProps {
     container: React.RefObject<HTMLDivElement | null>;
 }
 
+type TextBox = {
+    id: string;
+    text: string;
+};
+
+const createLine = (text = ""): TextBox => ({
+    id: crypto.randomUUID(),
+    text,
+});
+
 export default function TextArea({ focus, container }: TextAreaProps) {
     const {entry, setEntry} = useContext(EntryContext)
-    let holdInterval: NodeJS.Timeout | null = null
+    const [content, setContent] = useState<TextBox[]>(
+        () => entry.content.map((text) => createLine(text))
+    );
+    const holdTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const controls = useDragControls();
 
-    const handleReorder = (newContent: string[]) => {
-        setEntry({...entry, content: newContent})
+    useEffect(() => {
+        return () => {
+            if (holdTimeout.current) {
+                clearTimeout(holdTimeout.current);
+            }
+        };
+    }, []);
+
+    const updateContent = (nextContent: TextBox[]) => {
+        setContent(nextContent);
+        setEntry((prevEntry) => ({
+            ...prevEntry,
+            content: nextContent.map((line) => line.text),
+        }));
+    };
+
+    const handleReorder = (newContent: TextBox[]) => {
+        updateContent(newContent);
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === "Enter") {
             event.preventDefault();
-            setEntry({...entry, content: [...entry.content, ""]});
+            const nextContent = [...content, createLine("")];
+            updateContent(nextContent);
         }
     }
 
     const handlePointerDown = (event: React.PointerEvent<HTMLTextAreaElement>) => {
-        holdInterval = setInterval(() => {
-            controls.start(event)
-        }, 100)
+        if (holdTimeout.current) {
+            clearTimeout(holdTimeout.current);
+        }
+
+        event.persist?.();
+        holdTimeout.current = setTimeout(() => {
+            controls.start(event);
+        }, 150);
     }
 
-    const handlePointerUp = (event: React.PointerEvent<HTMLTextAreaElement>) => {
-        holdInterval ? clearInterval(holdInterval) : null
+    const handlePointerUp = () => {
+        if (holdTimeout.current) {
+            clearTimeout(holdTimeout.current);
+            holdTimeout.current = null;
+        }
     }
 
-    const handleChange = (index: number, value: string) => {
-        setEntry({
-            ...entry,
-            content: entry.content.map((line, lineIndex) => (lineIndex === index ? value : line)),
-        });
+    const handleChange = (id: string, value: string) => {
+
+        const nextContent = content.map((line) =>
+            line.id === id ? {...line, text: value} : line
+        );
+        setContent(nextContent);
+        setEntry((prevEntry) => ({
+            ...prevEntry,
+            content: nextContent.map((line) => line.text),
+        }));
     };
-
-    const controls = useDragControls();
 
     return (
             <Reorder.Group
-                values={entry.content}
+                values={content}
                 axis="y"
                 onReorder={handleReorder}
                 className="absolute inset-0 h-full w-full"
             >
-                { entry.content.map((text, index) => (
-                    <Reorder.Item key={index}
-                                  value={text}
+                {content.map((line) => (
+                    <Reorder.Item key={line.id}
+                                  value={line}
                                   whileHover={{ borderWidth: 1 }}
                                   dragControls={controls}
                                   dragConstraints={container}
-                                  className="w-full h-auto border-rose/20 rounded-md px-2 mb-1 hover:cursor-pointer">
+                                  className="w-full h-auto border-rose/20 bg-rose rounded-md px-2 mb-1 hover:cursor-pointer">
                         <motion.textarea
                             name="content"
                             className={
@@ -64,11 +106,11 @@ export default function TextArea({ focus, container }: TextAreaProps) {
                                 "text-xs leading-6.75 h-auto overflow-hidden  " +
                                 (focus ? "" : " pointer-events-none")
                             }
-                            value={text}
+                            value={line.text}
                             onPointerUp={handlePointerUp}
                             onPointerDown={handlePointerDown}
                             onKeyDown={handleKeyDown}
-                            onChange={(e) => handleChange(index, e.target.value)}
+                            onChange={(e) => handleChange(line.id, e.target.value)}
                             placeholder="How was your day?"
                             disabled={!focus}
                             spellCheck={false}
