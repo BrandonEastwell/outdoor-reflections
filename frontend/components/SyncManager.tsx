@@ -1,3 +1,4 @@
+"use client"
 import {useEffect} from "react";
 import {syncPendingEntries} from "@/utils/syncUtils";
 
