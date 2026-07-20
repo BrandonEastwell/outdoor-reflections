@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {syncPendingEntries} from "@/utils/syncUtils";
 
 export default function SyncManager() {
@@ -13,4 +13,6 @@ export default function SyncManager() {
             window.removeEventListener("offline", syncPendingEntries);
         };
     }, []);
+
+    return null;
 }
