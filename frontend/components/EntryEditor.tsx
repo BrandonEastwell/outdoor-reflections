@@ -8,6 +8,7 @@ import DatePicker from "@/components/DatePicker";
 import EditorToolbar from "@/components/ToolBar";
 import DrawingArea from "@/components/DrawingArea";
 import TextArea from "@/components/TextArea";
+import SyncStatus from "@/components/SyncStatus";
 
 const db = new Database();
 
@@ -24,9 +25,11 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const [drawColor, setDrawColor] = useState<string>('#000000')
     const [drawHistory, setDrawHistory] = useState<DrawPath[]>([]);
     const [entry, setEntry] = useState<Entry>(initEntry);
+    const [editorScale, setEditorScale] = useState(1);
+
     const isFirstRender = useRef(true);
     const editorAreaRef = useRef<HTMLDivElement | null>(null);
-    const [editorScale, setEditorScale] = useState(1);
+
 
     useEffect(() => {
         if (isFirstRender.current) {
@@ -114,7 +117,10 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     </div>
                 </EntryContext>
             </div>
-            <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} setMode={setMode} mode={mode} />
+            <div className={"fixed w-full my-5 bottom-0 h-20 gap-1 text-lg z-50"}>
+                <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} setMode={setMode} mode={mode} />
+                <SyncStatus isEntrySynced={entry.sync_status === "synced"} />
+            </div>
         </div>
     )
 }
