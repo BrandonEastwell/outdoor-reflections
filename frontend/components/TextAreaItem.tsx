@@ -49,9 +49,7 @@ export default function TextAreaItem({
     return (
         <Reorder.Item
             value={line}
-            initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={isDragging ? { backgroundColor: "#ce796020", cursor: "grabbing", boxShadow: "0px 1px 1px rgba(73,88,103,0.18)", opacity: 1, scale: 1, y: 0 } : draggedLine !== null ? { backgroundColor: "#ce796008" , boxShadow: "none", opacity: 1, y: 0, scale: 1 } : { backgroundColor: "transparent" , boxShadow: "none", opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95}}
             transition={{ duration: 0.3 }}
             whileHover={{ borderColor: "#ce796020", cursor: "pointer" }}
             onDragEnd={cancelHold}
@@ -73,7 +71,7 @@ export default function TextAreaItem({
                 name="content"
                 className={
                     "resize-none field-sizing-content bg-transparent font-mono outline-none outline-0 text-black placeholder-black " +
-                    "text-xs leading-6.75 h-auto overflow-hidden  " +
+                    "text-base leading-6.75 h-auto overflow-hidden  " +
                     (focus ? "" : " pointer-events-none")
                 }
                 value={line.text}

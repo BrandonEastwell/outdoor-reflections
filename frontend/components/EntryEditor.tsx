@@ -92,11 +92,11 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                 onBlur={(e) => e.currentTarget.innerText === "" ? e.currentTarget.placeholder = "untitled reflection" : null}
                 maxLength={30}
                 placeholder="untitled reflection"
-                className="max-w-xs bg-transparent text-center outline-none text-3xl font-semibold font-flower tracking-wider text-black placeholder-black"
+                className="max-w-full bg-transparent text-center outline-none text-3xl sm:text-5xl md:text-6xl font-semibold font-flower tracking-wider text-black placeholder-black"
             />
             <div className="flex flex-col grow w-full max-w-2xl h-full gap-2 px-3 pb-3 pt-2 rounded-2xl mt-4">
                 <EntryContext value={{entry, setEntry, drawHistory, drawColor, setDrawColor, editorScale}}>
-                    <div className="flex flex-row justify-between text-rose tracking-wider font-flower">
+                    <div className="flex flex-row justify-between text-lg md:text-3xl text-rose tracking-wider font-flower">
                         <DatePicker />
                     </div>
                     <div ref={editorAreaRef} className={"relative w-full h-full min-w-[320px] overflow-hidden flex flex-col flex-1 rounded-2xl"}>
