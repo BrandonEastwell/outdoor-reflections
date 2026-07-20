@@ -7,7 +7,7 @@ import Database from "../lib/database";
 import DatePicker from "@/components/DatePicker";
 import DrawingArea from "@/components/DrawingArea";
 import TextArea from "@/components/TextArea";
-import SyncHandler from "@/components/SyncHandler";
+import EntrySyncStatus from "@/components/EntrySyncStatus";
 import BarItem from "@/components/BarItem";
 import {SVG_PATHS} from "@/constants/svgPaths";
 
@@ -123,7 +123,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     <BarItem iconSize={22} svgPaths={SVG_PATHS.reverseIcon} label={"undo drawing tool"} onClick={() => drawUndo()} />
                     <BarItem iconSize={22} svgPaths={SVG_PATHS.forwardIcon} label={"redo drawing tool"} onClick={() => drawRedo()} />
                     <BarItem iconSize={22} svgPaths={SVG_PATHS.drawIcon} label={"draw tool"} fill={mode === "drawing" ? "#ce796b" : "#000000"} onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
-                    <SyncHandler isEntrySynced={entry.sync_status === "synced"} />
+                    <EntrySyncStatus isEntrySynced={entry.sync_status === "synced"} />
                 </div>
             </div>
         </div>
