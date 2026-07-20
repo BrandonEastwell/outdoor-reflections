@@ -31,6 +31,17 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
     const isFirstRender = useRef(true);
     const editorAreaRef = useRef<HTMLDivElement | null>(null);
+    const latestEntryRef = useRef<Entry>(entry);
+    const editableEntryKey = [
+        entry.title,
+        entry.content,
+        entry.date,
+        entry.drawings,
+    ].join("|");
+
+    useEffect(() => {
+        latestEntryRef.current = entry;
+    }, [entry]);
 
     useEffect(() => {
         if (isFirstRender.current) {
@@ -38,10 +49,10 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
             return
         }
 
-        if (isEntryBlank(entry)) return;
+        if (isEntryBlank(latestEntryRef.current)) return;
 
         const saveTimeout = setTimeout(() => {
-            const entryToSave: Entry = {...entry, sync_status: "pending", updated_at: new Date().toISOString()};
+            const entryToSave: Entry = {...latestEntryRef.current, sync_status: "pending", updated_at: new Date().toISOString()};
             db.saveToLocalDB(entryToSave, "reflections");
             setEntry(entryToSave);
         }, 1000);
@@ -55,7 +66,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
             clearTimeout(saveTimeout);
             clearTimeout(syncTimeout);
         };
-    }, [entry])
+    }, [editableEntryKey])
 
     useEffect(() => {
         const updateScale = () => {
@@ -82,7 +93,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
     const drawUndo = () => {
         if (entry.drawings.length === 0) return;
-        setEntry((prevEntry: any) => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
+        setEntry((prevEntry: Entry) => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
         setDrawHistory((prevHistory: DrawPath[]) => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
     }
 
