@@ -5,10 +5,11 @@ import {DrawPath, Entry} from "@/types/entryTypes";
 import {EntryContext} from "@/utils/entryContext";
 import Database from "../lib/database";
 import DatePicker from "@/components/DatePicker";
-import EditorToolbar from "@/components/ToolBar";
 import DrawingArea from "@/components/DrawingArea";
 import TextArea from "@/components/TextArea";
 import SyncHandler from "@/components/SyncHandler";
+import BarItem from "@/components/BarItem";
+import {SVG_PATHS} from "@/constants/svgPaths";
 
 const db = new Database();
 
@@ -71,14 +72,14 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
     const drawUndo = () => {
         if (entry.drawings.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
-        setDrawHistory(prevHistory => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
+        setEntry((prevEntry: { drawings: string | any[]; }) => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
+        setDrawHistory((prevHistory: any) => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
     }
 
     const drawRedo = () => {
         if (drawHistory.length === 0) return;
-        setEntry(prevEntry => ({...prevEntry, drawings: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
-        setDrawHistory(prevHistory => prevHistory.slice(0, -1));
+        setEntry((prevEntry: { drawings: any; }) => ({...prevEntry, drawings: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
+        setDrawHistory((prevHistory: string | any[]) => prevHistory.slice(0, -1));
     }
 
     return (
@@ -117,9 +118,13 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
                     </div>
                 </EntryContext>
             </div>
-            <div className={"fixed w-full my-5 bottom-0 h-20 gap-1 text-lg z-50"}>
-                <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} setMode={setMode} mode={mode} />
-                <SyncHandler isEntrySynced={entry.sync_status === "synced"} />
+            <div className={"fixed w-full flex flex-row justify-center items-center my-5 bottom-0 h-20 gap-1 text-lg z-50"}>
+                <div className="flex flex-row rounded-2xl border border-white/40 bg-rose/15 p-0.5 shadow-[0_8px_32px_rgba(73,88,103,0.18)] backdrop-blur-xl backdrop-saturate-150 ring-1 ring-rose/10">
+                    <BarItem iconSize={22} svgPaths={SVG_PATHS.reverseIcon} label={"undo drawing tool"} onClick={() => drawUndo()} />
+                    <BarItem iconSize={22} svgPaths={SVG_PATHS.forwardIcon} label={"redo drawing tool"} onClick={() => drawRedo()} />
+                    <BarItem iconSize={22} svgPaths={SVG_PATHS.drawIcon} label={"draw tool"} fill={mode === "drawing" ? "#ce796b" : "#000000"} onClick={() => setMode(mode === "drawing" ? "text" : "drawing")} />
+                    <SyncHandler isEntrySynced={entry.sync_status === "synced"} />
+                </div>
             </div>
         </div>
     )

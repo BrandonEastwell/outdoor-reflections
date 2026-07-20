@@ -34,12 +34,12 @@ export default function SyncHandler({ isEntrySynced } : { isEntrySynced: boolean
     }, [])
 
     return (
-        <div className="fixed flex flex-row font-mono gap-1 items-center text-sm rounded-2xl place-self-end self-center p-0.5 mr-20">
+        <div className="absolute ml-1.5 left-full place-self-center flex flex-row font-mono text-sm rounded-2xl p-0.5">
             { syncStatus === "synced" && (
-                <DrawIcon fill={"green"} strokeWidth={2} iconSize={20} svgPaths={SVG_PATHS.syncedIcon} />
+                <DrawIcon fill={"green"} strokeWidth={2} iconSize={16} svgPaths={SVG_PATHS.syncedIcon} />
             )}
             { syncStatus === "unsynced" && (
-                <DrawIcon fill={"red"} strokeWidth={2} iconSize={20} svgPaths={SVG_PATHS.unsyncedIcon} />
+                <DrawIcon fill={"red"} strokeWidth={2} iconSize={16} svgPaths={SVG_PATHS.unsyncedIcon} />
             )}
         </div>
     )
