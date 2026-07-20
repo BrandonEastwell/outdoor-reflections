@@ -25,7 +25,7 @@ export default function TextArea({ focus, container }: TextAreaProps) {
 
     const updateContent = (nextContent: TextBox[]) => {
         setContent(nextContent);
-        setEntry((prevEntry) => ({
+        setEntry((prevEntry: any) => ({
             ...prevEntry,
             content: nextContent.map((line) => line.text),
         }));
@@ -49,7 +49,7 @@ export default function TextArea({ focus, container }: TextAreaProps) {
             line.id === id ? {...line, text: value} : line
         );
         setContent(nextContent);
-        setEntry((prevEntry) => ({
+        setEntry((prevEntry: any) => ({
             ...prevEntry,
             content: nextContent.map((line) => line.text),
         }));

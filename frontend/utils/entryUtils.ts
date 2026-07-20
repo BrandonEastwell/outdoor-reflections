@@ -45,6 +45,6 @@ export async function createEmptyEntry() {
         drawings: []
     }
 
-    await db.saveToDB(initEntry, "reflections")
+    await db.saveToLocalDB(initEntry, "reflections")
     return initEntry
 }

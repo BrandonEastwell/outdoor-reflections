@@ -10,6 +10,7 @@ import TextArea from "@/components/TextArea";
 import EntrySyncStatus from "@/components/EntrySyncStatus";
 import BarItem from "@/components/BarItem";
 import {SVG_PATHS} from "@/constants/svgPaths";
+import {syncPendingEntries} from "@/utils/syncUtils";
 
 const db = new Database();
 
@@ -31,7 +32,6 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
     const isFirstRender = useRef(true);
     const editorAreaRef = useRef<HTMLDivElement | null>(null);
 
-
     useEffect(() => {
         if (isFirstRender.current) {
             isFirstRender.current = false;
@@ -40,11 +40,19 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
         if (isEntryBlank(entry)) return;
 
-        const timeout = setTimeout(() => {
-            const entryToSave = {...entry, updated_at: new Date().toISOString()};
-            db.saveToDB(entryToSave, "reflections");
+        const saveTimeout = setTimeout(() => {
+            const entryToSave: Entry = {...entry, sync_status: "pending", updated_at: new Date().toISOString()};
+            db.saveToLocalDB(entryToSave, "reflections");
         }, 1000);
-        return () => clearTimeout(timeout);
+
+        const syncTimeout = setTimeout(() => {
+            void syncPendingEntries();
+        }, 10000);
+
+        return () => {
+            clearTimeout(saveTimeout);
+            clearTimeout(syncTimeout);
+        };
     }, [entry])
 
     useEffect(() => {
@@ -72,14 +80,14 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
     const drawUndo = () => {
         if (entry.drawings.length === 0) return;
-        setEntry((prevEntry: { drawings: string | any[]; }) => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
-        setDrawHistory((prevHistory: any) => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
+        setEntry((prevEntry: any) => ({...prevEntry, drawings: prevEntry.drawings.slice(0, -1)}));
+        setDrawHistory((prevHistory: DrawPath[]) => [...prevHistory, entry.drawings[entry.drawings.length - 1]]);
     }
 
     const drawRedo = () => {
         if (drawHistory.length === 0) return;
-        setEntry((prevEntry: { drawings: any; }) => ({...prevEntry, drawings: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
-        setDrawHistory((prevHistory: string | any[]) => prevHistory.slice(0, -1));
+        setEntry((prevEntry: Entry) => ({...prevEntry, drawings: [...prevEntry.drawings, drawHistory[drawHistory.length - 1]]}));
+        setDrawHistory((prevHistory: DrawPath[]) => prevHistory.slice(0, -1));
     }
 
     return (

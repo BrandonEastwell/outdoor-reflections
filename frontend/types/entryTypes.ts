@@ -3,7 +3,7 @@ export type DrawPath = {
     color: string;
 };
 
-type EntrySyncStatus = "synced" | "pending" | "failed";
+export type SyncStatus = "synced" | "pending" | "failed";
 
 export type Entry = {
     id: string;
@@ -11,7 +11,7 @@ export type Entry = {
     content: string[];
     date: string;
     drawings: DrawPath[];
-    sync_status: EntrySyncStatus;
+    sync_status: SyncStatus;
     last_synced_at: string | null;
     created_at: string;
     updated_at: string;
