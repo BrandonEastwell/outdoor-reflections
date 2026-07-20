@@ -8,7 +8,7 @@ import DatePicker from "@/components/DatePicker";
 import EditorToolbar from "@/components/ToolBar";
 import DrawingArea from "@/components/DrawingArea";
 import TextArea from "@/components/TextArea";
-import SyncStatus from "@/components/SyncStatus";
+import SyncHandler from "@/components/SyncHandler";
 
 const db = new Database();
 
@@ -119,7 +119,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
             </div>
             <div className={"fixed w-full my-5 bottom-0 h-20 gap-1 text-lg z-50"}>
                 <EditorToolbar drawUndo={drawUndo} drawRedo={drawRedo} setMode={setMode} mode={mode} />
-                <SyncStatus isEntrySynced={entry.sync_status === "synced"} />
+                <SyncHandler isEntrySynced={entry.sync_status === "synced"} />
             </div>
         </div>
     )
