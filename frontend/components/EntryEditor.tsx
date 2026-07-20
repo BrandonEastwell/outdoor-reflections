@@ -43,10 +43,12 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
         const saveTimeout = setTimeout(() => {
             const entryToSave: Entry = {...entry, sync_status: "pending", updated_at: new Date().toISOString()};
             db.saveToLocalDB(entryToSave, "reflections");
+            setEntry(entryToSave);
         }, 1000);
 
         const syncTimeout = setTimeout(() => {
             void syncPendingEntries();
+            setEntry((prevEntry: Entry) => ({...prevEntry, sync_status: "synced"}));
         }, 10000);
 
         return () => {
