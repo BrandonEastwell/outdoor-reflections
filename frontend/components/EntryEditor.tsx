@@ -57,9 +57,11 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
             setEntry(entryToSave);
         }, 1000);
 
-        const syncTimeout = setTimeout(() => {
-            void syncPendingEntries();
-            setEntry((prevEntry: Entry) => ({...prevEntry, sync_status: "synced"}));
+        const syncTimeout = setTimeout(async () => {
+            const syncedEntries = await syncPendingEntries();
+            if (syncedEntries && syncedEntries.find((cur) => cur.id === entry.id)) {
+                setEntry((prevEntry: Entry) => ({...prevEntry, sync_status: "synced"}));
+            }
         }, 10000);
 
         return () => {
