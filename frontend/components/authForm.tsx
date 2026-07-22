@@ -26,7 +26,7 @@ export default function AuthForm() {
         const result = UserSchema.safeParse({email, password});
         if (!result.success) {
             setIsSubmitting(false);
-            return setError(result.error.issues[0]?.message ?? "Invalid credentials");
+            return setError(result.error.issues[0].message);
         }
         const user: User = result.data;
 
@@ -38,9 +38,11 @@ export default function AuthForm() {
                 },
                 body: JSON.stringify(user),
             });
-            if (!response.ok) {
-                throw new Error("Unable to sign in");
-            }
+
+            if (!response.ok) throw new Error("Unable to sign in");
+            const data = await response.json();
+            console.log(data);
+
         } catch (requestError) {
             setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
         } finally {
