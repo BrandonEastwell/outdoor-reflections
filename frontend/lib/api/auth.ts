@@ -9,7 +9,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
 
     if (res.status === 401) return null;
     if (!res.ok) throw new Error("Failed to fetch current user")
-    return res.json()
+    return await res.json() as Promise<AuthUser>
 }
 
 export async function login(user: User) {
