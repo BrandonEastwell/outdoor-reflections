@@ -50,59 +50,7 @@ export default function AuthPage() {
             </Link>
           </div>
 
-          <form className="mt-8 grid gap-4 font-mono">
-            <label className="grid gap-2">
-              <span className="text-sm font-medium text-blue-slate">Email</span>
-              <input
-                type="email"
-                name="email"
-                autoComplete="email"
-                placeholder="name@example.com"
-                className="h-12 rounded-2xl border border-border bg-white/90 px-4 text-sm text-blue-slate outline-none transition-shadow placeholder:text-blue-slate/35 focus:border-rose/40 focus:shadow-[0_0_0_3px_rgba(206,121,107,0.12)]"
-              />
-            </label>
 
-            <label className="grid gap-2">
-              <span className="text-sm font-medium text-blue-slate">Password</span>
-              <input
-                type="password"
-                name="password"
-                autoComplete="current-password"
-                placeholder="••••••••"
-                className="h-12 rounded-2xl border border-border bg-white/90 px-4 text-sm text-blue-slate outline-none transition-shadow placeholder:text-blue-slate/35 focus:border-rose/40 focus:shadow-[0_0_0_3px_rgba(206,121,107,0.12)]"
-              />
-            </label>
-
-            <div className="flex items-center justify-between gap-4">
-              <label className="flex items-center gap-2 text-sm text-blue-slate/80">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  className="h-4 w-4 rounded border-border text-rose focus:ring-rose/30"
-                />
-                remember me
-              </label>
-              <button type="button" className="text-sm text-rose transition-colors hover:text-camel">
-                forgot password
-              </button>
-            </div>
-
-            <Button type="submit" className="h-12 rounded-2xl bg-rose text-background hover:bg-rose/90">
-              sign in
-              <DrawIcon fill={"white"} svgPaths={SVG_PATHS.signInIcon} />
-            </Button>
-
-            <Button type="button" variant="outline" className="h-12 rounded-2xl border-white/70 bg-white/70">
-              continue with google
-            </Button>
-
-            <p className="pt-2 text-sm text-blue-slate/70">
-              New here?{" "}
-              <button type="button" className="font-medium text-rose transition-colors hover:text-camel">
-                create account
-              </button>
-            </p>
-          </form>
         </section>
       </div>
     </main>
