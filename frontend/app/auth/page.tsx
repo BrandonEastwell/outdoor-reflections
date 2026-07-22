@@ -2,6 +2,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
+import AuthForm from "@/components/authForm";
 
 export const metadata = {
   title: "Sign in | outdoor reflections",
@@ -50,6 +51,7 @@ export default function AuthPage() {
             </Link>
           </div>
 
+          <AuthForm />
 
         </section>
       </div>
