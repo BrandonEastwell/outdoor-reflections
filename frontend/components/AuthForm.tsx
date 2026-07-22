@@ -3,15 +3,9 @@ import {Button} from "@/components/ui/button";
 import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import {useState} from "react";
-import * as z from "zod";
+import {User, UserSchema} from "@/types/userTypes";
+import {login} from "@/lib/api/auth";
 
-const UserSchema = z.object({
-    email: z.email().trim(),
-    password: z.string().min(7),
-});
-
-type User = z.infer<typeof UserSchema>;
-const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:8000";
 
 export default function AuthForm() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -31,18 +25,8 @@ export default function AuthForm() {
         const user: User = result.data;
 
         try {
-            const response = await fetch(`${backendApiUrl}/api/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(user),
-            });
-
-            if (!response.ok) throw new Error("Unable to sign in");
-            const data = await response.json();
+            const data = await login(user);
             console.log(data);
-
         } catch (requestError) {
             setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
         } finally {

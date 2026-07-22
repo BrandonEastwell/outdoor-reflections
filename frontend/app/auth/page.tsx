@@ -2,7 +2,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
-import AuthForm from "@/components/authForm";
+import AuthForm from "@/components/AuthForm";
 
 export const metadata = {
   title: "Sign in | outdoor reflections",
