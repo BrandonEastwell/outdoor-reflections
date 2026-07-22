@@ -1,10 +1,10 @@
 import {AuthService} from "./auth.service";
-import {Controller, Post, Req, Res, UseGuards} from "@nestjs/common";
+import {Controller, Get, Post, Req, Res, UseGuards} from "@nestjs/common";
 import type {Request, Response} from 'express';
 import {LocalAuthGuard} from "./local-auth-guard";
 import {User} from "../interfaces/user.types";
 
-@Controller('tokens')
+@Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
@@ -16,5 +16,10 @@ export class AuthController {
         } catch (err) {
             return res.status(401).json({error: err.message});
         }
+    }
+
+    @Get()
+    async me(@Req() req: Request, @Res() res: Response) {
+
     }
 }
