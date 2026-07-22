@@ -1,37 +1,16 @@
 "use client"
 
 import { SVG_PATHS } from "@/constants/svgPaths";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import BarItem from "@/components/BarItem";
-import Database from "@/lib/database";
-import {createEmptyEntry, isEntryEmpty, sortEntriesByLastUpdated} from "@/utils/entryUtils";
-import {Entry} from "@/types/entryTypes";
+import {createEmptyEntry, isEntryEmpty} from "@/utils/entryUtils";
 import {usePathname, useRouter} from "next/navigation";
-
-const db = new Database();
 
 export default function TopBar() {
     const [toggleSidebar, setToggleSidebar] = useState<boolean>(false);
-    const [recentEntries, setRecentEntries] = useState<Entry[]>([]);
     const toggle = () => setToggleSidebar(!toggleSidebar);
     const pathname = usePathname();
     const router = useRouter();
-
-    useEffect(() => {
-        const getRecentEntries = async () => {
-            const entries = await db.getAll('reflections')
-            if (!entries) return;
-            const sortedEntries = sortEntriesByLastUpdated(entries)
-            setRecentEntries(sortedEntries)
-        }
-
-        getRecentEntries()
-    }, [])
-
-    const recentEntryClickHandler = (entry: Entry) => {
-        router.push(`/entry/${entry.id}`);
-        setToggleSidebar(false);
-    }
 
     const createNewEntry = async () => {
         if (window.location.pathname.includes("/entry/")) {
@@ -52,7 +31,7 @@ export default function TopBar() {
                 <BarItem
                     svgPaths={SVG_PATHS.userIcon}
                     label="Login"
-                    onClick={toggle}
+                    onClick={() => router.push("/auth")}
                 />
                 <BarItem
                     svgPaths={SVG_PATHS.flowerIcon}

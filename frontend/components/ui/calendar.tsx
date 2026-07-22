@@ -10,7 +10,20 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
+
+function ChevronIcon({ direction, className, ...props }: React.SVGProps<SVGSVGElement> & { direction: "left" | "right" | "down" }) {
+  const paths = {
+    left: "M15 18l-6-6 6-6",
+    right: "M9 6l6 6-6 6",
+    down: "M6 9l6 6 6-6",
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+      <path d={paths[direction]} />
+    </svg>
+  )
+}
 
 function Calendar({
   className,
@@ -146,20 +159,14 @@ function Calendar({
         },
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
-            return (
-              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
-            )
+            return <ChevronIcon direction="left" className={cn("size-4", className)} {...props} />
           }
 
           if (orientation === "right") {
-            return (
-              <ChevronRightIcon className={cn("size-4", className)} {...props} />
-            )
+            return <ChevronIcon direction="right" className={cn("size-4", className)} {...props} />
           }
 
-          return (
-            <ChevronDownIcon className={cn("size-4", className)} {...props} />
-          )
+          return <ChevronIcon direction="down" className={cn("size-4", className)} {...props} />
         },
         DayButton: ({ ...props }) => (
           <CalendarDayButton locale={locale} {...props} />
