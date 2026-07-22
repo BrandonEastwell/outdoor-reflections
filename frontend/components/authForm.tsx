@@ -3,6 +3,15 @@ import {Button} from "@/components/ui/button";
 import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import {useState} from "react";
+import * as z from "zod";
+
+const UserSchema = z.object({
+    email: z.email().trim(),
+    password: z.string().min(7),
+});
+
+type User = z.infer<typeof UserSchema>;
+const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:8000";
 
 export default function AuthForm() {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -10,8 +19,37 @@ export default function AuthForm() {
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const result = UserSchema.safeParse({email, password});
+        if (!result.success) {
+            setIsSubmitting(false);
+            return setError(result.error.issues[0]?.message ?? "Invalid credentials");
+        }
+        const user: User = result.data;
+
+        try {
+            const response = await fetch(`${backendApiUrl}/api/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(user),
+            });
+            if (!response.ok) {
+                throw new Error("Unable to sign in");
+            }
+        } catch (requestError) {
+            setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
     return (
-        <form className="mt-8 grid gap-4 font-mono">
+        <form onSubmit={handleSubmit} className="mt-8 grid gap-4 font-mono">
             <label className="grid gap-2">
                 <span className="text-sm font-medium text-blue-slate">Email</span>
                 <input
@@ -38,6 +76,8 @@ export default function AuthForm() {
                 />
             </label>
 
+            {error && <p className="text-sm text-destructive">{error}</p>}
+
             <div className="flex items-center justify-between gap-4">
                 <label className="flex items-center gap-2 text-sm text-blue-slate/80">
                     <input
@@ -52,7 +92,7 @@ export default function AuthForm() {
                 </button>
             </div>
 
-            <Button type="submit" className="h-12 rounded-2xl bg-rose text-background hover:bg-rose/90">
+            <Button type="submit" disabled={isSubmitting} className="h-12 rounded-2xl bg-rose text-background hover:bg-rose/90">
                 sign in
                 <DrawIcon fill={"white"} svgPaths={SVG_PATHS.signInIcon} />
             </Button>

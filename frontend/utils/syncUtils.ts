@@ -2,6 +2,7 @@ import Database from "@/lib/database";
 import {Entry} from "@/types/entryTypes";
 
 const db = new Database();
+const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "http://localhost:8000";
 
 export async function syncPendingEntries() {
     const entries = await db.getAll('reflections')
@@ -10,7 +11,7 @@ export async function syncPendingEntries() {
     const entriesToSync = entries.map(entry => entry.sync_status = "pending")
 
     try {
-        const res = await fetch("http://localhost:8000/reflections/sync", {
+        const res = await fetch(`${backendApiUrl}/reflections/sync`, {
             method: "POST",
             body: JSON.stringify(entriesToSync)
         })
