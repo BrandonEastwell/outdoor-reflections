@@ -10,13 +10,13 @@ export class UserController {
 
     @Get(':id')
     findOne(@Req() req: Request, @Res() res: Response) {
-         const userID: string = req.params.id[0];
-         return this.userService.findUserByID(Number(userID))
+         const userID = Number(req.params.id);
+         return this.userService.findUserByID(userID)
     }
 
     @Post()
     create(@Req() req: Request, @Res() res: Response) {
-         const UserDTO: UserDTO = req.body;
-         return this.authService.registerUser(UserDTO)
+         const userDTO: UserDTO = req.body;
+         return this.authService.registerUser(userDTO)
     }
  }

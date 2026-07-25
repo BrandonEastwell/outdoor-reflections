@@ -5,8 +5,8 @@ import {UserRepository} from "./user.repository";
 export class UserService {
     constructor(private repo: UserRepository) {}
 
-    createUser(username: string, password: string) {
-        return this.repo.createUser(username, password)
+    createUser(email: string, password: string) {
+        return this.repo.createUser(email, password)
     }
 
     async findUserByID(id: number) {
@@ -15,8 +15,8 @@ export class UserService {
         return user;
     }
 
-    async findUserByUsername(username: string) {
-        const user = await this.repo.getUserByUsername(username)
+    async findUserByEmail(email: string) {
+        const user = await this.repo.getUserByEmail(email)
         if (!user) return null;
         return user;
     }
