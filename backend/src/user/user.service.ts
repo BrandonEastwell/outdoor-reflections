@@ -1,11 +1,14 @@
-import {Injectable} from "@nestjs/common";
+import {ConflictException, Injectable} from "@nestjs/common";
 import {UserRepository} from "./user.repository";
 
 @Injectable()
 export class UserService {
     constructor(private repo: UserRepository) {}
 
-    createUser(email: string, password: string) {
+    async createUser(email: string, password: string) {
+        const existingUser = await this.findUserByEmail(email);
+        if (existingUser) throw new ConflictException('User already exists');
+
         return this.repo.createUser(email, password)
     }
 
