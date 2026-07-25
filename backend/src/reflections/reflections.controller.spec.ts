@@ -1,44 +1,69 @@
-import {ReflectionsController} from "./reflections.controller";
-import {ReflectionsService} from "./reflections.service";
-import {Test} from "@nestjs/testing";
-import {ConflictException} from "@nestjs/common";
-import {ReflectionsRepository} from "./reflections.repository";
-import {EntryDTO} from "../interfaces/reflection.types";
+import { Test } from "@nestjs/testing";
+import { ConflictException } from "@nestjs/common";
+import { ReflectionsController } from "./reflections.controller";
+import { ReflectionsService } from "./reflections.service";
+import { SyncService } from "./sync.service";
+import { ReflectionResponseDto } from "../interfaces/reflection.types";
+import { randomUUID } from "node:crypto";
 
 describe("ReflectionsController", () => {
-    let reflectionsController: ReflectionsController
-    let reflectionsService: ReflectionsService
+    let reflectionsController: ReflectionsController;
+
+    const mockReflectionService = {
+        createEntry: jest.fn(),
+    };
+
+    const mockSyncService = {
+        syncEntries: jest.fn(),
+    };
 
     beforeEach(async () => {
         const app = await Test.createTestingModule({
             controllers: [ReflectionsController],
-            providers: [ReflectionsService,
+            providers: [
                 {
-                    provide: ReflectionsRepository,
-                    useValue: jest.fn()
-                }],
-        }).compile()
+                    provide: ReflectionsService,
+                    useValue: mockReflectionService,
+                },
+                {
+                    provide: SyncService,
+                    useValue: mockSyncService,
+                },
+            ],
+        }).compile();
 
-        reflectionsController = app.get(ReflectionsController)
-        reflectionsService = app.get(ReflectionsService)
-    })
+        reflectionsController = app.get(ReflectionsController);
+        jest.clearAllMocks();
+    });
 
-    describe('create', () => {
-        const mockBody: EntryDTO = {
-            content: 'hello',
-            title: 'day 1',
-            drawing: null
-        }
-        const mockServiceReturnValue = { id: 1, ...mockBody }
+    describe("create", () => {
+        const entry: ReflectionResponseDto = {
+            createdAt: "",
+            date: new Date().toISOString(),
+            id: randomUUID(),
+            lastSyncedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            title: "test entry",
+            content: ["it is day 3"],
+            drawingPaths: [],
+        };
 
-        it('should create a new reflection entry', async () => {
-            jest.spyOn(reflectionsService, 'createEntry').mockResolvedValue(mockServiceReturnValue)
-            expect(await reflectionsController.create(mockBody)).toEqual(mockServiceReturnValue)
+        const mockBody = {
+            userId: 1,
+            entry,
+        };
+
+        it("should create a new reflection entry", async () => {
+            mockReflectionService.createEntry.mockResolvedValue(entry);
+
+            await expect(reflectionsController.create({ body: mockBody } as any, {} as any)).resolves.toEqual(entry);
+            expect(mockReflectionService.createEntry).toHaveBeenCalledWith(entry, 1);
         });
 
-        it('should return conflict exception if entry exists', () => {
-            reflectionsService.createEntry = jest.fn().mockRejectedValue(new ConflictException("EntryEditor already exists"))
-            expect(reflectionsController.create(mockBody)).rejects.toThrow(ConflictException)
+        it("should return conflict exception if entry exists", async () => {
+            mockReflectionService.createEntry.mockRejectedValue(new ConflictException("Entry already exists"));
+
+            await expect(reflectionsController.create({ body: mockBody } as any, {} as any)).rejects.toThrow(ConflictException);
         });
-    })
-})
+    });
+});

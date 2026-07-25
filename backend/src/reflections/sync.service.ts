@@ -1,13 +1,12 @@
 import {Injectable} from "@nestjs/common";
 import {ReflectionsRepository} from "./reflections.repository";
-import {Entry, EntryDTO} from "../interfaces/reflection.types";
+import {ReflectionResponseDto} from "../interfaces/reflection.types";
 
 @Injectable()
 export class SyncService {
     constructor(private repo: ReflectionsRepository) {}
 
-    async syncEntries(entries: EntryDTO[], userId: number) {
-        const entriesToInsert: Entry[] = entries.map(entry => ({...entry, user_id: userId }))
-        return this.repo.upsert(entriesToInsert)
+    async syncEntries(entries: ReflectionResponseDto[], userId: number) {
+        return this.repo.upsert(entries, userId)
     }
 }

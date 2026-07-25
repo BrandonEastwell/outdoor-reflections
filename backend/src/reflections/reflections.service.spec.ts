@@ -1,7 +1,8 @@
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
-import {EntryDTO} from "../interfaces/reflection.types";
+import {ReflectionResponseDto} from "../interfaces/reflection.types";
+import {randomUUID} from "node:crypto";
 
 describe('ReflectionsService', () => {
     let reflectionsService: ReflectionsService
@@ -24,17 +25,16 @@ describe('ReflectionsService', () => {
     })
 
     describe('create', () => {
-        const mockReflectionEntry: EntryDTO = {
-            created_at: new Date(),
-            date: new Date(),
-            id: "",
-            last_synced_at: null,
-            sync_status: "pending",
-            updated_at: new Date(),
-            content: "...",
-            title: "day 1",
-            drawing_paths: []
-        }
+        const mockReflectionEntry: ReflectionResponseDto = {
+            createdAt: "",
+            date: new Date().toISOString(),
+            id: randomUUID(),
+            lastSyncedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            title: "test entry",
+            content: ["it is day 3"],
+            drawingPaths: [],
+        };
 
         it('should create a new reflection entry', async () => {
             mockReflectionRepo.create.mockResolvedValue({user_id: 0, ...mockReflectionEntry})
