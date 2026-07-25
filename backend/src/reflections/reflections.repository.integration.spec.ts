@@ -1,15 +1,21 @@
 import {PrismaService} from "../database/prisma.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionEntryDTO} from "../interfaces/reflection.types";
+import {EntryDTO} from "../interfaces/reflection.types";
 import {DatabaseModule} from "../database/database.module";
+import {randomUUID} from "node:crypto";
 
 describe('ReflectionsRepository', () => {
     let reflectionRepository: ReflectionsRepository;
-    let db: PrismaService;
+    let prisma: PrismaService;
 
-    let testUserName = "test_user"
+    let testData = { email: 'test@gmail.com', password: "test"}
     let testUserID: number;
+
+    beforeAll(async () => {
+        prisma = new PrismaService();
+        await prisma.$connect();
+    });
 
     beforeEach(async () => {
         const app = await Test.createTestingModule({
@@ -18,41 +24,58 @@ describe('ReflectionsRepository', () => {
         }).compile()
 
         reflectionRepository = app.get(ReflectionsRepository)
-        db = app.get(PrismaService)
+        prisma = app.get(PrismaService)
 
-        const query = "INSERT INTO user_account (username, password) Values ($1, $2) ON CONFLICT (username) DO UPDATE SET username = EXCLUDED.username RETURNING id"
-        const res = await db.query(query, [testUserName, 'test']);
-        testUserID = res.rows[0].id;
+        const res = await prisma.userAccount.upsert({
+            create: testData,
+            update: testData,
+            where: { email: testData.email }
+        })
+
+        testUserID = res.id;
     })
 
     afterAll(async () => {
-        const query = "DELETE FROM user_account WHERE username = $1"
-        await db.query(query, [testUserName]);
+        prisma.userAccount.delete({
+            where: { id: testUserID }
+        })
+        await prisma.$disconnect();
     })
 
     it('should create a new reflections entry in reflections table', async () => {
-        const entry: ReflectionEntryDTO = {
+        const entry: EntryDTO = {
+            created_at: "",
+            date: new Date().toISOString(),
+            id: "",
+            last_synced_at: new Date().toISOString(),
+            sync_status: "pending",
+            updated_at: new Date().toISOString(),
+            user_id: testUserID,
             title: "test entry",
-            content: "it is day 3",
-            drawing: null
+            content: ["it is day 3"],
+            drawing_paths: []
         }
 
-        const query = "SELECT COUNT(*) FROM reflection"
-        const before = await db.query(query)
-        await reflectionRepository.create(entry, testUserID);
-        const after = await db.query(query)
-        expect(Number(after.rows[0].count)).toBe(Number(before.rows[0].count) + 1)
+        const before = await prisma.reflection.count()
+        await reflectionRepository.create(entry);
+        const after = await prisma.reflection.count()
+        expect(after).toBe(before + 1)
     });
 
     it('should delete a reflections entry from reflections table', async () => {
-        const insertEntryQuery = "INSERT INTO reflection (user_id, title) Values ($1, $2) RETURNING *";
-        const res = await db.query(insertEntryQuery, [testUserID, 'test']);
+        const entry = await prisma.reflection.create({
+            data: {
+                id: randomUUID(),
+                userId: testUserID,
+                title: 'test'
+            }
+        })
 
-        await reflectionRepository.delete(res.rows[0].id)
-        const countRes = await db.query("SELECT COUNT(*) FROM reflection WHERE id = $1",
-            [res.rows[0].id]);
-
-        expect(Number(countRes.rows[0].count)).toBe(0)
+        await reflectionRepository.delete(entry.id)
+        const res = await prisma.reflection.findFirst({
+            where: { id: entry.id }
+        })
+        expect(res).toBe(null)
     });
 
 });

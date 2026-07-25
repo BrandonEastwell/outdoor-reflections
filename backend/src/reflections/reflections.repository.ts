@@ -1,25 +1,27 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../database/prisma.service";
-import {Reflection, ReflectionEntryDTO} from "../interfaces/reflection.types";
+import {Entry} from "../interfaces/reflection.types";
 
 @Injectable()
 export class ReflectionsRepository {
-    constructor(private readonly db: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
-    async create(entry: Reflection) {
-        const query = "INSERT INTO reflection (id, user_id, title, content, date, drawing_paths, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *"
-        const res = await this.db.query(query,
-            [entry.user_id, entry.title, entry.content, entry.date, entry.drawing_paths, entry.created_at])
-        return res.rows[0]
+    async create(entry: Entry, userId: number) {
+        const entry = this.prisma.reflection.create({
+            data: {
+                ...entry,
+                userId: userId
+            }
+        })
     }
 
-    async delete(id: number) {
+    async delete(id: string) {
         const query = "DELETE FROM reflection WHERE id=$1 RETURNING *"
         const res = await this.db.query(query, [id])
         return res.rows[0]
     }
 
-    async upsert(reflectionEntries: Reflection[]) {
+    async upsert(reflectionEntries: Entry[]) {
         if (reflectionEntries.length === 0) {
             return [];
         }

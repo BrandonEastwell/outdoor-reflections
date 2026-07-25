@@ -3,28 +3,29 @@ export type DrawPath = {
     color: string;
 };
 
-type EntrySyncStatus = "synced" | "pending" | "failed";
+type SyncStatus = "synced" | "pending" | "failed";
 
-export type Reflection = {
+export type Entry = {
+    id: string;
+    title: string;
+    content: string[];
+    date: string;
+    drawing_paths: DrawPath[];
+    sync_status: SyncStatus;
+    last_synced_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export type EntryDTO = {
     id: string;
     user_id: number;
     title: string;
-    content: string;
-    date: Date;
+    content: string[];
+    date: string;
     drawing_paths: DrawPath[];
-    last_synced_at: Date | null;
-    created_at: Date;
-    updated_at: Date;
-}
-
-export type ReflectionEntryDTO = {
-    id: string;
-    title: string;
-    content: string;
-    date: Date;
-    drawing_paths: DrawPath[];
-    sync_status: EntrySyncStatus;
-    last_synced_at: Date | null;
-    created_at: Date;
-    updated_at: Date;
+    sync_status: SyncStatus;
+    last_synced_at: string | null;
+    created_at: string;
+    updated_at: string;
 }
