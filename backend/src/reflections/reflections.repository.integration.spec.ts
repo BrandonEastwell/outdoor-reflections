@@ -1,7 +1,7 @@
 import {PrismaService} from "../database/prisma.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
-import {EntryDTO} from "../interfaces/reflection.types";
+import {Entry, EntryDTO} from "../interfaces/reflection.types";
 import {DatabaseModule} from "../database/database.module";
 import {randomUUID} from "node:crypto";
 
@@ -43,21 +43,20 @@ describe('ReflectionsRepository', () => {
     })
 
     it('should create a new reflections entry in reflections table', async () => {
-        const entry: EntryDTO = {
+        const entry: Entry = {
             created_at: "",
             date: new Date().toISOString(),
             id: "",
             last_synced_at: new Date().toISOString(),
             sync_status: "pending",
             updated_at: new Date().toISOString(),
-            user_id: testUserID,
             title: "test entry",
             content: ["it is day 3"],
             drawing_paths: []
         }
 
         const before = await prisma.reflection.count()
-        await reflectionRepository.create(entry);
+        await reflectionRepository.create(entry, testUserID);
         const after = await prisma.reflection.count()
         expect(after).toBe(before + 1)
     });

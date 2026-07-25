@@ -1,31 +1,30 @@
+import type { Reflection } from '../../generated/prisma/client';
+
 export type DrawPath = {
     path: string;
     color: string;
 };
 
-type SyncStatus = "synced" | "pending" | "failed";
-
-export type Entry = {
+export type ReflectionResponseDto = {
     id: string;
     title: string;
     content: string[];
     date: string;
-    drawing_paths: DrawPath[];
-    sync_status: SyncStatus;
-    last_synced_at: string | null;
-    created_at: string;
-    updated_at: string;
-}
+    drawingPaths: DrawPath[];
+    lastSyncedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+};
 
-export type EntryDTO = {
-    id: string;
-    user_id: number;
-    title: string;
-    content: string[];
-    date: string;
-    drawing_paths: DrawPath[];
-    sync_status: SyncStatus;
-    last_synced_at: string | null;
-    created_at: string;
-    updated_at: string;
+export function toReflectionResponseDto(reflection: Reflection): ReflectionResponseDto {
+    return {
+        id: reflection.id,
+        title: reflection.title,
+        content: reflection.content,
+        date: reflection.date.toISOString(),
+        drawingPaths: reflection.drawingPaths as DrawPath[],
+        lastSyncedAt: reflection.lastSyncedAt?.toISOString() ?? null,
+        createdAt: reflection.createdAt.toISOString(),
+        updatedAt: reflection.updatedAt.toISOString(),
+    };
 }

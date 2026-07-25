@@ -1,18 +1,24 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../database/prisma.service";
-import {Entry} from "../interfaces/reflection.types";
+import {ReflectionResponseDto, toReflectionResponseDto} from "../interfaces/reflection.types";
 
 @Injectable()
 export class ReflectionsRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(entry: Entry, userId: number) {
-        const entry = this.prisma.reflection.create({
+    async create(dto: ReflectionResponseDto, userId: number): Promise<ReflectionResponseDto> {
+        const reflection = await this.prisma.reflection.create({
             data: {
-                ...entry,
-                userId: userId
+                id: dto.id,
+                userId,
+                title: dto.title,
+                content: dto.content,
+                date: new Date(dto.date),
+                drawingPaths: dto.drawingPaths,
             }
-        })
+        });
+
+        return toReflectionResponseDto(reflection);
     }
 
     async delete(id: string) {
