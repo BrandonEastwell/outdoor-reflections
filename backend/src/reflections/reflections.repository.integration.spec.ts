@@ -1,4 +1,4 @@
-import {DatabaseService} from "../database/database.service";
+import {PrismaService} from "../database/prisma.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
 import {ReflectionEntryDTO} from "../interfaces/reflection.types";
@@ -6,7 +6,7 @@ import {DatabaseModule} from "../database/database.module";
 
 describe('ReflectionsRepository', () => {
     let reflectionRepository: ReflectionsRepository;
-    let db: DatabaseService;
+    let db: PrismaService;
 
     let testUserName = "test_user"
     let testUserID: number;
@@ -18,7 +18,7 @@ describe('ReflectionsRepository', () => {
         }).compile()
 
         reflectionRepository = app.get(ReflectionsRepository)
-        db = app.get(DatabaseService)
+        db = app.get(PrismaService)
 
         const query = "INSERT INTO user_account (username, password) Values ($1, $2) ON CONFLICT (username) DO UPDATE SET username = EXCLUDED.username RETURNING id"
         const res = await db.query(query, [testUserName, 'test']);

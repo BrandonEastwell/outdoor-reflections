@@ -1,10 +1,10 @@
 import {Injectable} from "@nestjs/common";
-import {DatabaseService} from "../database/database.service";
+import {PrismaService} from "../database/prisma.service";
 import {User} from "../interfaces/user.types";
 
 @Injectable()
 export class UserRepository {
-    constructor(private db: DatabaseService) {}
+    constructor(private db: PrismaService) {}
 
     async getUserById(id: number) {
         return (await this.db.query('SELECT * FROM user_account WHERE id = $1', [id])).rows[0];

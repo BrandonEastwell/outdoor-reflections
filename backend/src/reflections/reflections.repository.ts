@@ -1,10 +1,10 @@
 import {Injectable} from "@nestjs/common";
-import {DatabaseService} from "../database/database.service";
+import {PrismaService} from "../database/prisma.service";
 import {Reflection, ReflectionEntryDTO} from "../interfaces/reflection.types";
 
 @Injectable()
 export class ReflectionsRepository {
-    constructor(private readonly db: DatabaseService) {}
+    constructor(private readonly db: PrismaService) {}
 
     async create(entry: Reflection) {
         const query = "INSERT INTO reflection (id, user_id, title, content, date, drawing_paths, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *"
