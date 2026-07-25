@@ -21,75 +21,68 @@ export class ReflectionsRepository {
         return toReflectionResponseDto(reflection);
     }
 
-    async delete(id: string) {
-        const query = "DELETE FROM reflection WHERE id=$1 RETURNING *"
-        const res = await this.db.query(query, [id])
-        return res.rows[0]
+    async delete(reflectionId: string, userId: number): Promise<ReflectionResponseDto | null> {
+        const reflection = await this.prisma.reflection.findFirst({
+            where: {
+                id: reflectionId,
+                userId,
+            },
+        });
+
+        if (!reflection) {
+            return null;
+        }
+
+        const deleted = await this.prisma.reflection.delete({
+            where: {
+                id: reflectionId,
+            },
+        });
+
+        return toReflectionResponseDto(deleted);
     }
 
-    async upsert(reflectionEntries: Entry[]) {
+    async upsert(reflectionEntries: ReflectionResponseDto[], userId: number) {
         if (reflectionEntries.length === 0) {
             return [];
         }
 
-        const values: unknown[] = [];
-        const rowsSql = reflectionEntries
-            .map((entry, index) => {
-                const offset = index * 7;
+        return this.prisma.$transaction(async (tx) => {
+            for (const entry of reflectionEntries) {
+                const existing = await tx.reflection.findUnique({
+                    where: { id: entry.id },
+                    select: { userId: true }
+                });
 
-                values.push(
-                    entry.id,
-                    entry.user_id,
-                    entry.title,
-                    entry.content,
-                    entry.date,
-                    JSON.stringify(entry.drawing_paths),
-                    entry.created_at,
-                    entry.last_synced_at,
-                    entry.updated_at,
-                );
+                if (existing && existing.userId !== userId) {
+                    continue;
+                }
 
-                return `(
-                  $${offset + 1},
-                  $${offset + 2},
-                  $${offset + 3},
-                  $${offset + 4},
-                  $${offset + 5},
-                  $${offset + 6}::jsonb,
-                  $${offset + 7},
-                  $${offset + 8},
-                  NOW(),
-                  $${offset + 9},
-                )`;
-            })
-            .join(",");
+                return this.prisma.reflection.upsert({
+                    where: { id: entry.id },
 
-        const res = await this.db.query(
-            `
-                INSERT INTO reflection (
-                    id,
-                    user_id,
-                    title,
-                    content,
-                    drawing_paths,
-                    created_at,
-                    updated_at,
-                    last_synced_at
-                )
-                VALUES ${rowsSql}
-                ON CONFLICT (id)
-                DO UPDATE SET
-                title = EXCLUDED.title,
-                content = EXCLUDED.content,
-                drawing_paths = EXCLUDED.drawing_paths,
-                updated_at = EXCLUDED.updated_at,
-                last_synced_at = NOW()
-                WHERE reflection.updated_at < EXCLUDED.updated_at
-                RETURNING *;
-            `,
-            values,
+                    create: {
+                        id: entry.id,
+                        userId,
+                        title: entry.title,
+                        content: entry.content,
+                        date: new Date(entry.date),
+                        drawingPaths: entry.drawingPaths,
+                        createdAt: new Date(entry.createdAt),
+                        lastSyncedAt: new Date(),
+                        updatedAt: new Date(entry.updatedAt),
+                    },
+
+                    update: {
+                        title: entry.title,
+                        content: entry.content,
+                        date: new Date(entry.date),
+                        drawingPaths: entry.drawingPaths,
+                        lastSyncedAt: new Date(),
+                        updatedAt: new Date(entry.updatedAt),
+                    },
+                })
+            }}
         );
-
-        return res.rows;
     }
 }
