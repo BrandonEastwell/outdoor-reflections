@@ -1,12 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
   moduleFormat = "cjs"
+  importFileExtension = "ts"
+  generatedFileExtension = "ts"
 }
 
 datasource db {
@@ -14,27 +11,26 @@ datasource db {
 }
 
 model UserAccount {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String
-  created_At DateTime @default(now())
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String
+  created_At  DateTime     @default(now())
   reflections Reflection[]
 
   @@map("user_account")
 }
 
 model Reflection {
-  id           String   @id @db.Uuid
+  id           String      @id @db.Uuid
   userId       Int
-  title        String   @db.VarChar(50)
+  title        String      @db.VarChar(50)
   content      String?
-  date         DateTime @default(now()) @db.Date
-  drawingPaths Json     @default("[]")
-  createdAt    DateTime @default(now()) @db.Timestamptz
-  lastSyncedAt DateTime @default(now()) @db.Timestamptz
-  updatedAt    DateTime @default(now()) @updatedAt @db.Timestamptz
-
-  user UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date         DateTime    @default(now()) @db.Date
+  drawingPaths Json        @default("[]")
+  createdAt    DateTime    @default(now()) @db.Timestamptz(6)
+  lastSyncedAt DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
+  user         UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("reflection")
 }

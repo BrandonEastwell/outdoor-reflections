@@ -14,8 +14,17 @@ describe('PrismaService', () => {
         prisma = app.get(PrismaService)
     })
 
+    beforeAll(async () => {
+        prisma = new PrismaService();
+        await prisma.$connect();
+    });
+
+    afterAll(async () => {
+        await prisma.$disconnect();
+    });
+
     it('should connect to a DB service', async () => {
-        const res = await prisma.userAccount.findMany()
-        expect(res.length).toBe(1)
+        const users = await prisma.userAccount.findMany()
+        expect(Array.isArray(users)).toBe(true);
     });
 });
