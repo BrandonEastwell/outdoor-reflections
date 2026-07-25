@@ -1,5 +1,6 @@
 import {ConflictException, Injectable} from "@nestjs/common";
 import {UserRepository} from "./user.repository";
+import * as bcrypt from "bcryptjs";
 
 @Injectable()
 export class UserService {
@@ -9,7 +10,8 @@ export class UserService {
         const existingUser = await this.findUserByEmail(email);
         if (existingUser) throw new ConflictException('User already exists');
 
-        return this.repo.createUser(email, password)
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return this.repo.createUser(email, hashedPassword)
     }
 
     async findUserByID(id: number) {

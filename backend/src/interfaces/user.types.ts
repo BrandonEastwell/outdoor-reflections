@@ -1,4 +1,5 @@
-export type UserDTO = {
+export type UserDto = {
+    id: number
     email: string
     password: string
 }
