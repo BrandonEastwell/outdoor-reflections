@@ -24,7 +24,7 @@ model Reflection {
   id           String      @id @db.Uuid
   userId       Int
   title        String      @db.VarChar(50)
-  content      String?
+  content      String[]
   date         DateTime    @default(now()) @db.Date
   drawingPaths Json        @default("[]")
   createdAt    DateTime    @default(now()) @db.Timestamptz(6)
