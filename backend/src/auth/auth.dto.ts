@@ -1,7 +1,7 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
-const CredentialsSchema = z.object({
+export const CredentialsSchema = z.object({
     email: z.email(),
     password: z.string(),
 })

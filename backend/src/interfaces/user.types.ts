@@ -8,3 +8,8 @@ export type UpdateUserData = {
     email?: string;
     password?: string;
 };
+
+export type SafeUser = {
+    id: number;
+    email: string;
+}
