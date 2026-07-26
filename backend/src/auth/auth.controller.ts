@@ -1,11 +1,10 @@
 import {AuthService} from "./auth.service";
-import {Body, Controller, Get, Post, Req, Res, UseGuards} from "@nestjs/common";
-import type {Request} from 'express';
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from "@nestjs/common";
+import type { Request, Response } from "express";
 import {LocalAuthGuard} from "./local-auth-guard";
 import {JwtAuthGuard} from "./jwt-auth-guard";
 import {CredentialsDto} from "./auth.dto";
 import {SafeUser} from "../interfaces/user.types";
-import request from "supertest";
 
 @Controller('auth')
 export class AuthController {
@@ -18,15 +17,22 @@ export class AuthController {
     }
 
     @Post('register')
+    @HttpCode(HttpStatus.CREATED)
     async register(@Body() credentials: CredentialsDto) {
-        return await this.authService.register(credentials)
+        await this.authService.register(credentials)
     }
 
-    @UseGuards(LocalAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Post('logout')
-    async logout(@Req() req: Request, @Res() res: Request) {
-        res.cookies.clear('access_token');
-        return res
+    async logout(@Res() res: Response) {
+        res.clearCookie("access_token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        });
+
+        return res.status(200).json({ message: "Logged out" });
     }
 
     @UseGuards(JwtAuthGuard)
