@@ -16,6 +16,7 @@ model UserAccount {
   password    String
   created_At  DateTime     @default(now())
   reflections Reflection[]
+  refreshTokens RefreshToken[]
 
   @@map("user_account")
 }
