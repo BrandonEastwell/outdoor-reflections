@@ -44,13 +44,17 @@ export class AuthService {
         }
 
         await this.authRepository.saveRefreshToken(tokenToSave)
-        return { access_token: token.access_token }
+        return token
+    }
+
+    async refreshToken(user) {
+
     }
 
     async createToken(user: SafeUser) {
         const payload = { email: user.email, sub: user.id };
         return {
-            refresh_token: await this.jwtService.signAsync(payload, { expiresIn: `${REFRESH_TOKEN_AGE_DAYS}d` }),
+            refresh_token: crypto.randomUUID(),
             access_token: await this.jwtService.signAsync(payload)
         };
     }

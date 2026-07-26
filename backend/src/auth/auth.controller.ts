@@ -12,8 +12,24 @@ export class AuthController {
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
-    async login(@Req() req: Request) {
-        return await this.authService.login(req.user as SafeUser);
+    async login(@Req() req: Request, @Res() res: Response) {
+        const token = await this.authService.login(req.user as SafeUser);
+
+        res.cookie('access_token', token.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        })
+
+        res.cookie('refresh_token', token.refresh_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        })
+
+        return res.status(201)
     }
 
     @Post('register')
@@ -29,7 +45,14 @@ export class AuthController {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            path: "/",
+            path: "/"
+        });
+
+        res.clearCookie("refresh_token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/"
         });
 
         return res.status(200).json({ message: "Logged out" });
