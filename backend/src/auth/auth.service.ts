@@ -20,10 +20,7 @@ export class AuthService {
         return safeUser
     }
 
-    async registerUser(credentials: CredentialsDto) {
-        const userExists = await this.userService.findUserByEmail(credentials.email);
-        if (userExists) throw new ConflictException('An account with this email already exists');
-
+    async register(credentials: CredentialsDto) {
         return this.userService.createUser(credentials.email, credentials.password)
     }
 
