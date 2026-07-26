@@ -1,5 +1,16 @@
 import {AuthService} from "./auth.service";
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Post,
+    Req,
+    Res,
+    UnauthorizedException,
+    UseGuards
+} from "@nestjs/common";
 import type { Request, Response } from "express";
 import {LocalAuthGuard} from "./local-auth-guard";
 import {JwtAuthGuard} from "./jwt-auth-guard";
@@ -59,8 +70,11 @@ export class AuthController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('me')
-    async me(@Req() req: Request) {
-        return req.user
+    @Post('refresh')
+    async refresh(@Req() req: Request) {
+        if (!req.cookies['refresh_token']) throw new UnauthorizedException('User is not signed in');
+        const user: SafeUser = req.user as SafeUser
+        const refreshToken: string = req.cookies['refresh_token']
+        return this.authService.refresh(user, refreshToken)
     }
 }
