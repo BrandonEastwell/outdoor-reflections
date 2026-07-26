@@ -34,3 +34,13 @@ model Reflection {
 
   @@map("reflection")
 }
+
+model RefreshToken {
+  userId Int
+  tokenHash String
+  device String
+  expiresAt DateTime
+  user UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_token")
+}
