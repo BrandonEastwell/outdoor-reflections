@@ -24,9 +24,15 @@ export class AuthService {
         return this.userService.createUser(credentials.email, credentials.password)
     }
 
+    async login(user: SafeUser) {
+        const token = await this.createToken(user);
+
+    }
+
     async createToken(user: SafeUser) {
         const payload = { email: user.email, sub: user.id };
         return {
+            refresh_token: await this.jwtService.signAsync(payload, { expiresIn: '7d' }),
             access_token: await this.jwtService.signAsync(payload)
         };
     }

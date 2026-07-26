@@ -4,6 +4,8 @@ import {UserModule} from "../user/user.module";
 import {LocalStrategy} from "./local.strategy";
 import {PassportModule} from "@nestjs/passport";
 import {JwtModule} from "@nestjs/jwt";
+import {DatabaseModule} from "../database/database.module";
+import {AuthRepository} from "./auth.repository";
 
 @Module({
     imports: [
@@ -12,9 +14,10 @@ import {JwtModule} from "@nestjs/jwt";
         JwtModule.register({
             secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: '10m' },
-        })
+        }),
+        DatabaseModule
     ],
-    providers: [AuthService, LocalStrategy],
+    providers: [AuthService, LocalStrategy, AuthRepository],
     exports: [AuthService]
 })
 
