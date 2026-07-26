@@ -14,7 +14,7 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Req() req: Request) {
-        return await this.authService.createToken(req.user as SafeUser);
+        return await this.authService.login(req.user as SafeUser);
     }
 
     @Post('register')
