@@ -1,10 +1,11 @@
 import {AuthService} from "./auth.service";
-import {Body, Controller, Get, Post, Req, UseGuards} from "@nestjs/common";
+import {Body, Controller, Get, Post, Req, Res, UseGuards} from "@nestjs/common";
 import type {Request} from 'express';
 import {LocalAuthGuard} from "./local-auth-guard";
 import {JwtAuthGuard} from "./jwt-auth-guard";
 import {CredentialsDto} from "./auth.dto";
 import {SafeUser} from "../interfaces/user.types";
+import request from "supertest";
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +20,13 @@ export class AuthController {
     @Post('register')
     async register(@Body() credentials: CredentialsDto) {
         return await this.authService.register(credentials)
+    }
+
+    @UseGuards(LocalAuthGuard)
+    @Post('logout')
+    async logout(@Req() req: Request, @Res() res: Request) {
+        res.cookies.clear('access_token');
+        return res
     }
 
     @UseGuards(JwtAuthGuard)
