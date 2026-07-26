@@ -37,12 +37,13 @@ model Reflection {
 }
 
 model RefreshToken {
-  id          Int          @id @default(autoincrement())
-  userId Int
-  tokenHash String
-  device String
-  expiresAt DateTime
-  user UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String       @id @db.Uuid
+  userId      Int
+  tokenHash   String?
+  device      String?
+  createdAt   DateTime
+  user        UserAccount  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, device])
   @@map("refresh_token")
 }

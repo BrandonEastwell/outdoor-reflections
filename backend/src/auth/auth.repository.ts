@@ -1,21 +1,30 @@
 import {PrismaService} from "../database/prisma.service";
-import {ConflictException, Injectable} from "@nestjs/common";
+import {Injectable} from "@nestjs/common";
 import {RefreshToken} from "../../generated/prisma/client";
 
 @Injectable()
 export class AuthRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async saveRefreshToken(data: Omit<RefreshToken, 'id'>): Promise<boolean> {
-        const savedToken = await this.prisma.refreshToken.create({data});
-        return !!savedToken;
+    async createRefreshSession(data: RefreshToken): Promise<RefreshToken> {
+        return this.prisma.refreshToken.create({data});
     }
 
-    async findRefreshToken(userId: number, device: string): Promise<RefreshToken | null> {
-        return this.prisma.refreshToken.findFirst({
+    async updateRefreshToken(id: string, hashedToken: string): Promise<RefreshToken> {
+        return this.prisma.refreshToken.update({
             where: {
-                userId,
-                device
+                id
+            },
+            data: {
+                tokenHash: hashedToken
+            }
+        });
+    }
+
+    async findRefreshToken(id: string): Promise<RefreshToken | null> {
+        return this.prisma.refreshToken.findUnique({
+            where: {
+                id
             }
         })
     }

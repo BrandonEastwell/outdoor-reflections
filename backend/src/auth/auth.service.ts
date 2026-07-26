@@ -28,33 +28,49 @@ export class AuthService {
     }
 
     async login(user: SafeUser) {
-        const exists = await this.authRepository.findRefreshToken(user.id, 'all');
-        if (exists) throw new ConflictException('User already signed in on this device');
+        // const exists = await this.authRepository.findRefreshToken(user.id);
+        // if (exists) throw new ConflictException('User already signed in on this device');
 
-        const token = await this.createToken(user);
-        const hashedToken = await bcrypt.hash(token.refresh_token, 10);
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + REFRESH_TOKEN_AGE_DAYS);
-
-        const tokenToSave: Omit<RefreshToken, 'id'> = {
+        const session: RefreshToken = await this.authRepository.createRefreshSession({
+            id: crypto.randomUUID(),
             userId: user.id,
-            tokenHash: hashedToken,
-            device: 'all',
-            expiresAt: expiresAt
-        }
+            createdAt: new Date(),
+            device: null,
+            tokenHash: null
+        });
 
-        await this.authRepository.saveRefreshToken(tokenToSave)
+        return this.createTokens(user, session.id)
+    }
+
+    async isRefreshTokenValid(refreshSessionId: string, token: string) {
+        const refresh: RefreshToken | null = await this.authRepository.findRefreshToken(refreshSessionId);
+        if (!refresh) throw new UnauthorizedException('User not signed in');
+        if (refresh.tokenHash) return await bcrypt.compare(refresh.tokenHash, token)
+        return false
+    }
+
+    async refresh(user: SafeUser, refreshToken: string) {
+        const payload = await this.jwtService.verifyAsync(refreshToken, { secret: process.env.JWT_REFRESH_SECRET });
+
+        const isValid = await this.isRefreshTokenValid(payload.sid, refreshToken);
+        if (!isValid) throw new UnauthorizedException('Invalid refresh token');
+
+        return this.createTokens(user, payload.sid)
+    }
+
+    async createTokens(user: SafeUser, refreshSessionId: string) {
+        const token = await this.signTokens(user, refreshSessionId);
+        const hashedToken = await bcrypt.hash(token.refresh_token, 10);
+        await this.authRepository.updateRefreshToken(refreshSessionId, hashedToken)
         return token
     }
 
-    async refreshToken(user) {
-
-    }
-
-    async createToken(user: SafeUser) {
+    async signTokens(user: SafeUser, refreshSessionId: string) {
         const payload = { email: user.email, sub: user.id };
+        const refreshPayload = { sub: user.id, sid: refreshSessionId }
         return {
-            refresh_token: crypto.randomUUID(),
+            refresh_token: await this.jwtService.signAsync(refreshPayload,
+                { expiresIn: `${REFRESH_TOKEN_AGE_DAYS}d`, secret: process.env.JWT_REFRESH_SECRET }),
             access_token: await this.jwtService.signAsync(payload)
         };
     }
