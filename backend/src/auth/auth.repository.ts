@@ -28,4 +28,12 @@ export class AuthRepository {
             }
         })
     }
+
+    async findRefreshTokenByUser(id: number): Promise<RefreshToken | null> {
+        return this.prisma.refreshToken.findFirst({
+            where: {
+                userId: id
+            }
+        })
+    }
 }

@@ -28,8 +28,8 @@ export class AuthService {
     }
 
     async login(user: SafeUser) {
-        // const exists = await this.authRepository.findRefreshToken(user.id);
-        // if (exists) throw new ConflictException('User already signed in on this device');
+         const exists = await this.authRepository.findRefreshTokenByUser(user.id);
+         if (exists) throw new ConflictException('User already signed in on this device');
 
         const session: RefreshToken = await this.authRepository.createRefreshSession({
             id: crypto.randomUUID(),
