@@ -1,20 +1,17 @@
-import {PrismaService} from "./prisma.service.js";
-import {ConfigModule} from "@nestjs/config";
 import {Test} from "@nestjs/testing";
+import {ConfigModule} from "@nestjs/config";
+import {PrismaService} from "./prisma.service";
 
 describe('PrismaService', () => {
     let prisma: PrismaService
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const app = await Test.createTestingModule({
             imports: [ConfigModule.forRoot()],
             providers: [PrismaService],
         }).compile()
 
         prisma = app.get(PrismaService)
-    })
-
-    beforeAll(async () => {
         await prisma.$connect();
     });
 

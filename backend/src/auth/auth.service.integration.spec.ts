@@ -3,12 +3,12 @@ import { JwtModule, JwtService } from "@nestjs/jwt";
 import { Test, type TestingModule } from "@nestjs/testing";
 import * as bcrypt from "bcryptjs";
 import { randomUUID } from "node:crypto";
-import {AuthService} from "./auth.service.js";
-import {UserService} from "../user/user.service.js";
-import {AuthRepository} from "./auth.repository.js";
-import {UserRepository} from "../user/user.repository.js";
-import {PrismaService} from "../database/prisma.service.js";
+import {UserService} from "../user/user.service";
+import {AuthRepository} from "./auth.repository";
+import {UserRepository} from "../user/user.repository";
+import {PrismaService} from "../database/prisma.service";
 import {ConfigModule} from "@nestjs/config";
+import {AuthService} from "./auth.service";
 
 
 describe("AuthService integration", () => {
