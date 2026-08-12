@@ -5,9 +5,11 @@ import {ReflectionsModule} from "./reflections/reflections.module";
 import {ConfigModule} from "@nestjs/config";
 import {APP_INTERCEPTOR, APP_PIPE} from '@nestjs/core';
 import {ZodSerializerInterceptor, ZodValidationPipe} from 'nestjs-zod';
+import {UserModule} from "./user/user.module";
+import {AuthModule} from "./auth/auth.module";
 
 @Module({
-  imports: [ReflectionsModule, ConfigModule.forRoot({isGlobal: true})],
+  imports: [ReflectionsModule, UserModule, AuthModule, ConfigModule.forRoot({isGlobal: true})],
   controllers: [AppController],
   providers: [AppService,
     { provide: APP_PIPE, useClass: ZodValidationPipe},

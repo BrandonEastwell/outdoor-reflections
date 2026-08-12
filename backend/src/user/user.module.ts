@@ -4,11 +4,13 @@ import {UserController} from "./user.controller";
 import {UserService} from "./user.service";
 import {UserRepository} from "./user.repository";
 import {AuthService} from "../auth/auth.service";
+import {AuthRepository} from "../auth/auth.repository";
+import {JwtService} from "@nestjs/jwt";
 
 @Module({
     imports: [DatabaseModule],
     controllers: [UserController],
-    providers: [UserService, UserRepository, AuthService],
+    providers: [UserService, UserRepository, AuthService, AuthRepository, JwtService],
     exports: [UserService]
 })
 
