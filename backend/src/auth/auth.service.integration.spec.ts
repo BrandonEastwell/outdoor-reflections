@@ -103,6 +103,22 @@ describe("AuthService integration", () => {
         });
     });
 
+    it("logs in a user", async () => {
+        const email = `auth-${randomUUID()}@example.com`;
+        const credentials = { email, password: "password123" };
+
+        const user = await prisma.userAccount.create({
+            data: {
+                email: email,
+                password: await bcrypt.hash(credentials.password, 10)
+            }
+        })
+
+        const token = await authService.login({ email: user.email, id: user.id })
+        expect(token).toBeDefined()
+        expect(await authRepo.findRefreshTokenByUser(user.id)).toBeDefined()
+    })
+
     it("rejects a second login while a refresh session is active", async () => {
         const email = `auth-${randomUUID()}@example.com`;
         const credentials = { email, password: "password123" };
