@@ -1,4 +1,4 @@
-import {ConflictException, Injectable, UnauthorizedException} from "@nestjs/common";
+import {ConflictException, Injectable, Logger, UnauthorizedException} from "@nestjs/common";
 import {SafeUser} from "../interfaces/user.types";
 import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcryptjs';
@@ -11,6 +11,7 @@ import {RefreshToken} from "../../generated/prisma/client";
 @Injectable()
 export class AuthService {
     constructor(private userService: UserService, private authRepository: AuthRepository, private jwtService: JwtService) {}
+    private readonly logger = new Logger(AuthService.name)
 
     async validateUser(email: string, password: string): Promise<SafeUser> {
         const user = await this.userService.findUserByEmail(email);
@@ -28,8 +29,9 @@ export class AuthService {
     }
 
     async login(user: SafeUser) {
-         const exists = await this.authRepository.findRefreshTokenByUser(user.id);
-         if (exists) throw new ConflictException('User already signed in on this device');
+        this.logger.log(`User ${user.email} attempting login`)
+        const exists = await this.authRepository.findRefreshTokenByUser(user.id);
+        if (exists) throw new ConflictException('User already signed in on this device');
 
         const session: RefreshToken = await this.authRepository.createRefreshSession({
             id: crypto.randomUUID(),
