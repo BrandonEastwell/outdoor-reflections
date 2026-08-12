@@ -16,10 +16,8 @@ describe("AuthService integration", () => {
     let authService: AuthService;
     let userService: UserService;
     let authRepo: AuthRepository;
-    let userRepo: UserRepository;
     let jwtService: JwtService;
     let prisma: PrismaService
-    let nextUserId = 1;
 
     beforeAll(async () => {
         app = await Test.createTestingModule({
@@ -103,7 +101,7 @@ describe("AuthService integration", () => {
         });
     });
 
-    it("logs in a user", async () => {
+    it("login a user", async () => {
         const email = `auth-${randomUUID()}@example.com`;
         const credentials = { email, password: "password123" };
 
