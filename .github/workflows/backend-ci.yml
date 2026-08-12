@@ -1,12 +1,16 @@
 name: Backend CI
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
-
-
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
 
 jobs:
   test:
@@ -53,6 +57,9 @@ jobs:
 
       - name: Generate Prisma client
         run: pnpm prisma generate
+
+      - name: Apply database migrations
+        run: pnpm prisma migrate deploy
 
       - name: Lint
         run: pnpm lint
