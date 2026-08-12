@@ -47,7 +47,7 @@ export class AuthService {
     async isRefreshTokenValid(refreshSessionId: string, token: string) {
         const refresh: RefreshToken | null = await this.authRepository.findRefreshToken(refreshSessionId);
         if (!refresh) throw new UnauthorizedException('User not signed in');
-        if (refresh.tokenHash) return await bcrypt.compare(refresh.tokenHash, token)
+        if (refresh.tokenHash) return await bcrypt.compare(token, refresh.tokenHash)
         return false
     }
 
