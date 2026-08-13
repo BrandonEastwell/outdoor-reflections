@@ -18,7 +18,7 @@ describe("SyncService integration", () => {
                 DatabaseModule,
                 ConfigModule.forRoot({
                     isGlobal: true,
-                    envFilePath: ".env",
+                    envFilePath: ".env.test",
                 })
             ],
             providers: [SyncService, ReflectionsRepository],

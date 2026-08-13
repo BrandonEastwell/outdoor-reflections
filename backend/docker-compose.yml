@@ -20,6 +20,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  postgres-test:
+    image: postgres:17
+    container_name: postgres-db-test
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: outdoor_reflections_test_db
+
+    ports:
+      - "5433:5433"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d outdoor_reflections_test_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

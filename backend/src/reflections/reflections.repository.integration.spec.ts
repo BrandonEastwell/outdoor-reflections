@@ -24,7 +24,7 @@ describe('ReflectionsRepository', () => {
                 DatabaseModule,
                 ConfigModule.forRoot({
                     isGlobal: true,
-                    envFilePath: ".env",
+                    envFilePath: ".env.test",
                 })],
             providers: [ReflectionsRepository]
         }).compile()

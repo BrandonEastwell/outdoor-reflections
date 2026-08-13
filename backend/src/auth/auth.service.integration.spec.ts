@@ -24,7 +24,7 @@ describe("AuthService integration", () => {
             imports: [
                 ConfigModule.forRoot({
                     isGlobal: true,
-                    envFilePath: ".env",
+                    envFilePath: ".env.test",
                 }),
                 JwtModule.register({
                     secret: "test-access-secret",
