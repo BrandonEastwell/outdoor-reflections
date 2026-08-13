@@ -6,12 +6,14 @@ import {SyncService} from "./sync.service";
 import {ReflectionDto} from "./reflection.types";
 import {ConfigModule} from "@nestjs/config";
 import {seedExplicitReflections} from "../database/db.seed.helpers";
+import {Reflection} from "../../generated/prisma/client";
 
 describe("SyncService integration", () => {
     let app: TestingModule;
     let prisma: PrismaService;
     let syncService: SyncService;
-    let user: { id: number; email: string };
+    let testUser: { id: number; email: string };
+    let testReflections: Reflection[];
     const reflectionId = "11111111-1111-1111-1111-111111111111";
 
     beforeAll(async () => {
@@ -35,7 +37,9 @@ describe("SyncService integration", () => {
         await prisma.reflection.deleteMany();
         await prisma.userAccount.deleteMany();
 
-        user = await seedExplicitReflections(prisma, reflectionId)
+        const { user, reflections } = await seedExplicitReflections(prisma, reflectionId)
+        testUser = user
+        testReflections = reflections
     });
 
     afterAll(async () => {
@@ -60,8 +64,8 @@ describe("SyncService integration", () => {
         } as unknown as ReflectionDto;
 
         const result = await syncService.syncEntries([entry], {
-            id: user.id,
-            email: user.email,
+            id: testUser.id,
+            email: testUser.email,
         });
 
         expect(result).toMatchObject({
@@ -81,7 +85,7 @@ describe("SyncService integration", () => {
         expect(persisted).not.toBeNull();
         expect(persisted).toMatchObject({
             id: reflectionId,
-            userId: user.id,
+            userId: testUser.id,
             title: "updated title",
             content: ["updated content"],
             drawingPaths: [{ path: "M0 0L10 10", color: "#000000" }],
@@ -89,4 +93,22 @@ describe("SyncService integration", () => {
         });
         expect(persisted!.date.toISOString()).toBe("2026-08-13T00:00:00.000Z");
     });
+
+    it("creates a new reflection and returns a success response with created count > 0", async () => {
+        const baseDate = new Date("2026-08-13T09:00:00.000Z");
+        const nextDate = new Date("2026-08-13T10:30:00.000Z");
+
+        const entry = {
+            id: ,
+            title: "updated title",
+            content: ["updated content"],
+            date: nextDate,
+            drawingPaths: [{ path: "M0 0L10 10", color: "#000000" }],
+            lastSyncedAt: nextDate,
+            lastEditedAt: nextDate,
+            createdAt: baseDate,
+            updatedAt: nextDate,
+        } as unknown as ReflectionDto;
+
+    })
 });
