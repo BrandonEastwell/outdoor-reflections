@@ -148,6 +148,34 @@ describe("SyncService integration", () => {
         });
     })
 
+    it("returns a partial response when some entries fail to sync", async () => {
+        const updatedEntry: ReflectionDto = {
+            ...testReflections[0],
+            title: "partial success title",
+            lastEditedAt: new Date("2026-08-13T11:00:00.000Z").toISOString(),
+        };
 
+        const brokenEntry = {
+            ...testReflections[1],
+            title: "broken entry",
+            content: "this should fail validation",
+            lastEditedAt: new Date("2026-08-13T11:30:00.000Z").toISOString(),
+        } as unknown as ReflectionDto;
+
+        const result = await syncService.syncEntries([updatedEntry, brokenEntry], testUser);
+
+        expect(result.status).toBe("PARTIAL");
+        expect(result.count.total).toBe(2);
+        expect(result.count.updated).toBe(1);
+        expect(result.count.failed).toBeGreaterThan(0);
+        expect(result.errors.length).toBeGreaterThan(0);
+        expect(result.errors).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    entryId: brokenEntry.id,
+                }),
+            ]),
+        );
+    })
 
 });
