@@ -4,6 +4,7 @@ import {ReflectionsRepository} from "./reflections.repository";
 import {DatabaseModule} from "../database/database.module";
 import {randomUUID} from "node:crypto";
 import {ReflectionDto} from "./reflection.types";
+import {ConfigModule} from "@nestjs/config";
 
 describe('ReflectionsRepository', () => {
     let reflectionRepository: ReflectionsRepository;
@@ -19,7 +20,12 @@ describe('ReflectionsRepository', () => {
 
     beforeEach(async () => {
         const app = await Test.createTestingModule({
-            imports: [DatabaseModule],
+            imports: [
+                DatabaseModule,
+                ConfigModule.forRoot({
+                    isGlobal: true,
+                    envFilePath: ".env",
+                })],
             providers: [ReflectionsRepository]
         }).compile()
 
