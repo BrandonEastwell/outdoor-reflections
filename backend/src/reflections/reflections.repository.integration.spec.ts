@@ -3,7 +3,7 @@ import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
 import {DatabaseModule} from "../database/database.module";
 import {randomUUID} from "node:crypto";
-import {ReflectionResponseDto} from "../interfaces/reflection.types";
+import {ReflectionResponseDto} from "./reflection.types";
 
 describe('ReflectionsRepository', () => {
     let reflectionRepository: ReflectionsRepository;

@@ -15,7 +15,7 @@ import type { Request, Response } from "express";
 import {LocalAuthGuard} from "./local-auth-guard";
 import {JwtAuthGuard} from "./jwt-auth-guard";
 import {CredentialsDto} from "./auth.dto";
-import {SafeUser} from "../interfaces/user.types";
+import {SafeUser} from "../user/user.types";
 
 @Controller('auth')
 export class AuthController {

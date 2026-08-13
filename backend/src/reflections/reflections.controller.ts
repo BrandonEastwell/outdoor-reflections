@@ -3,8 +3,8 @@ import {ReflectionsService} from "./reflections.service";
 import type {Request, Response} from 'express';
 import {SyncService} from "./sync.service";
 import {JwtAuthGuard} from "../auth/jwt-auth-guard";
-import {ReflectionResponseDto} from "../interfaces/reflection.types";
-import {SafeUser} from "../interfaces/user.types";
+import {ReflectionResponseDto} from "./reflection.types";
+import {SafeUser} from "../user/user.types";
 
 @Controller('reflection')
 export class ReflectionsController {

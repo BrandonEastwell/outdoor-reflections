@@ -1,5 +1,5 @@
 import {ConflictException, Injectable, Logger, UnauthorizedException} from "@nestjs/common";
-import {SafeUser} from "../interfaces/user.types";
+import {SafeUser} from "../user/user.types";
 import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcryptjs';
 import {JwtService} from "@nestjs/jwt";

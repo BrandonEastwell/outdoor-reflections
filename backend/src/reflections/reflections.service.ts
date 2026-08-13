@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionResponseDto} from "../interfaces/reflection.types";
+import {ReflectionResponseDto} from "./reflection.types";
 
 @Injectable()
 export class ReflectionsService {

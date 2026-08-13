@@ -1,7 +1,7 @@
 import {ReflectionsService} from "./reflections.service";
 import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionResponseDto} from "../interfaces/reflection.types";
+import {ReflectionResponseDto} from "./reflection.types";
 import {randomUUID} from "node:crypto";
 
 describe('ReflectionsService', () => {

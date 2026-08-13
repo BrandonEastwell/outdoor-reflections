@@ -3,7 +3,7 @@ import { ConflictException } from "@nestjs/common";
 import { ReflectionsController } from "./reflections.controller";
 import { ReflectionsService } from "./reflections.service";
 import { SyncService } from "./sync.service";
-import { ReflectionResponseDto } from "../interfaces/reflection.types";
+import { ReflectionResponseDto } from "./reflection.types";
 import { randomUUID } from "node:crypto";
 
 describe("ReflectionsController", () => {

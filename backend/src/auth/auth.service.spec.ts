@@ -10,7 +10,7 @@ import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { AuthRepository } from "./auth.repository";
 import { UserService } from "../user/user.service";
-import type { SafeUser } from "../interfaces/user.types";
+import type { SafeUser } from "../user/user.types";
 
 describe("AuthService", () => {
     let authService: AuthService;
