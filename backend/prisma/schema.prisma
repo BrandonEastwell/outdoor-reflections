@@ -30,6 +30,7 @@ model Reflection {
   drawingPaths Json        @default("[]")
   createdAt    DateTime    @default(now()) @db.Timestamptz(6)
   lastSyncedAt DateTime    @default(now()) @db.Timestamptz(6)
+  lastEditedAt DateTime
   updatedAt    DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
   user         UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
 

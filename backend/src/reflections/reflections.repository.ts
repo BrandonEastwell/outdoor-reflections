@@ -51,10 +51,17 @@ export class ReflectionsRepository {
             for (const entry of reflectionEntries) {
                 const existing = await tx.reflection.findUnique({
                     where: { id: entry.id },
-                    select: { userId: true }
+                    select: {
+                        userId: true,
+                        updatedAt: true
+                    }
                 });
 
                 if (existing && existing.userId !== userId) {
+                    continue;
+                }
+
+                if (existing && existing.updatedAt > new Date(entry.updatedAt)) {
                     continue;
                 }
 

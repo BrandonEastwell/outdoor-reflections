@@ -4,6 +4,7 @@ import type {Request, Response} from 'express';
 import {SyncService} from "./sync.service";
 import {JwtAuthGuard} from "../auth/jwt-auth-guard";
 import {ReflectionResponseDto} from "../interfaces/reflection.types";
+import {SafeUser} from "../interfaces/user.types";
 
 @Controller('reflection')
 export class ReflectionsController {
@@ -24,8 +25,8 @@ export class ReflectionsController {
 
     @UseGuards(JwtAuthGuard)
     @Post('sync')
-    async syncReflections(@Req() req: Request, @Res() res: Response) {
-        const { userId, entries }: { userId: number, entries: ReflectionResponseDto[] } = req.body;
-        return this.syncService.syncEntries(entries, userId)
+    async sync(@Req() req: Request, @Res() res: Response) {
+        const { user, entries }: { user: SafeUser, entries: ReflectionResponseDto[] } = req.body;
+        return this.syncService.syncEntries(entries, user)
     }
 }
