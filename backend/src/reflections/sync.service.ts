@@ -8,6 +8,8 @@ export class SyncService {
     constructor(private repo: ReflectionsRepository) {}
 
     async syncEntries(entries: ReflectionResponseDto[], user: SafeUser) {
-        return this.repo.upsert(entries, user.id)
+        if (entries.length === 0) return [];
+        const results = await this.repo.upsertMany(entries, user.id)
+
     }
 }

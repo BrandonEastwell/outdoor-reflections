@@ -12,6 +12,7 @@ export type ReflectionResponseDto = {
     date: string;
     drawingPaths: DrawPath[];
     lastSyncedAt: string | null;
+    lastEditedAt: string;
     createdAt: string;
     updatedAt: string;
 };
@@ -26,5 +27,6 @@ export function toReflectionResponseDto(reflection: Reflection): ReflectionRespo
         lastSyncedAt: reflection.lastSyncedAt?.toISOString() ?? null,
         createdAt: reflection.createdAt.toISOString(),
         updatedAt: reflection.updatedAt.toISOString(),
+        lastEditedAt: reflection.lastEditedAt.toISOString()
     };
 }

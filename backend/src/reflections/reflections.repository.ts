@@ -1,20 +1,25 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../database/prisma.service";
 import {ReflectionResponseDto, toReflectionResponseDto} from "../interfaces/reflection.types";
+import {Reflection} from "../../generated/prisma/client";
 
 @Injectable()
 export class ReflectionsRepository {
     constructor(private readonly prisma: PrismaService) {}
 
-    async create(dto: ReflectionResponseDto, userId: number): Promise<ReflectionResponseDto> {
+    async create(entry: ReflectionResponseDto, userId: number): Promise<ReflectionResponseDto> {
         const reflection = await this.prisma.reflection.create({
             data: {
-                id: dto.id,
+                id: entry.id,
                 userId,
-                title: dto.title,
-                content: dto.content,
-                date: new Date(dto.date),
-                drawingPaths: dto.drawingPaths,
+                title: entry.title,
+                content: entry.content,
+                date: new Date(entry.date),
+                drawingPaths: entry.drawingPaths,
+                createdAt: new Date(entry.createdAt),
+                lastSyncedAt: new Date(),
+                updatedAt: new Date(entry.updatedAt),
+                lastEditedAt: new Date(entry.lastEditedAt)
             }
         });
 
@@ -42,54 +47,67 @@ export class ReflectionsRepository {
         return toReflectionResponseDto(deleted);
     }
 
-    async upsert(reflectionEntries: ReflectionResponseDto[], userId: number) {
-        if (reflectionEntries.length === 0) {
-            return [];
-        }
+    async upsertMany(reflectionEntries: ReflectionResponseDto[], userId: number) {
+        const results: { entriesSynced: Reflection[], entriesCreated: Reflection[] } = { entriesSynced: [], entriesCreated: [] };
+        await this.prisma.$transaction(async (tx) => {
+                for (const entry of reflectionEntries) {
+                    const existing = await tx.reflection.findUnique({
+                        where: {id: entry.id},
+                        select: {
+                            userId: true,
+                            lastEditedAt: true
+                        }
+                    });
 
-        return this.prisma.$transaction(async (tx) => {
-            for (const entry of reflectionEntries) {
-                const existing = await tx.reflection.findUnique({
-                    where: { id: entry.id },
-                    select: {
-                        userId: true,
-                        updatedAt: true
+                    if (!existing) {
+                        const res = await tx.reflection.create({
+                            data: {
+                                id: entry.id,
+                                userId,
+                                title: entry.title,
+                                content: entry.content,
+                                date: new Date(entry.date),
+                                drawingPaths: entry.drawingPaths,
+                                createdAt: new Date(entry.createdAt),
+                                lastSyncedAt: new Date(),
+                                updatedAt: new Date(entry.updatedAt),
+                                lastEditedAt: new Date(entry.lastEditedAt)
+                            }
+                        });
+
+                        results.entriesCreated.push(res)
                     }
-                });
 
-                if (existing && existing.userId !== userId) {
-                    continue;
+                    if (existing && existing.userId !== userId) {
+                        continue;
+                    }
+
+                    if (existing && existing.lastEditedAt > new Date(entry.lastEditedAt)) {
+                        continue;
+                    }
+
+                    const res = await tx.reflection.update({
+                        where: {
+                            id: entry.id,
+                            lastEditedAt: {
+                                lt: entry.lastEditedAt
+                            }
+                        },
+                        data: {
+                            title: entry.title,
+                            content: entry.content,
+                            date: new Date(entry.date),
+                            drawingPaths: entry.drawingPaths,
+                            lastSyncedAt: new Date(),
+                            updatedAt: new Date(entry.updatedAt),
+                        },
+                    })
+
+                    results.entriesSynced.push(res)
                 }
-
-                if (existing && existing.updatedAt > new Date(entry.updatedAt)) {
-                    continue;
-                }
-
-                return this.prisma.reflection.upsert({
-                    where: { id: entry.id },
-
-                    create: {
-                        id: entry.id,
-                        userId,
-                        title: entry.title,
-                        content: entry.content,
-                        date: new Date(entry.date),
-                        drawingPaths: entry.drawingPaths,
-                        createdAt: new Date(entry.createdAt),
-                        lastSyncedAt: new Date(),
-                        updatedAt: new Date(entry.updatedAt),
-                    },
-
-                    update: {
-                        title: entry.title,
-                        content: entry.content,
-                        date: new Date(entry.date),
-                        drawingPaths: entry.drawingPaths,
-                        lastSyncedAt: new Date(),
-                        updatedAt: new Date(entry.updatedAt),
-                    },
-                })
-            }}
+            }
         );
+
+        return results;
     }
 }
