@@ -20,7 +20,7 @@ export type SyncResponse = {
     service_name: string;
     status: "SUCCESS" | "PARTIAL" | "FAILED"
     duration_ms: number;
-    count: { total: number, synced: number, failed: number }
+    count: { total: number, updated: number, created: number, failed: number }
     errors?: { entryId: string, error: string }[];
 };
 

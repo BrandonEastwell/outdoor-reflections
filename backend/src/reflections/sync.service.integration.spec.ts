@@ -7,6 +7,7 @@ import {ReflectionDto} from "./reflection.types";
 import {ConfigModule} from "@nestjs/config";
 import {seedExplicitReflections} from "../database/db.seed.helpers";
 import {Reflection} from "../../generated/prisma/client";
+import {randomUUID} from "node:crypto";
 
 describe("SyncService integration", () => {
     let app: TestingModule;
@@ -63,16 +64,14 @@ describe("SyncService integration", () => {
             updatedAt: nextDate,
         } as unknown as ReflectionDto;
 
-        const result = await syncService.syncEntries([entry], {
-            id: testUser.id,
-            email: testUser.email,
-        });
+        const result = await syncService.syncEntries([entry], testUser);
 
         expect(result).toMatchObject({
             status: "SUCCESS",
             count: {
                 total: 1,
-                synced: 1,
+                updated: 1,
+                created: 0,
                 failed: 0,
             },
             service_name: "reflections_sync_service",
@@ -99,7 +98,7 @@ describe("SyncService integration", () => {
         const nextDate = new Date("2026-08-13T10:30:00.000Z");
 
         const entry = {
-            id: ,
+            id: randomUUID(),
             title: "updated title",
             content: ["updated content"],
             date: nextDate,
@@ -109,6 +108,18 @@ describe("SyncService integration", () => {
             createdAt: baseDate,
             updatedAt: nextDate,
         } as unknown as ReflectionDto;
+
+        const result = await syncService.syncEntries([entry], testUser);
+
+        expect(result).toMatchObject({
+            status: "SUCCESS",
+            count: {
+                total: 1,
+                updated: 0,
+                created: 1,
+                failed: 0,
+            },
+        });
 
     })
 });

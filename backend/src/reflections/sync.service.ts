@@ -20,7 +20,12 @@ export class SyncService {
         results.entriesCreated && this.logger.log(`${results.entriesCreated.length} entries created`)
 
         const syncResults: SyncResponse = {
-            count: {failed: results.entriesFailed.length, synced: results.entriesSynced.length, total: entries.length},
+            count: {
+                failed: results.entriesFailed.length,
+                updated: results.entriesSynced.length,
+                created: results.entriesCreated.length,
+                total: entries.length
+            },
             duration_ms: diff[0] * 1000 + diff[1],
             service_name: "reflections_sync_service",
             status: results.entriesFailed.length > 0 ? results.entriesSynced.length > 0 || results.entriesCreated.length > 0 ? "PARTIAL" : "FAILED" : "SUCCESS",
