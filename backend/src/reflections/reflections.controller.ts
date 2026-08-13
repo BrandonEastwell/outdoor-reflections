@@ -27,6 +27,6 @@ export class ReflectionsController {
     @Post('sync')
     async sync(@Req() req: Request, @Res() res: Response) {
         const { user, entries }: { user: SafeUser, entries: ReflectionDto[] } = req.body;
-        return this.syncService.syncEnries(entries, user)
+        return this.syncService.syncEntries(entries, user)
     }
 }

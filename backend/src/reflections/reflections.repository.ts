@@ -91,7 +91,7 @@ export class ReflectionsRepository {
                             results.entriesCreated.push(toReflectionDto(res))
                         } catch (error) {
                             if (error instanceof Prisma.PrismaClientValidationError) {
-                                results.entriesFailed.push({ entry: entry, error: error.message })
+                                results.entriesFailed.push({ entryId: entry.id, error: error.message })
                             }
                         }
                     }
@@ -120,7 +120,7 @@ export class ReflectionsRepository {
                         results.entriesSynced.push(toReflectionDto(res))
                     } catch (error) {
                         if (error instanceof Prisma.PrismaClientValidationError) {
-                            results.entriesFailed.push({ entry: entry, error: error.message })
+                            results.entriesFailed.push({ entryId: entry.id, error: error.message })
                         }
                     }
                 }
