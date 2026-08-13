@@ -3,7 +3,7 @@ import {ReflectionsService} from "./reflections.service";
 import type {Request, Response} from 'express';
 import {SyncService} from "./sync.service";
 import {JwtAuthGuard} from "../auth/jwt-auth-guard";
-import {ReflectionResponseDto} from "./reflection.types";
+import {ReflectionDto} from "./reflection.types";
 import {SafeUser} from "../user/user.types";
 
 @Controller('reflection')
@@ -13,7 +13,7 @@ export class ReflectionsController {
     @UseGuards(JwtAuthGuard)
     @Post()
     async create(@Req() req: Request, @Res() res: Response) {
-        const { userId, entry }: { userId: number, entry: ReflectionResponseDto } = req.body;
+        const { userId, entry }: { userId: number, entry: ReflectionDto } = req.body;
         return this.reflectionService.createEntry(entry, userId)
     }
 
@@ -26,7 +26,7 @@ export class ReflectionsController {
     @UseGuards(JwtAuthGuard)
     @Post('sync')
     async sync(@Req() req: Request, @Res() res: Response) {
-        const { user, entries }: { user: SafeUser, entries: ReflectionResponseDto[] } = req.body;
+        const { user, entries }: { user: SafeUser, entries: ReflectionDto[] } = req.body;
         return this.syncService.syncEntries(entries, user)
     }
 }

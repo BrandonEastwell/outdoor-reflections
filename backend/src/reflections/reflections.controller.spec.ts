@@ -3,7 +3,7 @@ import { ConflictException } from "@nestjs/common";
 import { ReflectionsController } from "./reflections.controller";
 import { ReflectionsService } from "./reflections.service";
 import { SyncService } from "./sync.service";
-import { ReflectionResponseDto } from "./reflection.types";
+import { ReflectionDto } from "./reflection.types";
 import { randomUUID } from "node:crypto";
 
 describe("ReflectionsController", () => {
@@ -37,7 +37,7 @@ describe("ReflectionsController", () => {
     });
 
     describe("create", () => {
-        const entry: ReflectionResponseDto = {
+        const entry: ReflectionDto = {
             createdAt: "",
             date: new Date().toISOString(),
             id: randomUUID(),

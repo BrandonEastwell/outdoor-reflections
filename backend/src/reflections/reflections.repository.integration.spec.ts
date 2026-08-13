@@ -3,7 +3,7 @@ import {Test} from "@nestjs/testing";
 import {ReflectionsRepository} from "./reflections.repository";
 import {DatabaseModule} from "../database/database.module";
 import {randomUUID} from "node:crypto";
-import {ReflectionResponseDto} from "./reflection.types";
+import {ReflectionDto} from "./reflection.types";
 
 describe('ReflectionsRepository', () => {
     let reflectionRepository: ReflectionsRepository;
@@ -43,7 +43,7 @@ describe('ReflectionsRepository', () => {
     })
 
     it('should create a new reflections entry in reflections table', async () => {
-        const entry: ReflectionResponseDto = {
+        const entry: ReflectionDto = {
             createdAt: "",
             date: new Date().toISOString(),
             id: randomUUID(),
