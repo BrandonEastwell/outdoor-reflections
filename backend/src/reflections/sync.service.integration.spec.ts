@@ -1,16 +1,18 @@
 import {Test, type TestingModule} from "@nestjs/testing";
-import {randomUUID} from "node:crypto";
 import {DatabaseModule} from "../database/database.module";
 import {PrismaService} from "../database/prisma.service";
 import {ReflectionsRepository} from "./reflections.repository";
 import {SyncService} from "./sync.service";
 import {ReflectionDto} from "./reflection.types";
 import {ConfigModule} from "@nestjs/config";
+import {seedExplicitReflections} from "../database/db.seed.helpers";
 
 describe("SyncService integration", () => {
     let app: TestingModule;
     let prisma: PrismaService;
     let syncService: SyncService;
+    let user: { id: number; email: string };
+    const reflectionId = "11111111-1111-1111-1111-111111111111";
 
     beforeAll(async () => {
         app = await Test.createTestingModule({
@@ -32,6 +34,8 @@ describe("SyncService integration", () => {
         await prisma.refreshToken.deleteMany();
         await prisma.reflection.deleteMany();
         await prisma.userAccount.deleteMany();
+
+        user = await seedExplicitReflections(prisma, reflectionId)
     });
 
     afterAll(async () => {
@@ -40,32 +44,8 @@ describe("SyncService integration", () => {
     });
 
     it("updates an existing reflection and returns a success response", async () => {
-        const email = `sync-${randomUUID()}@example.com`;
-        const user = await prisma.userAccount.create({
-            data: {
-                email,
-                password: "password123",
-            },
-        });
-
-        const reflectionId = randomUUID();
         const baseDate = new Date("2026-08-13T09:00:00.000Z");
         const nextDate = new Date("2026-08-13T10:30:00.000Z");
-
-        await prisma.reflection.create({
-            data: {
-                id: reflectionId,
-                userId: user.id,
-                title: "old title",
-                content: ["old content"],
-                date: baseDate,
-                drawingPaths: [],
-                createdAt: baseDate,
-                lastSyncedAt: baseDate,
-                lastEditedAt: baseDate,
-                updatedAt: baseDate,
-            },
-        });
 
         const entry = {
             id: reflectionId,
@@ -105,7 +85,7 @@ describe("SyncService integration", () => {
             title: "updated title",
             content: ["updated content"],
             drawingPaths: [{ path: "M0 0L10 10", color: "#000000" }],
-            lastEditedAt: baseDate,
+            lastEditedAt: new Date("2026-08-01T09:00:00.000Z"),
         });
         expect(persisted!.date.toISOString()).toBe("2026-08-13T00:00:00.000Z");
     });
