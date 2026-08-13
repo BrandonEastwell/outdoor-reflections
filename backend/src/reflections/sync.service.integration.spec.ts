@@ -3,10 +3,9 @@ import {DatabaseModule} from "../database/database.module";
 import {PrismaService} from "../database/prisma.service";
 import {ReflectionsRepository} from "./reflections.repository";
 import {SyncService} from "./sync.service";
-import {ReflectionDto} from "./reflection.types";
+import {ReflectionDto, toReflectionDto} from "./reflection.types";
 import {ConfigModule} from "@nestjs/config";
 import {seedExplicitReflections} from "../database/db.seed.helpers";
-import {Reflection} from "../../generated/prisma/client";
 import {randomUUID} from "node:crypto";
 
 describe("SyncService integration", () => {
@@ -14,7 +13,7 @@ describe("SyncService integration", () => {
     let prisma: PrismaService;
     let syncService: SyncService;
     let testUser: { id: number; email: string };
-    let testReflections: Reflection[];
+    let testReflections: ReflectionDto[];
     const reflectionId = "11111111-1111-1111-1111-111111111111";
 
     beforeAll(async () => {
@@ -40,7 +39,10 @@ describe("SyncService integration", () => {
 
         const { user, reflections } = await seedExplicitReflections(prisma, reflectionId)
         testUser = user
-        testReflections = reflections
+        testReflections = []
+        reflections.forEach(r => {
+            r.userId === user.id && testReflections.push(toReflectionDto(r))
+        })
     });
 
     afterAll(async () => {
@@ -49,10 +51,10 @@ describe("SyncService integration", () => {
     });
 
     it("updates an existing reflection and returns a success response", async () => {
-        const baseDate = new Date("2026-08-13T09:00:00.000Z");
-        const nextDate = new Date("2026-08-13T10:30:00.000Z");
+        const baseDate = new Date("2026-08-13T09:00:00.000Z").toISOString();
+        const nextDate = new Date("2026-08-13T10:30:00.000Z").toISOString();
 
-        const entry = {
+        const entry: ReflectionDto = {
             id: reflectionId,
             title: "updated title",
             content: ["updated content"],
@@ -62,7 +64,7 @@ describe("SyncService integration", () => {
             lastEditedAt: nextDate,
             createdAt: baseDate,
             updatedAt: nextDate,
-        } as unknown as ReflectionDto;
+        };
 
         const result = await syncService.syncEntries([entry], testUser);
 
@@ -75,6 +77,7 @@ describe("SyncService integration", () => {
                 failed: 0,
             },
             service_name: "reflections_sync_service",
+            errors: []
         });
 
         const persisted = await prisma.reflection.findUnique({
@@ -94,10 +97,10 @@ describe("SyncService integration", () => {
     });
 
     it("creates a new reflection and returns a success response with created count > 0", async () => {
-        const baseDate = new Date("2026-08-13T09:00:00.000Z");
-        const nextDate = new Date("2026-08-13T10:30:00.000Z");
+        const baseDate = new Date("2026-08-13T09:00:00.000Z").toISOString();
+        const nextDate = new Date("2026-08-13T10:30:00.000Z").toISOString();
 
-        const entry = {
+        const entry: ReflectionDto = {
             id: randomUUID(),
             title: "updated title",
             content: ["updated content"],
@@ -107,7 +110,7 @@ describe("SyncService integration", () => {
             lastEditedAt: nextDate,
             createdAt: baseDate,
             updatedAt: nextDate,
-        } as unknown as ReflectionDto;
+        };
 
         const result = await syncService.syncEntries([entry], testUser);
 
@@ -122,4 +125,29 @@ describe("SyncService integration", () => {
         });
 
     })
+
+    it("updates many entries with a successful sync", async () => {
+        const title = "new title"
+        const entriesToUpdate = testReflections.map(r => {
+            r.title = title
+            r.lastEditedAt = new Date().toISOString()
+            return r
+        })
+
+        const result = await syncService.syncEntries([...entriesToUpdate], testUser);
+
+        expect(result).toMatchObject({
+            status: "SUCCESS",
+            count: {
+                total: entriesToUpdate.length,
+                updated: entriesToUpdate.length,
+                created: 0,
+                failed: 0,
+            },
+            errors: [],
+        });
+    })
+
+
+
 });

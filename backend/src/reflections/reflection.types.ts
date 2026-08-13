@@ -5,14 +5,14 @@ export const ReflectionSchema = z.object({
     id: z.string(),
     title: z.string(),
     content: z.array(z.string()),
-    date: z.date(),
+    date: z.iso.datetime(),
     drawingPaths: z.array(z.object({
         path: z.string(),
         color: z.string()
     })),
-    lastSyncedAt: z.date().optional(),
-    lastEditedAt: z.date(),
-    createdAt: z.date(),
+    lastSyncedAt: z.iso.datetime().optional(),
+    lastEditedAt: z.iso.datetime(),
+    createdAt: z.iso.datetime(),
 })
 
 export type SyncResponse = {
