@@ -52,7 +52,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
         if (isEntryBlank(latestEntryRef.current)) return;
 
         const saveTimeout = setTimeout(() => {
-            const entryToSave: Entry = {...latestEntryRef.current, sync_status: "pending", updated_at: new Date().toISOString()};
+            const entryToSave: Entry = {...latestEntryRef.current, sync_status: "pending", last_edited_at: new Date().toISOString()};
             db.saveToLocalDB(entryToSave, "reflections");
             setEntry(entryToSave);
         }, 1000);
