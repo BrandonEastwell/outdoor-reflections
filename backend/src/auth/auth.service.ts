@@ -44,6 +44,11 @@ export class AuthService {
         return this.createTokens(user, session.id)
     }
 
+    async loginWithGoogle(req) {
+        if (!req.user) return 'No user from google'
+        return req.user
+    }
+
     async isRefreshTokenValid(refreshSessionId: string, token: string) {
         const refresh: RefreshToken | null = await this.authRepository.findRefreshToken(refreshSessionId);
         if (!refresh) throw new UnauthorizedException('User not signed in');

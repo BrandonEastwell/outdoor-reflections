@@ -16,6 +16,7 @@ import {LocalAuthGuard} from "./local-auth-guard";
 import {JwtAuthGuard} from "./jwt-auth-guard";
 import {CredentialsDto} from "./auth.dto";
 import {SafeUser} from "../user/user.types";
+import {GoogleAuthGuard} from "./google-auth-guard";
 
 @Controller('auth')
 export class AuthController {
@@ -76,5 +77,15 @@ export class AuthController {
         const user: SafeUser = req.user as SafeUser
         const refreshToken: string = req.cookies['refresh_token']
         return this.authService.refresh(user, refreshToken)
+    }
+
+    @Get('google')
+    @UseGuards(GoogleAuthGuard)
+    async googleLogin(@Req() req: Request) {}
+
+    @Get("google/callback")
+    @UseGuards(GoogleAuthGuard)
+    async googleCallback(@Req() req: Request) {
+        return this.authService.loginWithGoogle(req);
     }
 }
