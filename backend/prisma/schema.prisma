@@ -17,8 +17,18 @@ model UserAccount {
   created_At  DateTime     @default(now())
   reflections Reflection[]
   refreshTokens RefreshToken[]
+  accounts    AuthProvider[]
 
   @@map("user_account")
+}
+
+model AuthProvider {
+  id         String @id @default(uuid())
+  provider   String
+  providerId String
+  userId     Int
+  user       UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerId])
 }
 
 model Reflection {
