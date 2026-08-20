@@ -18,7 +18,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: backend
+        working-directory: ./backend
 
     services:
       postgres:
@@ -41,31 +41,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: pnpm
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Generate Prisma client
-        run: pnpm prisma generate
+        run: npx prisma generate
 
       - name: Apply database migrations
-        run: pnpm prisma migrate deploy
+        run: npx prisma migrate deploy
 
       - name: Lint
-        run: pnpm lint
+        run: npm lint
 
       - name: Test
-        run: pnpm test
+        run: npm test
 
       - name: Build
-        run: pnpm build
+        run: npm build
