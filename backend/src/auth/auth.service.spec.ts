@@ -194,6 +194,9 @@ describe("AuthService", () => {
             );
         });
 
+    });
+
+    describe("password validation", () => {
         it("accepts the minimum valid password length", () => {
             const result = CredentialsSchema.safeParse({
                 email: `auth-${randomUUID()}@example.com`,
@@ -240,5 +243,5 @@ describe("AuthService", () => {
                 );
             }
         });
-    });
+    })
 });
