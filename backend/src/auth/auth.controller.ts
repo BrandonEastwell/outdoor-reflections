@@ -41,7 +41,7 @@ export class AuthController {
             path: "/",
         })
 
-        return res.status(201)
+        return res.status(201).end()
     }
 
     @Post('register')
