@@ -1,3 +1,5 @@
+import {CredentialsSchema} from "./auth.dto";
+
 jest.mock("bcryptjs", () => ({
     compare: jest.fn(),
     hash: jest.fn(),
@@ -11,6 +13,7 @@ import { AuthService } from "./auth.service";
 import { AuthRepository } from "./auth.repository";
 import { UserService } from "../user/user.service";
 import type { SafeUser } from "../user/user.types";
+import {randomUUID} from "node:crypto";
 
 describe("AuthService", () => {
     let authService: AuthService;
@@ -189,6 +192,53 @@ describe("AuthService", () => {
             await expect(authService.refresh({ id: 1, email: "sam@example.com" }, "refresh-token")).rejects.toBeInstanceOf(
                 UnauthorizedException,
             );
+        });
+
+        it("accepts the minimum valid password length", () => {
+            const result = CredentialsSchema.safeParse({
+                email: `auth-${randomUUID()}@example.com`,
+                password: "1234567",
+            });
+
+            expect(result.success).toBe(true);
+        });
+
+        it("rejects passwords shorter than 7 characters", () => {
+            const result = CredentialsSchema.safeParse({
+                email: `auth-${randomUUID()}@example.com`,
+                password: "123456",
+            });
+
+            expect(result.success).toBe(false);
+            if (!result.success) {
+                expect(result.error.issues).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            path: ["password"],
+                            code: "too_small",
+                        }),
+                    ]),
+                );
+            }
+        });
+
+        it("rejects passwords longer than 32 characters", () => {
+            const result = CredentialsSchema.safeParse({
+                email: `auth-${randomUUID()}@example.com`,
+                password: "123456789012345678901234567890123",
+            });
+
+            expect(result.success).toBe(false);
+            if (!result.success) {
+                expect(result.error.issues).toEqual(
+                    expect.arrayContaining([
+                        expect.objectContaining({
+                            path: ["password"],
+                            code: "too_big",
+                        }),
+                    ]),
+                );
+            }
         });
     });
 });
