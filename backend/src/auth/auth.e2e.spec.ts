@@ -8,6 +8,7 @@ import {LocalAuthGuard} from "./local-auth-guard";
 import {JwtAuthGuard} from "./jwt-auth-guard";
 import {PrismaService} from "../database/prisma.service";
 import * as bcrypt from "bcryptjs";
+import cookieParser from "cookie-parser";
 
 
 describe('Auth flow end to end tests', () => {
@@ -64,6 +65,7 @@ describe('Auth flow end to end tests', () => {
             }).compile()
 
         app = module.createNestApplication();
+        app.use(cookieParser());
         await app.init();
 
         prisma = module.get(PrismaService);
@@ -96,6 +98,65 @@ describe('Auth flow end to end tests', () => {
         expect(storedPassword).not.toBeNull();
         expect(storedPassword).not.toBe(password);
         expect(await bcrypt.compare(password, storedPassword!)).toBe(true);
+    });
+
+    it('POST auth/register accepts the minimum valid password length', async () => {
+        const email = `min-password-${Date.now()}@example.com`;
+        const password = '1234567';
+
+        await request(app.getHttpServer())
+            .post('/auth/register')
+            .send({ email, password })
+            .expect(201);
+
+        const createdUser = await prisma.userAccount.findUnique({
+            where: { email },
+        });
+
+        expect(createdUser).not.toBeNull();
+    });
+
+    it('POST auth/register rejects passwords shorter than 7 characters', async () => {
+        const response = await request(app.getHttpServer())
+            .post('/auth/register')
+            .send({ email: `short-password-${Date.now()}@example.com`, password: '123456' })
+            .expect(400);
+
+        expect(response.body).toMatchObject({
+            statusCode: 400,
+            message: 'Validation failed',
+        });
+        expect(response.body.errors).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    path: ['password'],
+                    code: 'too_small',
+                }),
+            ]),
+        );
+    });
+
+    it('POST auth/register rejects passwords longer than 32 characters', async () => {
+        const response = await request(app.getHttpServer())
+            .post('/auth/register')
+            .send({
+                email: `long-password-${Date.now()}@example.com`,
+                password: '123456789012345678901234567890123',
+            })
+            .expect(400);
+
+        expect(response.body).toMatchObject({
+            statusCode: 400,
+            message: 'Validation failed',
+        });
+        expect(response.body.errors).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    path: ['password'],
+                    code: 'too_big',
+                }),
+            ]),
+        );
     });
 
     it('POST auth/login sets auth cookies for the signed-in user', async () => {

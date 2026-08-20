@@ -73,9 +73,9 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @Post('refresh')
     async refresh(@Req() req: Request) {
-        if (!req.cookies['refresh_token']) throw new UnauthorizedException('User is not signed in');
+        const refreshToken = req.cookies['refresh_token']
+        if (!refreshToken) throw new UnauthorizedException('User is not signed in');
         const user: SafeUser = req.user as SafeUser
-        const refreshToken: string = req.cookies['refresh_token']
         return this.authService.refresh(user, refreshToken)
     }
 
