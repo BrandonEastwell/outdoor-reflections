@@ -9,7 +9,6 @@ import {UserRepository} from "../user/user.repository";
 import {PrismaService} from "../database/prisma.service";
 import {ConfigModule} from "@nestjs/config";
 import {AuthService} from "./auth.service";
-import {CredentialsSchema} from "./auth.dto";
 
 
 describe("AuthService integration", () => {
