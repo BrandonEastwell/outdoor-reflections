@@ -101,7 +101,7 @@ describe("AuthService integration", () => {
         });
     });
 
-    it("login a user", async () => {
+    it("login a user with local credentials", async () => {
         const email = `auth-${randomUUID()}@example.com`;
         const credentials = { email, password: "password123" };
 

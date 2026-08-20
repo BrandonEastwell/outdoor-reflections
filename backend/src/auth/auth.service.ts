@@ -45,7 +45,7 @@ export class AuthService {
     }
 
     async loginWithGoogle(req) {
-        if (!req.user) return
+        if (!req.user) throw new UnauthorizedException('Invalid credentials');
 
         const user = await this.userService.findUserByEmail(req.user.email);
         if (user) return await this.login({ email: user.email, id: user.id });
