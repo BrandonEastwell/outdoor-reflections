@@ -45,7 +45,10 @@ export class AuthService {
     }
 
     async loginWithGoogle(req) {
-        if (!req.user) return 'No user from google'
+        if (!req.user) return
+
+
+
         return req.user
     }
 
