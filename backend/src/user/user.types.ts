@@ -1,22 +1,22 @@
 export type UserDto = {
-    id: number
-    email: string
-    password: string
-}
+  id: number;
+  email: string;
+  password: string;
+};
 
 export type UpdateUserData = {
-    email?: string;
-    password?: string;
+  email?: string;
+  password?: string;
 };
 
 export type SafeUser = {
-    id: number;
-    email: string;
-}
+  id: number;
+  email: string;
+};
 
 export type LoginProvider = {
-    id: string;
-    name: Providers;
-}
+  id: string;
+  name: Providers;
+};
 
-type Providers = "google"
+type Providers = 'google';

@@ -1,38 +1,47 @@
-import {Injectable, Logger} from "@nestjs/common";
-import {ReflectionsRepository} from "./reflections.repository";
-import {ReflectionDto, SyncResponse} from "./reflection.types";
-import {SafeUser} from "../user/user.types";
+import { Injectable, Logger } from '@nestjs/common';
+import { ReflectionsRepository } from './reflections.repository';
+import { ReflectionDto, SyncResponse } from './reflection.types';
+import { SafeUser } from '../user/user.types';
 
 @Injectable()
 export class SyncService {
-    constructor(private repo: ReflectionsRepository) {}
-    private readonly logger = new Logger(SyncService.name)
+  constructor(private repo: ReflectionsRepository) {}
+  private readonly logger = new Logger(SyncService.name);
 
-    async syncEntries(entries: ReflectionDto[], user: SafeUser) {
-        if (entries.length === 0) return [];
-        this.logger.log(`Syncing ${entries.length} entries`)
+  async syncEntries(entries: ReflectionDto[], user: SafeUser) {
+    if (entries.length === 0) return [];
+    this.logger.log(`Syncing ${entries.length} entries`);
 
-        const start = process.hrtime()
-        const results = await this.repo.upsertMany(entries, user.id)
-        const diff = process.hrtime(start)
+    const start = process.hrtime();
+    const results = await this.repo.upsertMany(entries, user.id);
+    const diff = process.hrtime(start);
 
-        this.logger.log(`${results.entriesSynced.length} entries synced in ${diff[0]}s ${diff[1] / 1000000}ms`)
-        results.entriesCreated && this.logger.log(`${results.entriesCreated.length} entries created`)
+    this.logger.log(
+      `${results.entriesSynced.length} entries synced in ${diff[0]}s ${diff[1] / 1000000}ms`,
+    );
+    results.entriesCreated &&
+      this.logger.log(`${results.entriesCreated.length} entries created`);
 
-        const syncResults: SyncResponse = {
-            count: {
-                failed: results.entriesFailed.length,
-                updated: results.entriesSynced.length,
-                created: results.entriesCreated.length,
-                total: entries.length
-            },
-            duration_ms: diff[0] * 1000 + diff[1],
-            service_name: "reflections_sync_service",
-            status: results.entriesFailed.length > 0 ? results.entriesSynced.length > 0 || results.entriesCreated.length > 0 ? "PARTIAL" : "FAILED" : "SUCCESS",
-            timestamp: new Date().toISOString(),
-            errors: results.entriesFailed
-        }
+    const syncResults: SyncResponse = {
+      count: {
+        failed: results.entriesFailed.length,
+        updated: results.entriesSynced.length,
+        created: results.entriesCreated.length,
+        total: entries.length,
+      },
+      duration_ms: diff[0] * 1000 + diff[1],
+      service_name: 'reflections_sync_service',
+      status:
+        results.entriesFailed.length > 0
+          ? results.entriesSynced.length > 0 ||
+            results.entriesCreated.length > 0
+            ? 'PARTIAL'
+            : 'FAILED'
+          : 'SUCCESS',
+      timestamp: new Date().toISOString(),
+      errors: results.entriesFailed,
+    };
 
-        return syncResults
-    }
+    return syncResults;
+  }
 }

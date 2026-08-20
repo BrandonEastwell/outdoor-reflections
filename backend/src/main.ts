@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {ConsoleLogger} from "@nestjs/common";
-import {ZodValidationPipe} from "nestjs-zod";
-import cookieParser from "cookie-parser";
+import { ConsoleLogger } from '@nestjs/common';
+import { ZodValidationPipe } from 'nestjs-zod';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,7 +13,7 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
-  app.useGlobalPipes(new ZodValidationPipe())
+  app.useGlobalPipes(new ZodValidationPipe());
   await app.listen(8000);
 }
 bootstrap();

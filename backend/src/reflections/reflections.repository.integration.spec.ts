@@ -1,85 +1,85 @@
-import {PrismaService} from "../database/prisma.service";
-import {Test} from "@nestjs/testing";
-import {ReflectionsRepository} from "./reflections.repository";
-import {DatabaseModule} from "../database/database.module";
-import {randomUUID} from "node:crypto";
-import {ReflectionDto} from "./reflection.types";
-import {ConfigModule} from "@nestjs/config";
+import { PrismaService } from '../database/prisma.service';
+import { Test } from '@nestjs/testing';
+import { ReflectionsRepository } from './reflections.repository';
+import { DatabaseModule } from '../database/database.module';
+import { randomUUID } from 'node:crypto';
+import { ReflectionDto } from './reflection.types';
+import { ConfigModule } from '@nestjs/config';
 
 describe('ReflectionsRepository', () => {
-    let reflectionRepository: ReflectionsRepository;
-    let prisma: PrismaService;
+  let reflectionRepository: ReflectionsRepository;
+  let prisma: PrismaService;
 
-    let testData = { email: 'test@gmail.com', password: "test"}
-    let testUserID: number;
+  const testData = { email: 'test@gmail.com', password: 'test' };
+  let testUserID: number;
 
-    beforeAll(async () => {
-        prisma = new PrismaService();
-        await prisma.$connect();
+  beforeAll(async () => {
+    prisma = new PrismaService();
+    await prisma.$connect();
+  });
+
+  beforeEach(async () => {
+    const app = await Test.createTestingModule({
+      imports: [
+        DatabaseModule,
+        ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: '.env.test',
+        }),
+      ],
+      providers: [ReflectionsRepository],
+    }).compile();
+
+    reflectionRepository = app.get(ReflectionsRepository);
+    prisma = app.get(PrismaService);
+
+    const res = await prisma.userAccount.upsert({
+      create: testData,
+      update: testData,
+      where: { email: testData.email },
     });
 
-    beforeEach(async () => {
-        const app = await Test.createTestingModule({
-            imports: [
-                DatabaseModule,
-                ConfigModule.forRoot({
-                    isGlobal: true,
-                    envFilePath: ".env.test",
-                })],
-            providers: [ReflectionsRepository]
-        }).compile()
+    testUserID = res.id;
+  });
 
-        reflectionRepository = app.get(ReflectionsRepository)
-        prisma = app.get(PrismaService)
+  afterAll(async () => {
+    prisma.userAccount.delete({
+      where: { id: testUserID },
+    });
+    await prisma.$disconnect();
+  });
 
-        const res = await prisma.userAccount.upsert({
-            create: testData,
-            update: testData,
-            where: { email: testData.email }
-        })
+  it('should create a new reflections entry in reflections table', async () => {
+    const entry: ReflectionDto = {
+      createdAt: '',
+      date: new Date().toISOString(),
+      id: randomUUID(),
+      lastSyncedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      title: 'test entry',
+      content: ['it is day 3'],
+      drawingPaths: [],
+    };
 
-        testUserID = res.id;
-    })
+    const before = await prisma.reflection.count();
+    await reflectionRepository.create(entry, testUserID);
+    const after = await prisma.reflection.count();
+    expect(after).toBe(before + 1);
+  });
 
-    afterAll(async () => {
-        prisma.userAccount.delete({
-            where: { id: testUserID }
-        })
-        await prisma.$disconnect();
-    })
-
-    it('should create a new reflections entry in reflections table', async () => {
-        const entry: ReflectionDto = {
-            createdAt: "",
-            date: new Date().toISOString(),
-            id: randomUUID(),
-            lastSyncedAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            title: "test entry",
-            content: ["it is day 3"],
-            drawingPaths: []
-        }
-
-        const before = await prisma.reflection.count()
-        await reflectionRepository.create(entry, testUserID);
-        const after = await prisma.reflection.count()
-        expect(after).toBe(before + 1)
+  it('should delete a reflections entry from reflections table', async () => {
+    const entry = await prisma.reflection.create({
+      data: {
+        id: randomUUID(),
+        userId: testUserID,
+        title: 'test',
+      },
     });
 
-    it('should delete a reflections entry from reflections table', async () => {
-        const entry = await prisma.reflection.create({
-            data: {
-                id: randomUUID(),
-                userId: testUserID,
-                title: 'test'
-            }
-        })
-
-        await reflectionRepository.delete(entry.id, testUserID)
-        const res = await prisma.reflection.findFirst({
-            where: { id: entry.id }
-        })
-        expect(res).toBe(null)
+    await reflectionRepository.delete(entry.id, testUserID);
+    const res = await prisma.reflection.findFirst({
+      where: { id: entry.id },
     });
-
+    expect(res).toBe(null);
+  });
 });

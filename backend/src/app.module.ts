@@ -1,19 +1,25 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {ReflectionsModule} from "./reflections/reflections.module";
-import {ConfigModule} from "@nestjs/config";
-import {APP_INTERCEPTOR, APP_PIPE} from '@nestjs/core';
-import {ZodSerializerInterceptor, ZodValidationPipe} from 'nestjs-zod';
-import {UserModule} from "./user/user.module";
-import {AuthModule} from "./auth/auth.module";
+import { ReflectionsModule } from './reflections/reflections.module';
+import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [ReflectionsModule, UserModule, AuthModule, ConfigModule.forRoot({isGlobal: true})],
+  imports: [
+    ReflectionsModule,
+    UserModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
   controllers: [AppController],
-  providers: [AppService,
-    { provide: APP_PIPE, useClass: ZodValidationPipe},
-    { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor}
+  providers: [
+    AppService,
+    { provide: APP_PIPE, useClass: ZodValidationPipe },
+    { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
   ],
 })
 export class AppModule {}
