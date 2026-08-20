@@ -25,6 +25,14 @@ export class UserRepository {
         });
     }
 
+    async createUserWithProvider(email: string, provider: { provider: "google", providerId: string }) {
+        return this.prisma.$transaction(async (tx) => {
+            tx.userAccount.create({
+                data: { email }
+            })
+        })
+    }
+
     async deleteUser(id: number) {
         return this.prisma.userAccount.delete({
             where: { id },

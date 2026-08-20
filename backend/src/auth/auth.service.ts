@@ -47,7 +47,10 @@ export class AuthService {
     async loginWithGoogle(req) {
         if (!req.user) return
 
+        const user = await this.userService.findUserByEmail(req.user.email);
+        if (user) return await this.login({ email: user.email, id: user.id });
 
+        const newUser = this.userService.
 
         return req.user
     }

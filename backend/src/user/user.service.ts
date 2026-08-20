@@ -16,6 +16,14 @@ export class UserService {
         return this.repo.createUser(email, hashedPassword)
     }
 
+    async createGoogleUser(email: string) {
+        this.logger.log(`Creating a google user with google email: ${email}`)
+        const existingUser = await this.findUserByEmail(email);
+        if (existingUser) throw new ConflictException('User already exists');
+
+
+    }
+
     async findUserByID(id: number) {
         const user = await this.repo.getUserById(id);
         if (!user) return null;
