@@ -1,5 +1,5 @@
 import {ConflictException, Injectable, Logger, UnauthorizedException} from "@nestjs/common";
-import {SafeUser} from "../user/user.types";
+import {LoginProvider, SafeUser} from "../user/user.types";
 import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcryptjs';
 import {JwtService} from "@nestjs/jwt";
@@ -50,9 +50,9 @@ export class AuthService {
         const user = await this.userService.findUserByEmail(req.user.email);
         if (user) return await this.login({ email: user.email, id: user.id });
 
-        const newUser = this.userService.
-
-        return req.user
+        const provider: LoginProvider = { id: req.user.googleId, name: "google" }
+        const newUser = await this.userService.createProviderUser(req.user.email, provider)
+        return await this.login({ email: newUser.email, id: newUser.id })
     }
 
     async isRefreshTokenValid(refreshSessionId: string, token: string) {

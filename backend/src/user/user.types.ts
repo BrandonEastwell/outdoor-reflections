@@ -13,3 +13,10 @@ export type SafeUser = {
     id: number;
     email: string;
 }
+
+export type LoginProvider = {
+    id: string;
+    name: Providers;
+}
+
+type Providers = "google"

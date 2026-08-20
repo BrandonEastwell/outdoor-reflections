@@ -1,12 +1,18 @@
 import {ConflictException, Injectable, Logger} from "@nestjs/common";
 import {UserRepository} from "./user.repository";
 import * as bcrypt from "bcryptjs";
+import {LoginProvider} from "./user.types";
 
 @Injectable()
 export class UserService {
     constructor(private repo: UserRepository) {}
     private readonly logger = new Logger(UserService.name)
 
+    /**
+     * This is a user created with local credentials
+     * @param email
+     * @param password
+     */
     async createUser(email: string, password: string) {
         this.logger.log(`Creating user with email: ${email}`)
         const existingUser = await this.findUserByEmail(email);
@@ -16,12 +22,17 @@ export class UserService {
         return this.repo.createUser(email, hashedPassword)
     }
 
-    async createGoogleUser(email: string) {
-        this.logger.log(`Creating a google user with google email: ${email}`)
+    /**
+     * This is a user created with OAuth providers
+     * @param email
+     * @param provider
+     */
+    async createProviderUser(email: string, provider: LoginProvider) {
+        this.logger.log(`Creating a provider user with google email: ${email}`)
         const existingUser = await this.findUserByEmail(email);
         if (existingUser) throw new ConflictException('User already exists');
 
-
+        return await this.repo.createUserWithProvider(email, provider)
     }
 
     async findUserByID(id: number) {
