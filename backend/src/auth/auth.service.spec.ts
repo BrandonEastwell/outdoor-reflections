@@ -61,7 +61,7 @@ describe("AuthService", () => {
             });
             compareMock.mockResolvedValue(true);
 
-            const result = await authService.validateUser("sam@example.com", "secret");
+            const result = await authService.validateLocalUser("sam@example.com", "secret");
 
             expect(result).toEqual({
                 id: 7,
@@ -73,7 +73,7 @@ describe("AuthService", () => {
         it("throws when the user does not exist", async () => {
             mockUserService.findUserByEmail.mockResolvedValue(null);
 
-            await expect(authService.validateUser("missing@example.com", "secret")).rejects.toBeInstanceOf(
+            await expect(authService.validateLocalUser("missing@example.com", "secret")).rejects.toBeInstanceOf(
                 UnauthorizedException,
             );
         });
@@ -86,7 +86,7 @@ describe("AuthService", () => {
             });
             compareMock.mockResolvedValue(false);
 
-            await expect(authService.validateUser("sam@example.com", "wrong")).rejects.toBeInstanceOf(
+            await expect(authService.validateLocalUser("sam@example.com", "wrong")).rejects.toBeInstanceOf(
                 UnauthorizedException,
             );
         });

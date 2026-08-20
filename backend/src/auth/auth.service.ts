@@ -13,9 +13,9 @@ export class AuthService {
     constructor(private userService: UserService, private authRepository: AuthRepository, private jwtService: JwtService) {}
     private readonly logger = new Logger(AuthService.name)
 
-    async validateUser(email: string, password: string): Promise<SafeUser> {
+    async validateLocalUser(email: string, password: string): Promise<SafeUser> {
         const user = await this.userService.findUserByEmail(email);
-        if (!user) throw new UnauthorizedException('Invalid email or password');
+        if (!user || !user.password) throw new UnauthorizedException('Invalid email or password');
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) throw new UnauthorizedException('Invalid email or password');
