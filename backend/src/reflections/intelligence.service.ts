@@ -10,6 +10,8 @@ export class IntelligenceService {
     ) {}
 
     async generateSentenceStarters(currentContent: string, previousContent: string[]) {
+        if (previousContent.length <= 0) return
+
         const context = previousContent
             .map((entry, index) => `Previous entry ${index + 1}:\n${entry}`)
             .join('\n\n');
@@ -21,7 +23,6 @@ export class IntelligenceService {
                     Your job is to help the user continue writing in their own voice. 
                     Generate exactly 3 short sentence starters.
                     Use previous journal entries only to understand recurring themes, experiences and interests.
-                    
                  
                     Do not invent memories or events.
                     Do not write complete journal paragraphs.

@@ -13,12 +13,14 @@ import { SyncService } from './sync.service';
 import { JwtAuthGuard } from '../auth/jwt-auth-guard';
 import { ReflectionDto } from './reflection.types';
 import { SafeUser } from '../user/user.types';
+import {IntelligenceService} from "./intelligence.service";
 
 @Controller('reflection')
 export class ReflectionsController {
   constructor(
     private reflectionService: ReflectionsService,
     private syncService: SyncService,
+    private intelligenceService: IntelligenceService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -45,6 +47,7 @@ export class ReflectionsController {
 
   @Post(':id/intelligence/suggestions')
   async getSuggestions(@Req() req: Request, @Res() res: Response) {
-    
+    const { currentContent, recentContent }: { currentContent: string, recentContent: string[] } = req.body;
+    return await this.intelligenceService.generateSentenceStarters(currentContent, recentContent);
   }
 }
