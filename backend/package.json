@@ -1,8 +1,8 @@
 {
-  "name": "backend",
+  "name": "outdoor-reflections-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "backend API service for outdoor reflections app",
+  "author": "Brandon Eastwell",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

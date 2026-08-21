@@ -20,9 +20,7 @@ export class ReflectionsRepository {
         content: entry.content,
         date: new Date(entry.date),
         drawingPaths: entry.drawingPaths,
-        createdAt: new Date(entry.createdAt),
         lastSyncedAt: new Date(),
-        updatedAt: new Date(entry.updatedAt),
         lastEditedAt: new Date(entry.lastEditedAt),
       },
     });
