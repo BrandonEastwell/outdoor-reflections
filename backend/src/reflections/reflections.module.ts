@@ -5,12 +5,12 @@ import { DatabaseModule } from '../database/database.module';
 import { ReflectionsRepository } from './reflections.repository';
 import { SyncService } from './sync.service';
 import {IntelligenceService} from "./intelligence.service";
-import {IntelligenceRepository} from "./intelligence.repository";
+import {GroqProvider} from "./groq.provider";
 
 @Module({
   imports: [DatabaseModule],
   controllers: [ReflectionsController],
-  providers: [ReflectionsService, ReflectionsRepository, SyncService, IntelligenceService, IntelligenceRepository],
+  providers: [ReflectionsService, ReflectionsRepository, SyncService, IntelligenceService, GroqProvider],
   exports: [ReflectionsService, SyncService, IntelligenceService],
 })
 export class ReflectionsModule {}

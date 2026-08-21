@@ -1,10 +1,69 @@
 import {Injectable, Req, Res} from "@nestjs/common";
-import {IntelligenceRepository} from "./intelligence.repository";
+import {GroqProvider} from "./groq.provider";
+import {ReflectionsRepository} from "./reflections.repository";
 
 @Injectable()
 export class IntelligenceService {
-    constructor(private repo: IntelligenceRepository) {}
+    constructor(
+        private readonly repo: ReflectionsRepository,
+        private readonly groqProvider: GroqProvider
+    ) {}
 
-    async getSentenceStarter(@Req() req: Request, @Res() res: Response) {
+    async generateSentenceStarters(currentContent: string, previousContent: string[]) {
+        const context = previousContent
+            .map((entry, index) => `Previous entry ${index + 1}:\n${entry}`)
+            .join('\n\n');
+
+        const messages = [
+                {
+                    role: 'system',
+                    content: `You are a journaling assistant for an outdoor journal.
+                    Your job is to help the user continue writing in their own voice. 
+                    Generate exactly 3 short sentence starters.
+                    Use previous journal entries only to understand recurring themes, experiences and interests.
+                    
+                 
+                    Do not invent memories or events.
+                    Do not write complete journal paragraphs.
+                    Do not copy sentences from previous entries.
+                    Keep each suggestion under 20 words`.trim(),
+                },
+                {
+                    role: 'user',
+                    content: `CURRENT JOURNAL ENTRY: ${currentContent}
+                    PREVIOUS JOURNAL ENTRIES: ${context}`.trim(),
+                },
+            ]
+
+        const response_format = {
+            type: 'json_schema',
+                json_schema: {
+                name: 'sentence_starters',
+                    strict: false,
+                    schema: {
+                    type: 'object',
+                        properties: {
+                        starters: {
+                            type: 'array',
+                                items: {
+                                type: 'object',
+                                    properties: {
+                                    text: {
+                                        type: 'string',
+                                    },
+                                },
+                                required: ['text'],
+                                    additionalProperties: false,
+                            },
+                        },
+                    },
+                    required: ['starters'],
+                        additionalProperties: false,
+                },
+            },
+        }
+
+        const result = await this.groqProvider.chatGeneration(messages, response_format);
+
     }
 }
