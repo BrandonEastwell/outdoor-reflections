@@ -92,7 +92,6 @@ export class ReflectionsRepository {
                 drawingPaths: entry.drawingPaths,
                 createdAt: new Date(entry.createdAt),
                 lastSyncedAt: new Date(),
-                updatedAt: new Date(entry.updatedAt),
                 lastEditedAt: new Date(entry.lastEditedAt),
               },
             });
@@ -126,7 +125,6 @@ export class ReflectionsRepository {
               date: new Date(entry.date),
               drawingPaths: entry.drawingPaths,
               lastSyncedAt: new Date(),
-              updatedAt: new Date(entry.updatedAt),
             },
           });
 
