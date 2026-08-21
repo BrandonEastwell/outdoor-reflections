@@ -42,4 +42,9 @@ export class ReflectionsController {
       req.body;
     return this.syncService.syncEntries(entries, user);
   }
+
+  @Post(':id/intelligence/suggestions')
+  async getSuggestions(@Req() req: Request, @Res() res: Response) {
+    
+  }
 }

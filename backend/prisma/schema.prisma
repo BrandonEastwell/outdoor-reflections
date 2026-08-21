@@ -10,6 +10,10 @@ datasource db {
   provider = "postgresql"
 }
 
+enum SuggestionType {
+  SENTENCE_STARTER
+}
+
 model UserAccount {
   id          Int          @id @default(autoincrement())
   email       String       @unique
@@ -42,8 +46,20 @@ model Reflection {
   lastSyncedAt DateTime    @default(now()) @db.Timestamptz(6)
   lastEditedAt DateTime
   user         UserAccount @relation(fields: [userId], references: [id], onDelete: Cascade)
+  suggestions  ReflectionSuggestion[]
 
   @@map("reflection")
+}
+
+model ReflectionSuggestion {
+  id             String             @id @default(uuid())
+  reflectionId   String
+  type           SuggestionType
+  text           String
+  createdAt      DateTime           @default(now())
+  reflection     Reflection  @relation(fields: [reflectionId], references: [id], onDelete: Cascade)
+
+  @@index([reflectionId])
 }
 
 model RefreshToken {
