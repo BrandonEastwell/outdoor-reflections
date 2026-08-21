@@ -5,5 +5,4 @@ import {IntelligenceRepository} from "./intelligence.repository";
 export class IntelligenceService {
     constructor(private repo: IntelligenceRepository) {}
 
-
 }

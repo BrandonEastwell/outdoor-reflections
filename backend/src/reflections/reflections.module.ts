@@ -4,12 +4,13 @@ import { ReflectionsService } from './reflections.service';
 import { DatabaseModule } from '../database/database.module';
 import { ReflectionsRepository } from './reflections.repository';
 import { SyncService } from './sync.service';
-import {IntelligenceModule} from "./intelligence/intelligence.module";
+import {IntelligenceService} from "./intelligence.service";
+import {IntelligenceRepository} from "./intelligence.repository";
 
 @Module({
-  imports: [DatabaseModule, IntelligenceModule],
+  imports: [DatabaseModule],
   controllers: [ReflectionsController],
-  providers: [ReflectionsService, ReflectionsRepository, SyncService],
-  exports: [ReflectionsService, SyncService],
+  providers: [ReflectionsService, ReflectionsRepository, SyncService, IntelligenceService, IntelligenceRepository],
+  exports: [ReflectionsService, SyncService, IntelligenceService],
 })
 export class ReflectionsModule {}
