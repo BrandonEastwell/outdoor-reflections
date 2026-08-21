@@ -51,7 +51,6 @@ describe('ReflectionsRepository', () => {
 
   it('should create a new reflections entry in reflections table', async () => {
     const entry: ReflectionDto = {
-      createdAt: '',
       date: new Date().toISOString(),
       id: randomUUID(),
       lastSyncedAt: new Date().toISOString(),
@@ -74,6 +73,7 @@ describe('ReflectionsRepository', () => {
         id: randomUUID(),
         userId: testUserID,
         title: 'test',
+        lastEditedAt: new Date().toISOString(),
       },
     });
 
