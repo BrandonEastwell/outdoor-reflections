@@ -66,8 +66,7 @@ describe('SyncService integration', () => {
       lastSyncedAt: nextDate,
       lastEditedAt: nextDate,
       createdAt: baseDate,
-      updatedAt: nextDate,
-    };
+     };
 
     const result = await syncService.syncEntries([entry], testUser);
 
@@ -112,7 +111,6 @@ describe('SyncService integration', () => {
       lastSyncedAt: nextDate,
       lastEditedAt: nextDate,
       createdAt: baseDate,
-      updatedAt: nextDate,
     };
 
     const result = await syncService.syncEntries([entry], testUser);

@@ -34,7 +34,6 @@ export const seedReflection = (
       createdAt: date,
       lastSyncedAt: date,
       lastEditedAt: date,
-      updatedAt: date,
     },
   });
 };

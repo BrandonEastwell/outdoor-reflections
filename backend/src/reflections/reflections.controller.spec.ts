@@ -42,7 +42,7 @@ describe('ReflectionsController', () => {
       date: new Date().toISOString(),
       id: randomUUID(),
       lastSyncedAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      lastEditedAt: new Date().toISOString(),
       title: 'test entry',
       content: ['it is day 3'],
       drawingPaths: [],

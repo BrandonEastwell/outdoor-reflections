@@ -45,8 +45,8 @@ export class ReflectionsController {
     return this.syncService.syncEntries(entries, user);
   }
 
-  @Post(':id/intelligence/suggestions')
-  async getSuggestions(@Req() req: Request, @Res() res: Response) {
+  @Post(':id/intelligence/sentence-starters')
+  async getSentenceStarters(@Req() req: Request, @Res() res: Response) {
     const { currentContent, recentContent }: { currentContent: string, recentContent: string[] } = req.body;
     return await this.intelligenceService.generateSentenceStarters(currentContent, recentContent);
   }

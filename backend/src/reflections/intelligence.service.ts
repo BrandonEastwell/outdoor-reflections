@@ -1,6 +1,7 @@
 import {Injectable, Req, Res} from "@nestjs/common";
 import {GroqProvider} from "./groq.provider";
 import {ReflectionsRepository} from "./reflections.repository";
+import {JournalSuggestion} from "./intelligence.types";
 
 @Injectable()
 export class IntelligenceService {
@@ -9,8 +10,8 @@ export class IntelligenceService {
         private readonly groqProvider: GroqProvider
     ) {}
 
-    async generateSentenceStarters(currentContent: string, previousContent: string[]) {
-        if (previousContent.length <= 0) return
+    async generateSentenceStarters(currentContent: string, previousContent: string[]): Promise<JournalSuggestion[]> {
+        if (previousContent.length <= 0) return []
 
         const context = previousContent
             .map((entry, index) => `Previous entry ${index + 1}:\n${entry}`)
@@ -66,5 +67,9 @@ export class IntelligenceService {
 
         const result = await this.groqProvider.chatGeneration(messages, response_format);
 
+        return result.map((text) => ({
+            type: 'sentence_starter',
+            text,
+        }));
     }
 }
