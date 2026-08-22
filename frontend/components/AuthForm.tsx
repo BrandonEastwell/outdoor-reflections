@@ -4,7 +4,8 @@ import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import {useState} from "react";
 import {User, UserSchema} from "@/types/userTypes";
-import {login} from "@/lib/api/auth";
+import {login, loginWithProvider} from "@/lib/api/auth";
+import {Providers} from "@/types/authTypes";
 
 
 export default function AuthForm() {
@@ -26,6 +27,19 @@ export default function AuthForm() {
 
         try {
             const data = await login(user);
+            console.log(data);
+        } catch (requestError) {
+            setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
+
+    const handleContinueWithProvider = async (provider: Providers) => {
+        setIsSubmitting(true);
+
+        try {
+            const data = await loginWithProvider(provider);
             console.log(data);
         } catch (requestError) {
             setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
@@ -83,7 +97,7 @@ export default function AuthForm() {
                 <DrawIcon fill={"white"} svgPaths={SVG_PATHS.signInIcon} />
             </Button>
 
-            <Button type="button" variant="outline" className="h-12 rounded-2xl border-white/70 bg-white/70">
+            <Button onClick={() => handleContinueWithProvider("google")} type="button" variant="outline" className="h-12 rounded-2xl border-white/70 bg-white/70">
                 continue with google
             </Button>
 

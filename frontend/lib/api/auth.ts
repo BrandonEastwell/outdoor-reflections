@@ -1,5 +1,7 @@
 import {AuthUser, User} from "@/types/userTypes";
 import {API_URL} from "@/constants/apiUrl";
+import {Provider} from "react";
+import {Providers} from "@/types/authTypes";
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
     const res = await fetch(`${API_URL}/api/auth/me`, {
@@ -24,3 +26,17 @@ export async function login(user: User) {
     if (!res.ok) throw new Error("Unable to sign in");
     return res.json();
 }
+
+export async function loginWithProvider(provider: Providers) {
+    const res = await fetch(`${API_URL}/api/auth/google`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!res.ok) throw new Error("Unable to sign in");
+    return res.json();
+}
+
+export async function logout(): Promise<void> {}

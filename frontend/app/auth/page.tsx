@@ -1,5 +1,4 @@
 import Link from "next/link";
-import {Button} from "@/components/ui/button";
 import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import AuthForm from "@/components/AuthForm";
