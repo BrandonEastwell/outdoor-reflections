@@ -44,7 +44,7 @@ describe('AuthForm', () => {
     await user.type(screen.getByLabelText(/password/i), '123456');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(await screen.findByText(/too small: expected string to have >=7 characters/i)).toBeInTheDocument();
+    expect(await screen.findByText(/password must be over 6 characters/i)).toBeInTheDocument();
     expect(loginMock).not.toHaveBeenCalled();
   });
 

@@ -4,11 +4,16 @@ import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import {useState} from "react";
 import {User, UserSchema} from "@/types/userTypes";
-import {login, loginWithProvider} from "@/lib/api/auth";
+import {createAccount, login, loginWithProvider} from "@/lib/api/readResponseError";
 import {Providers} from "@/types/authTypes";
 
 
-export default function AuthForm() {
+type AuthFormProps = {
+    isSigningIn?: boolean;
+    setIsSigningIn?: (nextValue: boolean) => void;
+}
+
+export default function AuthForm({ isSigningIn = true, setIsSigningIn = () => {} }: AuthFormProps) {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -21,31 +26,24 @@ export default function AuthForm() {
         const result = UserSchema.safeParse({email, password});
         if (!result.success) {
             setIsSubmitting(false);
+            console.error(result.error);
             return setError(result.error.issues[0].message);
         }
+
         const user: User = result.data;
 
         try {
-            const data = await login(user);
-            console.log(data);
-        } catch (requestError) {
-            setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
+            if (isSigningIn) await login(user);
+            else await createAccount(user)
+        } catch (error) {
+            setError(error instanceof Error ? error.message : "Unable to sign in");
         } finally {
             setIsSubmitting(false);
         }
     }
 
-    const handleContinueWithProvider = async (provider: Providers) => {
-        setIsSubmitting(true);
-
-        try {
-            const data = await loginWithProvider(provider);
-            console.log(data);
-        } catch (requestError) {
-            setError(requestError instanceof Error ? requestError.message : "Unable to sign in");
-        } finally {
-            setIsSubmitting(false);
-        }
+    const handleContinueWithProvider = (provider: Providers) => {
+        loginWithProvider(provider);
     }
 
     return (
@@ -93,7 +91,7 @@ export default function AuthForm() {
             </div>
 
             <Button type="submit" disabled={isSubmitting} className="h-12 rounded-2xl bg-rose text-background hover:bg-rose/90">
-                sign in
+                { isSigningIn ? 'sign in' : 'create account' }
                 <DrawIcon fill={"white"} svgPaths={SVG_PATHS.signInIcon} />
             </Button>
 
@@ -102,9 +100,9 @@ export default function AuthForm() {
             </Button>
 
             <p className="pt-2 text-sm text-blue-slate/70">
-                New here?{" "}
-                <button type="button" className="font-medium text-rose transition-colors hover:text-camel">
-                    create account
+                { isSigningIn ? 'New here? ' : 'Have an account? ' }
+                <button onClick={() => setIsSigningIn(!isSigningIn)} type="button" className="cursor-pointer font-medium text-rose transition-colors hover:text-camel">
+                    { isSigningIn ? 'create account' : 'sign in' }
                 </button>
             </p>
         </form>

@@ -1,14 +1,13 @@
-import Link from "next/link";
+'use client'
 import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import AuthForm from "@/components/AuthForm";
-
-export const metadata = {
-  title: "Sign in | outdoor reflections",
-  description: "Sign in or create an account for outdoor reflections.",
-};
+import {useState} from "react";
+import Link from "next/link";
 
 export default function AuthPage() {
+  const [isSigningIn, setIsSigningIn] = useState(true);
+
   return (
     <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center px-6 py-10">
       <div className="grid w-full max-w-6xl gap-6 lg:grid-cols-[1.05fr_0.95fr]">
@@ -43,14 +42,14 @@ export default function AuthPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-mono uppercase tracking-[0.24em] text-blue-slate/60">Account</p>
-              <h2 className="mt-2 font-flower text-3xl font-bold text-blue-slate">Sign in</h2>
+              <h2 className="mt-2 font-flower text-3xl font-bold text-blue-slate">{ isSigningIn ? 'Sign in' : 'Sign up' }</h2>
             </div>
             <Link href="/" className="text-sm font-mono text-rose transition-colors hover:text-camel">
               back
             </Link>
           </div>
 
-          <AuthForm />
+          <AuthForm isSigningIn={isSigningIn} setIsSigningIn={setIsSigningIn} />
 
         </section>
       </div>

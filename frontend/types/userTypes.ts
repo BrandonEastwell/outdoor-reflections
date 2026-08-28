@@ -1,8 +1,8 @@
 import * as z from "zod";
 
 export const UserSchema = z.object({
-    email: z.email().trim(),
-    password: z.string().min(7),
+    email: z.email({ error: "Email is not valid" }).trim(),
+    password: z.string({ error: "Password must be a string" }).min(7, { error: "Password must be over 6 characters" }),
 });
 
 export type User = z.infer<typeof UserSchema>;
