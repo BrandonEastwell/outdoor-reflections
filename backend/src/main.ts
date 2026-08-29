@@ -12,6 +12,7 @@ async function bootstrap() {
     }),
   });
 
+  app.enableCors({ origin: process.env.ORIGIN, credentials: true });
   app.use(cookieParser());
   app.useGlobalPipes(new ZodValidationPipe());
   await app.listen(8000);

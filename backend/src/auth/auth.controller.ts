@@ -17,6 +17,7 @@ import { JwtAuthGuard } from './jwt-auth-guard';
 import { CredentialsDto } from './auth.dto';
 import { SafeUser } from '../user/user.types';
 import { GoogleAuthGuard } from './google-auth-guard';
+import {setCookie} from "./helpers";
 
 @Controller('auth')
 export class AuthController {
@@ -26,28 +27,17 @@ export class AuthController {
   @Post('login')
   async login(@Req() req: Request, @Res() res: Response) {
     const token = await this.authService.login(req.user as SafeUser);
-
-    res.cookie('access_token', token.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    });
-
-    res.cookie('refresh_token', token.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    });
-
+    setCookie(res, token)
     return res.status(201).end();
   }
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() credentials: CredentialsDto) {
-    await this.authService.register(credentials);
+  async register(@Body() credentials: CredentialsDto, @Res() res: Response) {
+    const user: SafeUser = await this.authService.register(credentials);
+    const token = await this.authService.login(user)
+    setCookie(res, token)
+    return res.status(201).end();
   }
 
   @UseGuards(JwtAuthGuard)
