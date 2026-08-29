@@ -23,6 +23,7 @@ export class SyncService {
       this.logger.log(`${results.entriesCreated.length} entries created`);
 
     const syncResults: SyncResponse = {
+      synced_entries: results.entriesSynced.concat(results.entriesCreated),
       count: {
         failed: results.entriesFailed.length,
         updated: results.entriesSynced.length,

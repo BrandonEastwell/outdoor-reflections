@@ -18,6 +18,7 @@ export const ReflectionSchema = z.object({
 });
 
 export type SyncResponse = {
+  synced_entries: Reflection[];
   timestamp: string;
   service_name: string;
   status: 'SUCCESS' | 'PARTIAL' | 'FAILED';
@@ -25,6 +26,12 @@ export type SyncResponse = {
   count: { total: number; updated: number; created: number; failed: number };
   errors?: { entryId: string; error: string }[];
 };
+
+export type SyncResults = {
+  entriesSynced: Reflection[];
+  entriesCreated: Reflection[];
+  entriesFailed: { entryId: string; error: string }[];
+}
 
 export type DrawPath = {
   path: string;

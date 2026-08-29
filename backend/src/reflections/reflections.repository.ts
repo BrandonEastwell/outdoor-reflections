@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import {
   ReflectionDto,
-  ReflectionSchema,
+  ReflectionSchema, SyncResults,
   toReflectionDto,
 } from './reflection.types';
-import { Prisma } from '../../generated/prisma/client';
+import {Prisma, Reflection} from '../../generated/prisma/client';
 
 @Injectable()
 export class ReflectionsRepository {
@@ -53,11 +53,7 @@ export class ReflectionsRepository {
   }
 
   async upsertMany(reflectionEntries: ReflectionDto[], userId: number) {
-    const results: {
-      entriesSynced: ReflectionDto[];
-      entriesCreated: ReflectionDto[];
-      entriesFailed: { entryId: string; error: string }[];
-    } = {
+    const results: SyncResults = {
       entriesSynced: [],
       entriesCreated: [],
       entriesFailed: [],
@@ -96,7 +92,7 @@ export class ReflectionsRepository {
               },
             });
 
-            results.entriesCreated.push(toReflectionDto(res));
+            results.entriesCreated.push(res);
           } catch (error) {
             if (error instanceof Prisma.PrismaClientValidationError) {
               results.entriesFailed.push({
@@ -128,7 +124,7 @@ export class ReflectionsRepository {
             },
           });
 
-          results.entriesSynced.push(toReflectionDto(res));
+          results.entriesSynced.push(res);
         } catch (error) {
           if (error instanceof Prisma.PrismaClientValidationError) {
             results.entriesFailed.push({
