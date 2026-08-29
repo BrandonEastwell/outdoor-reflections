@@ -1,32 +1,12 @@
 import {API_URL} from "@/constants/apiUrl";
-import type {AuthUser, User} from "@/types/userTypes";
+import type {User} from "@/types/userTypes";
 import type {Providers} from "@/types/authTypes";
+import {readJsonError} from "@/lib/api/readResponse";
 
 type AuthTokenResponse = {
     access_token: string;
     refresh_token: string;
 };
-
-async function readJsonError(res: Response, fallback: string) {
-    try {
-        const body = await res.json();
-        return body?.message ?? fallback;
-    } catch {
-        return fallback;
-    }
-}
-
-export async function getCurrentUser(): Promise<AuthUser | null> {
-    const res = await fetch(`${API_URL}/auth/me`, {
-        method: "GET",
-        credentials: "include",
-    });
-
-    if (res.status === 401) return null;
-    if (!res.ok) throw new Error("Failed to fetch current user");
-
-    return (await res.json()) as AuthUser;
-}
 
 export async function login(user: User): Promise<AuthTokenResponse> {
     const res = await fetch(`${API_URL}/auth/login`, {

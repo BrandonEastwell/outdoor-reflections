@@ -16,7 +16,7 @@ export class UserService {
   async createUser(email: string, password: string) {
     this.logger.log(`Creating user with email: ${email}`);
     const existingUser = await this.findUserByEmail(email);
-    if (existingUser) throw new ConflictException('User already exists');
+    if (existingUser) throw new ConflictException('User with this email already exists');
 
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.repo.createUser(email, hashedPassword);

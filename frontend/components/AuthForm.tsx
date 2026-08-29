@@ -4,8 +4,9 @@ import DrawIcon from "@/components/DrawIcon";
 import {SVG_PATHS} from "@/constants/svgPaths";
 import {useState} from "react";
 import {User, UserSchema} from "@/types/userTypes";
-import {createAccount, login, loginWithProvider} from "@/lib/api/readResponseError";
+import {createAccount, login, loginWithProvider} from "@/lib/api/auth";
 import {Providers} from "@/types/authTypes";
+import {useRouter} from "next/navigation";
 
 
 type AuthFormProps = {
@@ -18,6 +19,7 @@ export default function AuthForm({ isSigningIn = true, setIsSigningIn = () => {}
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +36,10 @@ export default function AuthForm({ isSigningIn = true, setIsSigningIn = () => {}
 
         try {
             if (isSigningIn) await login(user);
-            else await createAccount(user)
+            else await createAccount(user);
+
+
+            router.push("/entries");
         } catch (error) {
             setError(error instanceof Error ? error.message : "Unable to sign in");
         } finally {
