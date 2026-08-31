@@ -1,15 +1,26 @@
 import {API_URL} from "@/constants/apiUrl";
-import {readJsonError} from "@/lib/api/readResponse";
+import {SyncResponse} from "@/types/entryTypes";
+import Database from "@/lib/database";
 
-export const syncReflections = async () => {
-    const res = await fetch(`${API_URL}/reflection/sync`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: "include"
-    });
+const db = new Database();
 
-    if (!res.ok) throw new Error(await readJsonError(res, "Error fetching entries"));
-    return (await res.json());
+export async function syncPendingEntries(): Promise<SyncResponse | undefined> {
+    const entries = await db.getAll('reflections')
+    if (!entries) return;
+
+    const entriesToSync = entries.map(entry => entry.sync_status = "pending")
+
+    try {
+        const res = await fetch(`${API_URL}/reflections/sync`, {
+            method: "POST",
+            body: JSON.stringify(entriesToSync)
+        })
+
+        if (!res.ok) throw new Error("Failed to sync entries")
+        const results: SyncResponse = await res.json()
+        console.log(results)
+        return results
+    } catch (error) {
+        console.error(error)
+    }
 }

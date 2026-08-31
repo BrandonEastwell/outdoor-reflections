@@ -7,6 +7,7 @@ export type SyncStatus = "synced" | "pending" | "failed";
 
 export type Entry = {
     id: string;
+    user_id?: number;
     title: string;
     content: string[];
     date: string;
@@ -16,3 +17,13 @@ export type Entry = {
     created_at: string;
     updated_at: string;
 }
+
+export type SyncResponse = {
+    synced_entries: Entry[];
+    timestamp: string;
+    service_name: string;
+    status: 'SUCCESS' | 'PARTIAL' | 'FAILED';
+    duration_ms: number;
+    count: { total: number; updated: number; created: number; failed: number };
+    errors?: { entryId: string; error: string }[];
+};

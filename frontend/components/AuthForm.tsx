@@ -7,8 +7,8 @@ import {User, UserSchema} from "@/types/userTypes";
 import {createAccount, login, loginWithProvider} from "@/lib/api/auth";
 import {Providers} from "@/types/authTypes";
 import {useRouter} from "next/navigation";
-import {getUserEntries} from "@/lib/api/user";
-import {syncReflections} from "@/lib/api/reflections";
+import {SyncResponse} from "@/types/entryTypes";
+import {syncPendingEntries} from "@/lib/api/reflections";
 
 
 type AuthFormProps = {
@@ -40,8 +40,7 @@ export default function AuthForm({ isSigningIn = true, setIsSigningIn = () => {}
             if (isSigningIn) await login(user);
             else await createAccount(user);
 
-            const entries = await syncReflections();
-
+            const entries: SyncResponse | undefined = await syncPendingEntries();
             router.push("/entries");
         } catch (error) {
             setError(error instanceof Error ? error.message : "Unable to sign in");

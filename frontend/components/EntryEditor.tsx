@@ -10,7 +10,7 @@ import TextArea from "@/components/TextArea";
 import EntrySyncStatus from "@/components/EntrySyncStatus";
 import BarItem from "@/components/BarItem";
 import {SVG_PATHS} from "@/constants/svgPaths";
-import {syncPendingEntries} from "@/utils/syncUtils";
+import {syncPendingEntries} from "@/lib/api/reflections";
 
 const db = new Database();
 
@@ -59,7 +59,7 @@ export default function EntryEditor({ initEntry } : { initEntry: Entry }) {
 
         const syncTimeout = setTimeout(async () => {
             const syncedEntries = await syncPendingEntries();
-            if (syncedEntries && syncedEntries.find((cur) => cur.id === entry.id)) {
+            if (syncedEntries && syncedEntries.synced_entries.find((cur) => cur.id === entry.id)) {
                 setEntry((prevEntry: Entry) => ({...prevEntry, sync_status: "synced"}));
             }
         }, 10000);
