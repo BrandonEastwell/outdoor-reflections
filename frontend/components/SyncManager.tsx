@@ -1,6 +1,6 @@
 "use client"
 import {useEffect} from "react";
-import {syncPendingEntries} from "@/utils/syncUtils";
+import {syncPendingEntries} from "@/lib/api/reflections";
 
 export default function SyncManager() {
 
