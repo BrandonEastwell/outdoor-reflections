@@ -19,7 +19,7 @@ export function normalizeEntry(entry: Entry | (Omit<Entry, "content"> & { conten
 
 export function sortEntriesByLastUpdated(entries: Entry[])  {
     return entries.sort((a,b) => {
-        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        return new Date(b.last_edited_at).getTime() - new Date(a.last_edited_at).getTime()
     })
 }
 
