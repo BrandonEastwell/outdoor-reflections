@@ -1,16 +1,11 @@
-import Database from "@/lib/database";
-import {Entry} from "@/types/entryTypes";
 import {AuthProvider} from "@/lib/context/authContext";
+import Entries from "@/components/Entries";
 
-const db = new Database();
-
-export default async function EntriesPage({ children } : { children: React.ReactNode}) {
-    const entries: Entry[] | undefined = await db.getAll('reflections');
-
+export default async function EntriesPage() {
     return (
         <div>
             <AuthProvider>
-                { children }
+                <Entries />
             </AuthProvider>
         </div>
     )
