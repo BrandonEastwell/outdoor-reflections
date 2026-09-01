@@ -36,7 +36,7 @@ export async function createEmptyEntry() {
     const initEntry: Entry = {
         id: crypto.randomUUID(),
         created_at: curDate,
-        last_synced_at: null,
+        last_edited_at: curDate,
         sync_status: "pending",
         updated_at: curDate,
         title: "",

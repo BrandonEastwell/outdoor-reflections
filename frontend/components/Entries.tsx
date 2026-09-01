@@ -3,36 +3,60 @@ import Database from "@/lib/database";
 import {Entry} from "@/types/entryTypes";
 import {useAuth} from "@/lib/context/auth";
 import {useEffect, useState} from "react";
+import {normalizeEntry, sortEntriesByLastUpdated} from "@/utils/entryUtils";
+import {useRouter} from "next/navigation";
 
 const db = new Database();
 export default function Entries() {
     const [entries, setEntries] = useState<Entry[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const { userId } = useAuth()
+    const router = useRouter();
 
     useEffect(() => {
         async function loadEntries() {
-            const entries: Entry[] | undefined = await db.getAll('reflections');
-            if (!entries) return;
+            try {
+                const storedEntries = (await db.getAll('reflections')) ?? [];
+                const normalizedEntries = storedEntries.map(normalizeEntry);
 
-            let filteredEntries: Entry[] = [];
-            if (!userId) filteredEntries = entries.filter(entry => entry.user_id === undefined)
-            else filteredEntries = entries.filter(entry => entry.user_id === userId)
-            setEntries(filteredEntries)
-            setLoading(false);
+                const filteredEntries = !userId
+                    ? normalizedEntries.filter((entry) => entry.user_id === undefined)
+                    : normalizedEntries.filter((entry) => entry.user_id === userId);
+
+                sortEntriesByLastUpdated(filteredEntries)
+                setEntries(filteredEntries);
+            } finally {
+                setLoading(false);
+            }
         }
 
         loadEntries()
-    });
+    }, [userId]);
+
+    function handleEntryClick(entryId: string) {
+        router.push(`/entry/${entryId}`);
+    }
 
     return (
         <div>
             { loading && <p>Loading...</p> }
             { !loading && entries.length === 0 && <p>Create your first entry</p> }
-            { !loading && entries.map(entry => (
-                <div key={entry.id} className="flex flex-col p-1 rounded-lg bg-amber-50">
+            { !loading &&
+                <div className={"grid grid-cols-3 gap-2 font-mono"}>
+                    { entries.map(entry => (
+                    <div key={entry.id} onClick={() => handleEntryClick(entry.id)} className="flex flex-col gap-1 p-3 rounded-xl bg-white/90 aspect-square hover:cursor-pointer">
+                        <div className="flex flex-row justify-between w-full h-6 px-1 overflow-hidden">
+                            <p>{entry.title ? entry.title : 'untitled reflection'}</p>
+                        </div>
+                        <div className="bg-rose/10 rounded-xl h-full p-2 overflow-hidden">
+                            { entry.content.map((paragraph, index) =>
+                                <p key={index} className="blur-[1.5px] text-xs">{paragraph}</p>
+                            )}
+                        </div>
+                    </div>
+                    ))}
                 </div>
-            ))}
+            }
         </div>
     )
 }
