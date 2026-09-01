@@ -66,4 +66,6 @@ export default class Database {
             console.error("Error saving entry to offline database:", error);
         }
     }
+
+
 }
